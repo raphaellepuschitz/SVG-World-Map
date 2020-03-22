@@ -1,0 +1,1497 @@
+{
+    "AF": {
+       "name": "Afghanistan",
+       "longname": "The Islamic Republic of Afghanistan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "AX": {
+       "name": "Åland Islands",
+       "longname": "Åland",
+       "sovereignty": "Finland",
+       "region": "EU"
+    },
+    "AL": {
+       "name": "Albania",
+       "longname": "The Republic of Albania",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "DZ": {
+       "name": "Algeria",
+       "longname": "The People's Democratic Republic of Algeria",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "AS": {
+       "name": "American Samoa",
+       "longname": "The Territory of American Samoa",
+       "sovereignty": "United States",
+       "region": "OC"
+    },
+    "AD": {
+       "name": "Andorra",
+       "longname": "The Principality of Andorra",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "AO": {
+       "name": "Angola",
+       "longname": "The Republic of Angola",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "AI": {
+       "name": "Anguilla",
+       "longname": "Anguilla",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "AQ": {
+       "name": "Antarctica",
+       "longname": "All land and ice shelves south of the 60th parallel south",
+       "sovereignty": "Antarctic Treaty",
+       "region": "AN"
+    },
+    "AG": {
+       "name": "Antigua and Barbuda",
+       "longname": "Antigua and Barbuda",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "AR": {
+       "name": "Argentina",
+       "longname": "The Argentine Republic",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "AM": {
+       "name": "Armenia",
+       "longname": "The Republic of Armenia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "AW": {
+       "name": "Aruba",
+       "longname": "Aruba",
+       "sovereignty": "Netherlands",
+       "region": "SA"
+    },
+    "AU": {
+       "name": "Australia",
+       "longname": "The Commonwealth of Australia",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "AT": {
+       "name": "Austria",
+       "longname": "The Republic of Austria",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "AZ": {
+       "name": "Azerbaijan",
+       "longname": "The Republic of Azerbaijan",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "BS": {
+       "name": "Bahamas",
+       "longname": "The Commonwealth of The Bahamas",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "BH": {
+       "name": "Bahrain",
+       "longname": "The Kingdom of Bahrain",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "BD": {
+       "name": "Bangladesh",
+       "longname": "The People's Republic of Bangladesh",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "BB": {
+       "name": "Barbados",
+       "longname": "Barbados",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "BY": {
+       "name": "Belarus",
+       "longname": "The Republic of Belarus",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "BE": {
+       "name": "Belgium",
+       "longname": "The Kingdom of Belgium",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "BZ": {
+       "name": "Belize",
+       "longname": "Belize",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "BJ": {
+       "name": "Benin",
+       "longname": "The Republic of Benin",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "BM": {
+       "name": "Bermuda",
+       "longname": "Bermuda",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "BT": {
+       "name": "Bhutan",
+       "longname": "The Kingdom of Bhutan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "BO": {
+       "name": "Bolivia",
+       "longname": "The Plurinational State of Bolivia",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "BQ": {
+       "name": "Bonaire, Sint Eustatius and Saba",
+       "longname": "Bonaire, Sint Eustatius and Saba",
+       "sovereignty": "Netherlands",
+       "region": "SA"
+    },
+    "BA": {
+       "name": "Bosnia and Herzegovina",
+       "longname": "Bosnia and Herzegovina",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "BW": {
+       "name": "Botswana",
+       "longname": "The Republic of Botswana",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "BV": {
+       "name": "Bouvet Island",
+       "longname": "Bouvet Island",
+       "sovereignty": "Norway",
+       "region": "AN"
+    },
+    "BR": {
+       "name": "Brazil",
+       "longname": "The Federative Republic of Brazil",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "IO": {
+       "name": "British Indian Ocean Territory",
+       "longname": "The British Indian Ocean Territory",
+       "sovereignty": "United Kingdom",
+       "region": "AS"
+    },
+    "BN": {
+       "name": "Brunei",
+       "longname": "The Nation of Brunei, the Abode of Peace",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "BG": {
+       "name": "Bulgaria",
+       "longname": "The Republic of Bulgaria",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "BF": {
+       "name": "Burkina Faso",
+       "longname": "Burkina Faso",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "BI": {
+       "name": "Burundi",
+       "longname": "The Republic of Burundi",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CV": {
+       "name": "Cabo Verde",
+       "longname": "The Republic of Cabo Verde",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "KH": {
+       "name": "Cambodia",
+       "longname": "The Kingdom of Cambodia",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "CM": {
+       "name": "Cameroon",
+       "longname": "The Republic of Cameroon",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CA": {
+       "name": "Canada",
+       "longname": "Canada",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "KY": {
+       "name": "Cayman Islands",
+       "longname": "The Cayman Islands",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "CF": {
+       "name": "Central African Republic",
+       "longname": "The Central African Republic",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "TD": {
+       "name": "Chad",
+       "longname": "The Republic of Chad",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CL": {
+       "name": "Chile",
+       "longname": "The Republic of Chile",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "CN": {
+       "name": "China",
+       "longname": "The People's Republic of China",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "CX": {
+       "name": "Christmas Island",
+       "longname": "The Territory of Christmas Island",
+       "sovereignty": "Australia",
+       "region": "AS"
+    },
+    "CC": {
+       "name": "Cocos (Keeling) Islands",
+       "longname": "The Territory of Cocos (Keeling) Islands",
+       "sovereignty": "Australia",
+       "region": "AS"
+    },
+    "CO": {
+       "name": "Colombia",
+       "longname": "The Republic of Colombia",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "KM": {
+       "name": "Comoros",
+       "longname": "The Union of the Comoros",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CD": {
+       "name": "Congo (the Democratic Republic of the)",
+       "longname": "The Democratic Republic of the Congo",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CG": {
+       "name": "Congo",
+       "longname": "The Republic of the Congo",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "CK": {
+       "name": "Cook Islands",
+       "longname": "The Cook Islands",
+       "sovereignty": "New Zealand",
+       "region": "OC"
+    },
+    "CR": {
+       "name": "Costa Rica",
+       "longname": "The Republic of Costa Rica",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "CI": {
+       "name": "Côte d'Ivoire",
+       "longname": "The Republic of Côte d'Ivoire",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "HR": {
+       "name": "Croatia",
+       "longname": "The Republic of Croatia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "CU": {
+       "name": "Cuba",
+       "longname": "The Republic of Cuba",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "CW": {
+       "name": "Curaçao",
+       "longname": "The Country of Curaçao",
+       "sovereignty": "Netherlands",
+       "region": "SA"
+    },
+    "CY": {
+       "name": "Cyprus",
+       "longname": "The Republic of Cyprus",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "CZ": {
+       "name": "Czechia",
+       "longname": "The Czech Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "DK": {
+       "name": "Denmark",
+       "longname": "The Kingdom of Denmark",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "DJ": {
+       "name": "Djibouti",
+       "longname": "The Republic of Djibouti",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "DM": {
+       "name": "Dominica",
+       "longname": "The Commonwealth of Dominica",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "DO": {
+       "name": "Dominican Republic",
+       "longname": "The Dominican Republic",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "EC": {
+       "name": "Ecuador",
+       "longname": "The Republic of Ecuador",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "EG": {
+       "name": "Egypt",
+       "longname": "The Arab Republic of Egypt",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "SV": {
+       "name": "El Salvador",
+       "longname": "The Republic of El Salvador",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "GQ": {
+       "name": "Equatorial Guinea",
+       "longname": "The Republic of Equatorial Guinea",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "ER": {
+       "name": "Eritrea",
+       "longname": "The State of Eritrea",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "EE": {
+       "name": "Estonia",
+       "longname": "The Republic of Estonia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "SZ": {
+       "name": "Eswatini (Swaziland)",
+       "longname": "The Kingdom of Eswatini",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "ET": {
+       "name": "Ethiopia",
+       "longname": "The Federal Democratic Republic of Ethiopia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "FK": {
+       "name": "Falkland Islands",
+       "longname": "The Falkland Islands",
+       "sovereignty": "United Kingdom",
+       "region": "SA"
+    },
+    "FO": {
+       "name": "Faroe Islands",
+       "longname": "The Faroe Islands",
+       "sovereignty": "Denmark",
+       "region": "EU"
+    },
+    "FJ": {
+       "name": "Fiji",
+       "longname": "The Republic of Fiji",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "FI": {
+       "name": "Finland",
+       "longname": "The Republic of Finland",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "FR": {
+       "name": "France",
+       "longname": "The French Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "GF": {
+       "name": "French Guiana",
+       "longname": "Guyane",
+       "sovereignty": "France",
+       "region": "SA"
+    },
+    "PF": {
+       "name": "French Polynesia",
+       "longname": "French Polynesia",
+       "sovereignty": "France",
+       "region": "OC"
+    },
+    "TF": {
+       "name": "French Southern Territories",
+       "longname": "The French Southern and Antarctic Lands",
+       "sovereignty": "France",
+       "region": "AF"
+    },
+    "GA": {
+       "name": "Gabon",
+       "longname": "The Gabonese Republic",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GM": {
+       "name": "Gambia",
+       "longname": "The Republic of The Gambia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GE": {
+       "name": "Georgia",
+       "longname": "Georgia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "DE": {
+       "name": "Germany",
+       "longname": "The Federal Republic of Germany",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "GH": {
+       "name": "Ghana",
+       "longname": "The Republic of Ghana",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GI": {
+       "name": "Gibraltar",
+       "longname": "Gibraltar",
+       "sovereignty": "United Kingdom",
+       "region": "EU"
+    },
+    "GR": {
+       "name": "Greece",
+       "longname": "The Hellenic Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "GL": {
+       "name": "Greenland",
+       "longname": "Kalaallit Nunaat",
+       "sovereignty": "Denmark",
+       "region": "NA"
+    },
+    "GD": {
+       "name": "Grenada",
+       "longname": "Grenada",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "GP": {
+       "name": "Guadeloupe",
+       "longname": "Guadeloupe",
+       "sovereignty": "France",
+       "region": "NA"
+    },
+    "GU": {
+       "name": "Guam",
+       "longname": "The Territory of Guam",
+       "sovereignty": "United States",
+       "region": "OC"
+    },
+    "GT": {
+       "name": "Guatemala",
+       "longname": "The Republic of Guatemala",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "GG": {
+       "name": "Guernsey",
+       "longname": "The Bailiwick of Guernsey",
+       "sovereignty": "British Crown",
+       "region": "EU"
+    },
+    "GN": {
+       "name": "Guinea",
+       "longname": "The Republic of Guinea",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GW": {
+       "name": "Guinea-Bissau",
+       "longname": "The Republic of Guinea-Bissau",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GY": {
+       "name": "Guyana",
+       "longname": "The Co-operative Republic of Guyana",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "HT": {
+       "name": "Haiti",
+       "longname": "The Republic of Haiti",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "HM": {
+       "name": "Heard Island and McDonald Islands",
+       "longname": "The Territory of Heard Island and McDonald Islands",
+       "sovereignty": "Australia",
+       "region": "AN"
+    },
+    "VA": {
+       "name": "Holy See",
+       "longname": "The Holy See",
+       "sovereignty": "UN observer",
+       "region": "EU"
+    },
+    "HN": {
+       "name": "Honduras",
+       "longname": "The Republic of Honduras",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "HK": {
+       "name": "Hong Kong",
+       "longname": "The Hong Kong Special Administrative Region of China[10]",
+       "sovereignty": "China",
+       "region": "AS"
+    },
+    "HU": {
+       "name": "Hungary",
+       "longname": "Hungary",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "IS": {
+       "name": "Iceland",
+       "longname": "Iceland",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "IN": {
+       "name": "India",
+       "longname": "The Republic of India",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "ID": {
+       "name": "Indonesia",
+       "longname": "The Republic of Indonesia",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "IR": {
+       "name": "Iran",
+       "longname": "The Islamic Republic of Iran",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "IQ": {
+       "name": "Iraq",
+       "longname": "The Republic of Iraq",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "IE": {
+       "name": "Ireland",
+       "longname": "Ireland",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "IM": {
+       "name": "Isle of Man",
+       "longname": "The Isle of Man",
+       "sovereignty": "British Crown",
+       "region": "EU"
+    },
+    "IL": {
+       "name": "Israel",
+       "longname": "The State of Israel",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "IT": {
+       "name": "Italy",
+       "longname": "The Italian Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "JM": {
+       "name": "Jamaica",
+       "longname": "Jamaica",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "JP": {
+       "name": "Japan",
+       "longname": "Japan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "JE": {
+       "name": "Jersey",
+       "longname": "The Bailiwick of Jersey",
+       "sovereignty": "British Crown",
+       "region": "EU"
+    },
+    "JO": {
+       "name": "Jordan",
+       "longname": "The Hashemite Kingdom of Jordan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "KZ": {
+       "name": "Kazakhstan",
+       "longname": "The Republic of Kazakhstan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "KE": {
+       "name": "Kenya",
+       "longname": "The Republic of Kenya",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "KI": {
+       "name": "Kiribati",
+       "longname": "The Republic of Kiribati",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "KP": {
+       "name": "North Korea",
+       "longname": "The Democratic People's Republic of Korea",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "KR": {
+       "name": "South Korea",
+       "longname": "The Republic of Korea",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "KW": {
+       "name": "Kuwait",
+       "longname": "The State of Kuwait",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "KG": {
+       "name": "Kyrgyzstan",
+       "longname": "The Kyrgyz Republic",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "LA": {
+       "name": "Laos",
+       "longname": "The Lao People's Democratic Republic",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "LV": {
+       "name": "Latvia",
+       "longname": "The Republic of Latvia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "LB": {
+       "name": "Lebanon",
+       "longname": "The Lebanese Republic",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "LS": {
+       "name": "Lesotho",
+       "longname": "The Kingdom of Lesotho",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "LR": {
+       "name": "Liberia",
+       "longname": "The Republic of Liberia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "LY": {
+       "name": "Libya",
+       "longname": "The State of Libya",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "LI": {
+       "name": "Liechtenstein",
+       "longname": "The Principality of Liechtenstein",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "LT": {
+       "name": "Lithuania",
+       "longname": "The Republic of Lithuania",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "LU": {
+       "name": "Luxembourg",
+       "longname": "The Grand Duchy of Luxembourg",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MO": {
+       "name": "Macao",
+       "longname": "Macao Special Administrative Region of China",
+       "sovereignty": "China",
+       "region": "AS"
+    },
+    "MK": {
+       "name": "North Macedonia",
+       "longname": "Republic of North Macedonia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MG": {
+       "name": "Madagascar",
+       "longname": "The Republic of Madagascar",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MW": {
+       "name": "Malawi",
+       "longname": "The Republic of Malawi",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MY": {
+       "name": "Malaysia",
+       "longname": "Malaysia",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "MV": {
+       "name": "Maldives",
+       "longname": "The Republic of Maldives",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "ML": {
+       "name": "Mali",
+       "longname": "The Republic of Mali",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MT": {
+       "name": "Malta",
+       "longname": "The Republic of Malta",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MH": {
+       "name": "Marshall Islands",
+       "longname": "The Republic of the Marshall Islands",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "MQ": {
+       "name": "Martinique",
+       "longname": "Martinique",
+       "sovereignty": "France",
+       "region": "NA"
+    },
+    "MR": {
+       "name": "Mauritania",
+       "longname": "The Islamic Republic of Mauritania",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MU": {
+       "name": "Mauritius",
+       "longname": "The Republic of Mauritius",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "YT": {
+       "name": "Mayotte",
+       "longname": "The Department of Mayotte",
+       "sovereignty": "France",
+       "region": "AF"
+    },
+    "MX": {
+       "name": "Mexico",
+       "longname": "The United Mexican States",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "FM": {
+       "name": "Micronesia",
+       "longname": "The Federated States of Micronesia",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "MD": {
+       "name": "Moldova",
+       "longname": "The Republic of Moldova",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MC": {
+       "name": "Monaco",
+       "longname": "The Principality of Monaco",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MN": {
+       "name": "Mongolia",
+       "longname": "The State of Mongolia",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "ME": {
+       "name": "Montenegro",
+       "longname": "Montenegro",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "MS": {
+       "name": "Montserrat",
+       "longname": "Montserrat",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "MA": {
+       "name": "Morocco",
+       "longname": "The Kingdom of Morocco",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MZ": {
+       "name": "Mozambique",
+       "longname": "The Republic of Mozambique",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "MM": {
+       "name": "Myanmar",
+       "longname": "The Republic of the Union of Myanmar",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "NA": {
+       "name": "Namibia",
+       "longname": "The Republic of Namibia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "NR": {
+       "name": "Nauru",
+       "longname": "The Republic of Nauru",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "NP": {
+       "name": "Nepal",
+       "longname": "The Federal Democratic Republic of Nepal",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "NL": {
+       "name": "Netherlands",
+       "longname": "The Kingdom of the Netherlands",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "NC": {
+       "name": "New Caledonia",
+       "longname": "New Caledonia",
+       "sovereignty": "France",
+       "region": "OC"
+    },
+    "NZ": {
+       "name": "New Zealand",
+       "longname": "New Zealand",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "NI": {
+       "name": "Nicaragua",
+       "longname": "The Republic of Nicaragua",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "NE": {
+       "name": "Niger",
+       "longname": "The Republic of the Niger",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "NG": {
+       "name": "Nigeria",
+       "longname": "The Federal Republic of Nigeria",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "NU": {
+       "name": "Niue",
+       "longname": "Niue",
+       "sovereignty": "New Zealand",
+       "region": "OC"
+    },
+    "NF": {
+       "name": "Norfolk Island",
+       "longname": "The Territory of Norfolk Island",
+       "sovereignty": "Australia",
+       "region": "OC"
+    },
+    "MP": {
+       "name": "Northern Mariana Islands",
+       "longname": "The Commonwealth of the Northern Mariana Islands",
+       "sovereignty": "United States",
+       "region": "AS"
+    },
+    "NO": {
+       "name": "Norway",
+       "longname": "The Kingdom of Norway",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "OM": {
+       "name": "Oman",
+       "longname": "The Sultanate of Oman",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "PK": {
+       "name": "Pakistan",
+       "longname": "The Islamic Republic of Pakistan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "PW": {
+       "name": "Palau",
+       "longname": "The Republic of Palau",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "PS": {
+       "name": "Palestine",
+       "longname": "The State of Palestine",
+       "sovereignty": "UN observer",
+       "region": "AS"
+    },
+    "PA": {
+       "name": "Panama",
+       "longname": "The Republic of Panamá",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "PG": {
+       "name": "Papua New Guinea",
+       "longname": "The Independent State of Papua New Guinea",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "PY": {
+       "name": "Paraguay",
+       "longname": "The Republic of Paraguay",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "PE": {
+       "name": "Peru",
+       "longname": "The Republic of Perú",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "PH": {
+       "name": "Philippines",
+       "longname": "The Republic of the Philippines",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "PN": {
+       "name": "Pitcairn",
+       "longname": "The Pitcairn, Henderson, Ducie and Oeno Islands",
+       "sovereignty": "United Kingdom",
+       "region": "OC"
+    },
+    "PL": {
+       "name": "Poland",
+       "longname": "The Republic of Poland",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "PT": {
+       "name": "Portugal",
+       "longname": "The Portuguese Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "PR": {
+       "name": "Puerto Rico",
+       "longname": "The Commonwealth of Puerto Rico",
+       "sovereignty": "United States",
+       "region": "NA"
+    },
+    "QA": {
+       "name": "Qatar",
+       "longname": "The State of Qatar",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "RE": {
+       "name": "Réunion",
+       "longname": "Réunion",
+       "sovereignty": "France",
+       "region": "AF"
+    },
+    "RO": {
+       "name": "Romania",
+       "longname": "Romania",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "RU": {
+       "name": "Russia",
+       "longname": "The Russian Federation",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "RW": {
+       "name": "Rwanda",
+       "longname": "The Republic of Rwanda",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "BL": {
+       "name": "Saint Barthélemy",
+       "longname": "The Collectivity of Saint-Barthélemy",
+       "sovereignty": "France",
+       "region": "NA"
+    },
+    "SH": {
+       "name": "Saint Helena, Ascension and Tristan da Cunha",
+       "longname": "Saint Helena, Ascension and Tristan da Cunha",
+       "sovereignty": "United Kingdom",
+       "region": "AF"
+    },
+    "KN": {
+       "name": "Saint Kitts and Nevis",
+       "longname": "Saint Kitts and Nevis",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "LC": {
+       "name": "Saint Lucia",
+       "longname": "Saint Lucia",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "MF": {
+       "name": "Saint Martin (French part)",
+       "longname": "The Collectivity of Saint-Martin",
+       "sovereignty": "France",
+       "region": "NA"
+    },
+    "PM": {
+       "name": "Saint Pierre and Miquelon",
+       "longname": "The Overseas Collectivity of Saint-Pierre and Miquelon",
+       "sovereignty": "France",
+       "region": "NA"
+    },
+    "VC": {
+       "name": "Saint Vincent and the Grenadines",
+       "longname": "Saint Vincent and the Grenadines",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "WS": {
+       "name": "Samoa",
+       "longname": "The Independent State of Samoa",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "SM": {
+       "name": "San Marino",
+       "longname": "The Republic of San Marino",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "ST": {
+       "name": "Sao Tome and Principe",
+       "longname": "The Democratic Republic of São Tomé and Príncipe",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "SA": {
+       "name": "Saudi Arabia",
+       "longname": "The Kingdom of Saudi Arabia",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "SN": {
+       "name": "Senegal",
+       "longname": "The Republic of Senegal",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "RS": {
+       "name": "Serbia",
+       "longname": "The Republic of Serbia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "SC": {
+       "name": "Seychelles",
+       "longname": "The Republic of Seychelles",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "SL": {
+       "name": "Sierra Leone",
+       "longname": "The Republic of Sierra Leone",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "SG": {
+       "name": "Singapore",
+       "longname": "The Republic of Singapore",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "SX": {
+       "name": "Sint Maarten (Dutch part)",
+       "longname": "Sint Maarten",
+       "sovereignty": "Netherlands",
+       "region": "NA"
+    },
+    "SK": {
+       "name": "Slovakia",
+       "longname": "The Slovak Republic",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "SI": {
+       "name": "Slovenia",
+       "longname": "The Republic of Slovenia",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "SB": {
+       "name": "Solomon Islands",
+       "longname": "The Solomon Islands",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "SO": {
+       "name": "Somalia",
+       "longname": "The Federal Republic of Somalia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "ZA": {
+       "name": "South Africa",
+       "longname": "The Republic of South Africa",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "GS": {
+       "name": "South Georgia and the South Sandwich Islands",
+       "longname": "South Georgia and the South Sandwich Islands",
+       "sovereignty": "United Kingdom",
+       "region": "AN"
+    },
+    "SS": {
+       "name": "South Sudan",
+       "longname": "The Republic of South Sudan",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "ES": {
+       "name": "Spain",
+       "longname": "The Kingdom of Spain",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "LK": {
+       "name": "Sri Lanka",
+       "longname": "The Democratic Socialist Republic of Sri Lanka",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "SD": {
+       "name": "Sudan",
+       "longname": "The Republic of the Sudan",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "SR": {
+       "name": "Suriname",
+       "longname": "The Republic of Suriname",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "SJ": {
+       "name": "Svalbard and Jan Mayen",
+       "longname": "Svalbard and Jan Mayen",
+       "sovereignty": "Norway",
+       "region": "EU"
+    },
+    "SE": {
+       "name": "Sweden",
+       "longname": "The Kingdom of Sweden",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "CH": {
+       "name": "Switzerland",
+       "longname": "The Swiss Confederation",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "SY": {
+       "name": "Syria",
+       "longname": "The Syrian Arab Republic",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TW": {
+       "name": "Taiwan",
+       "longname": "The Republic of China",
+       "sovereignty": "disputed",
+       "region": "AS"
+    },
+    "TJ": {
+       "name": "Tajikistan",
+       "longname": "The Republic of Tajikistan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TZ": {
+       "name": "Tanzania, the United Republic of",
+       "longname": "The United Republic of Tanzania",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "TH": {
+       "name": "Thailand",
+       "longname": "The Kingdom of Thailand",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TL": {
+       "name": "Timor-Leste (East Timor)",
+       "longname": "The Democratic Republic of Timor-Leste",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TG": {
+       "name": "Togo",
+       "longname": "The Togolese Republic",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "TK": {
+       "name": "Tokelau",
+       "longname": "Tokelau",
+       "sovereignty": "New Zealand",
+       "region": "OC"
+    },
+    "TO": {
+       "name": "Tonga",
+       "longname": "The Kingdom of Tonga",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "TT": {
+       "name": "Trinidad and Tobago",
+       "longname": "The Republic of Trinidad and Tobago",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "TN": {
+       "name": "Tunisia",
+       "longname": "The Republic of Tunisia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "TR": {
+       "name": "Turkey",
+       "longname": "The Republic of Turkey",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TM": {
+       "name": "Turkmenistan",
+       "longname": "Turkmenistan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "TC": {
+       "name": "Turks and Caicos Islands",
+       "longname": "The Turks and Caicos Islands",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "TV": {
+       "name": "Tuvalu",
+       "longname": "Tuvalu",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "UG": {
+       "name": "Uganda",
+       "longname": "The Republic of Uganda",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "UA": {
+       "name": "Ukraine",
+       "longname": "Ukraine",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "AE": {
+       "name": "United Arab Emirates",
+       "longname": "The United Arab Emirates",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "GB": {
+       "name": "United Kingdom of Great Britain and Northern Ireland",
+       "longname": "The United Kingdom of Great Britain and Northern Ireland",
+       "sovereignty": "UN",
+       "region": "EU"
+    },
+    "UM": {
+       "name": "United States Minor Outlying Islands",
+       "longname": "Baker Island, Howland Island, Jarvis Island, Johnston Atoll, Kingman Reef, Midway Atoll, Navassa Island, Palmyra Atoll, and Wake Island",
+       "sovereignty": "United States",
+       "region": "OC"
+    },
+    "US": {
+       "name": "United States of America",
+       "longname": "The United States of America",
+       "sovereignty": "UN",
+       "region": "NA"
+    },
+    "UY": {
+       "name": "Uruguay",
+       "longname": "The Oriental Republic of Uruguay",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "UZ": {
+       "name": "Uzbekistan",
+       "longname": "The Republic of Uzbekistan",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "VU": {
+       "name": "Vanuatu",
+       "longname": "The Republic of Vanuatu",
+       "sovereignty": "UN",
+       "region": "OC"
+    },
+    "VE": {
+       "name": "Venezuela",
+       "longname": "The Bolivarian Republic of Venezuela",
+       "sovereignty": "UN",
+       "region": "SA"
+    },
+    "VN": {
+       "name": "Viet Nam",
+       "longname": "The Socialist Republic of Viet Nam",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "VG": {
+       "name": "Virgin Islands (British)",
+       "longname": "The Virgin Islands",
+       "sovereignty": "United Kingdom",
+       "region": "NA"
+    },
+    "VI": {
+       "name": "Virgin Islands (U.S.)",
+       "longname": "The Virgin Islands of the United States",
+       "sovereignty": "United States",
+       "region": "NA"
+    },
+    "WF": {
+       "name": "Wallis and Futuna",
+       "longname": "The Territory of the Wallis and Futuna Islands",
+       "sovereignty": "France",
+       "region": "OC"
+    },
+    "EH": {
+       "name": "Western Sahara",
+       "longname": "The Sahrawi Arab Democratic Republic",
+       "sovereignty": "disputed",
+       "region": "AF"
+    },
+    "YE": {
+       "name": "Yemen",
+       "longname": "The Republic of Yemen",
+       "sovereignty": "UN",
+       "region": "AS"
+    },
+    "ZM": {
+       "name": "Zambia",
+       "longname": "The Republic of Zambia",
+       "sovereignty": "UN",
+       "region": "AF"
+    },
+    "ZW": {
+       "name": "Zimbabwe",
+       "longname": "The Republic of Zimbabwe",
+       "sovereignty": "UN",
+       "region": "AF"
+    }
+ }
+ 

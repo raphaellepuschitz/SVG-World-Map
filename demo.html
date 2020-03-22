@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SVG World Map Demo</title>
+        <style>
+            html { overflow: hidden; }
+            body { margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+            #info { position: fixed; top: 10px; right: 10px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; }
+        </style>
+	</head>
+	<body>
+		<div id="container">
+			<object id="svg-world-map" data="World_States_Provinces.svg" type="image/svg+xml"></object>
+        </div>
+        <div id="info"></div>
+        <!--<script src="svg-pan-zoom.min.js"></script>-->
+        <script src="svg-world-map.js"></script>
+        <script>
+            var svgmap = document.getElementById('svg-world-map'); 
+            worldmap = svgWorldMap(svgmap, { param: 1 }); 
+        </script>
+    </body>
+</html>
