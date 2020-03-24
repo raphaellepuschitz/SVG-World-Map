@@ -32,27 +32,22 @@
             function loadSVGMap(mySVG) {
                 mySVG.addEventListener("load", function() {
                     myWorldMap = svgWorldMap(mySVG, { param: 1 });
-                    buildGroupControls(myWorldMap.countryGroups);
                     //console.log(myWorldMap);
+                    buildGroupControls();
+
                     // TODO: Check svg-pan-zoom.js integration - it inserts a viewport layer into the SVG DOM, this fucks up the internal hierarchy
-                    //svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false, /*beforePan: beforePan*/ });  //controlIconsEnabled: true
+                    //svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
                 }, false);
             }
 
             // Demo control buttons
-            function buildGroupControls(countryGroups) {
-                    console.log(countryGroups);
+            // TODO: Rewrite for several groups
+            function buildGroupControls() {
                 var out = '';
                 // Regions
                 out += 'Regions:<br>';
-                    console.log(countryGroups['regions']);
-                for (var region in countryGroups['regions']) {
-                    console.log(region);
-                    out += '<button id="' + region + '" onclick="highlightGroup(\'regions\')">' + region + '</button><br>'; // TODO: combine?
-                }
-                out += '<br><br>Sovereignty:<br>';
-                for (var sovereignty in countryGroups['sovereignty']) {
-                    out += '<button id="' + sovereignty + '" onclick="highlightGroup(\'sovereignty\')">' + sovereignty + '</button><br>'; // TODO: combine?
+                for (var region in myWorldMap.countryGroups['region']) {
+                    out += '<button id="' + region + '" onclick="highlightGroup(\'region\')">' + region + '</button><br>'; // TODO: combine?
                 }
                 document.getElementById("groups").innerHTML = out;
             }
@@ -60,10 +55,10 @@
             // Highlight country group
             function highlightGroup(group) {
                 var id = event.srcElement.id;
-                var group = countryGroups[group];
+                var group = myWorldMap.countryGroups[group];
                 var color = getGroupColor(group, id);
                 for (var country in group[id]) {
-                    countries[group[id][country]].provinces.forEach(function(province) { 
+                    group[id][country].provinces.forEach(function(province) { 
                         province.setAttribute('fill', color);
                     }); 
                 }
@@ -80,6 +75,7 @@
                 return hex;
             }
 
+            // TODO: Rewrite to use 'async function loadCountryData()'?
             // Load file helper function
             function loadFile(url, callback) {
                 var xobj = new XMLHttpRequest();
@@ -92,6 +88,13 @@
                     }
                 };
                 xobj.send(null);
+            }
+
+            // Asynchronous JSON load
+            async function loadCountryData() {
+                let response = await fetch('countrydata.json');
+                let data = await response.json();
+                return data;
             }
 
         </script>
