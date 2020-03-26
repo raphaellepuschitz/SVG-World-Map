@@ -10,9 +10,10 @@
             ul { list-style: none; padding: 0; }
             ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
             ul li:hover { background-color: #444444; }
-            .box { position: fixed; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; overflow-y: scroll;  }
+            .box { position: fixed; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
+            .hidden { display: none; }
             #container, #svg-world-map { width: 100%; height: 100%; }
-            #info { bottom: 10px; right: 10px; max-width: 400px; max-height: 300px; }
+            #info { bottom: 10px; left: calc(50vw - 300px); width: 600px; height: 200px; }
             #groups { top: 10px; right: 10px; }
             #countries { top: 10px; left: 10px; max-width: 300px; max-height: calc(100vh - 40px); }
         </style>
@@ -21,7 +22,7 @@
 		<div id="container">
 			<object id="svg-world-map" data="World_States_Provinces.svg" type="image/svg+xml"></object>
         </div>
-        <div id="info" class="box"></div>
+        <div id="info" class="box hidden"></div>
         <div id="groups" class="box"></div>
         <div id="countries" class="box"></div>
         <!--<script src="svg-pan-zoom.min.js"></script>-->
@@ -35,57 +36,70 @@
             loadSVGMap(mySVG);
             function loadSVGMap(mySVG) {
                 mySVG.addEventListener("load", function() {
-                    myWorldMap = svgWorldMap(mySVG, { 
-                        //countryFill: '#999', // currently disabled
-                        //countryStroke: '#F00', 
-                        //countryStrokeWidth: '2',
-                        //provinceFill: '#666',
-                        provinceStroke: '#666', 
-                        //provinceStrokeWidth: '0',
-                        //groupCountries: true, 
-                        groupBy: [ "region" ],
-                        mapClick: "mapClick"
-                    });
-                    //console.log(myWorldMap);
-                    buildCountryControls();
-                    buildGroupControls();
 
-                    // TODO: Check svg-pan-zoom.js integration - it inserts a viewport layer into the SVG DOM, this fucks up the internal hierarchy
-                    //svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+                    // Load country data via async request, then startup map init
+                    loadCountryData().then(function(countryData) {
+
+                        var params = { 
+                            //showOcean: true, 
+                            //oceanColor: '#FF0000', 
+                            //groupCountries: true, 
+                            groupBy: [ "region", "sovereignty" ],
+                            mapClick: "mapClick"
+                        };
+
+                        myWorldMap = svgWorldMap(mySVG, params, countryData);
+
+                        //console.log(myWorldMap);
+                        buildCountryControls();
+                        buildGroupControls();
+
+                        // TODO: Check svg-pan-zoom.js integration - it inserts a viewport layer into the SVG DOM, this fucks up the internal hierarchy
+                        //svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+                    });
+
                 }, false);
             }
 
             // Custom callback function for map click, defined in 'options.mapClick'
-            function mapClick(country, nation) {
-                if (country == undefined) {
-                    country = '(No province found in ' + nation.name + ')';
-                } else {
+            function mapClick(country) {
+                if (country != undefined) {
+                    nation = country.country; // Because countries can be (sub)grouped provinces
                     country = country.id;
+                    document.getElementById("info").innerHTML = 'Country: ' + country + '<br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
+                    document.getElementById("info").innerHTML += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
+                    nation.provinces.forEach(function(province) { document.getElementById("info").innerHTML += province.id + '<br>'; }); 
+                    document.getElementById("info").classList.remove("hidden");
+                } else {
+                    console.log('Country not found');
                 }
-                document.getElementById("info").innerHTML = 'Country: ' + country + '<br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
-                document.getElementById("info").innerHTML += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
-                nation.provinces.forEach(function(province) { document.getElementById("info").innerHTML += province.id + '<br>'; }); 
             }
 
             // Demo country list
             function buildCountryControls() {
-                var out = 'Countries:<br><ul>';
+                var out = '<u>Countries:</u><br><ul>';
                 for (var country in myWorldMap.countries) {
-                    out += '<li id="' + country + '" onclick="myWorldMap.countryClick()">' + myWorldMap.countries[country].name + '</li>'; 
+                    out += '<li id="' + country + '" onmouseout="myWorldMap.countryOut()" onmouseover="myWorldMap.countryOver()" onclick="myWorldMap.countryClick()">[' + country + '] ' + myWorldMap.countries[country].name + '</li>'; 
                 }
                 out += '</ul>';
                 document.getElementById("countries").innerHTML = out;
             }
 
             // Demo control buttons
-            // TODO: Rewrite for several groups
             function buildGroupControls() {
                 var regionNames = { AF: "Afrika", AN: "Antarctica", AS: "Asia", EU: "Europe", NA: "North America", OC: "Ocania", SA: "South America" };
-                var out = 'Regions:<br><ul>';
-                for (var region in myWorldMap.countryGroups['region']) {
-                    out += '<li id="' + region + '" onclick="highlightGroup(\'region\')">' + regionNames[region] + '</li>'; 
+                var out = '';
+                for (var group in myWorldMap.countryGroups) {
+                    out += '<u>' + group.charAt(0).toUpperCase() + group.slice(1) + ':</u><br><ul>'; // Capitalize first letter
+                    for (var subgroup in myWorldMap.countryGroups[group]) {
+                        if (group == 'region') {
+                            out += '<li id="' + subgroup + '" onclick="highlightGroup(\'' + group + '\')">' + regionNames[subgroup] + '</li>'; 
+                        } else {
+                            out += '<li id="' + subgroup + '" onclick="highlightGroup(\'' + group + '\')">' + subgroup + '</li>'; 
+                        }
+                    }
+                    out += '</ul><br>';
                 }
-                out += '</ul>';
                 document.getElementById("groups").innerHTML = out;
             }
 
@@ -112,23 +126,9 @@
                 return hex;
             }
 
-            // TODO: Rewrite to use 'async function loadCountryData()'?
-            // Load file helper function
-            function loadFile(url, callback) {
-                var xobj = new XMLHttpRequest();
-                //xobj.overrideMimeType("application/json");
-                //xobj.open('GET', 'countries.json', true);
-                xobj.open('GET', url, true);
-                xobj.onreadystatechange = function() {
-                    if (xobj.readyState === 4 && xobj.status === 200) {
-                        callback(xobj.responseText);
-                    }
-                };
-                xobj.send(null);
-            }
-
             // Asynchronous JSON load
             async function loadCountryData() {
+                //let response = await fetch('countrydata_startrek.json');
                 let response = await fetch('countrydata.json');
                 let data = await response.json();
                 return data;

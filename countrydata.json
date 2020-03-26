@@ -69,7 +69,7 @@
        "name": "Armenia",
        "longname": "The Republic of Armenia",
        "sovereignty": "UN",
-       "region": "EU"
+       "region": "AS"
     },
     "AW": {
        "name": "Aruba",
@@ -93,7 +93,7 @@
        "name": "Azerbaijan",
        "longname": "The Republic of Azerbaijan",
        "sovereignty": "UN",
-       "region": "EU"
+       "region": "AS"
     },
     "BS": {
        "name": "Bahamas",
@@ -300,7 +300,7 @@
        "region": "AF"
     },
     "CD": {
-       "name": "Congo (the Democratic Republic of the)",
+       "name": "Congo (Democratic Rep. of the)",
        "longname": "The Democratic Republic of the Congo",
        "sovereignty": "UN",
        "region": "AF"
@@ -495,7 +495,7 @@
        "name": "Georgia",
        "longname": "Georgia",
        "sovereignty": "UN",
-       "region": "EU"
+       "region": "AS"
     },
     "DE": {
        "name": "Germany",
@@ -601,7 +601,7 @@
     },
     "HK": {
        "name": "Hong Kong",
-       "longname": "The Hong Kong Special Administrative Region of China[10]",
+       "longname": "The Hong Kong Special Administrative Region of China",
        "sovereignty": "China",
        "region": "AS"
     },
@@ -1101,7 +1101,7 @@
        "name": "Russia",
        "longname": "The Russian Federation",
        "sovereignty": "UN",
-       "region": "AS"
+       "region": "EU"
     },
     "RW": {
        "name": "Rwanda",
@@ -1314,7 +1314,7 @@
        "region": "AS"
     },
     "TZ": {
-       "name": "Tanzania, the United Republic of",
+       "name": "Tanzania",
        "longname": "The United Republic of Tanzania",
        "sovereignty": "UN",
        "region": "AF"
@@ -1475,6 +1475,12 @@
        "sovereignty": "disputed",
        "region": "AF"
     },
+    "XK": { 
+       "name": "Kosovo", 
+       "longname": "The Republic of Kosovo",
+       "sovereignty": "disputed",
+       "region": "EU"
+   }, 
     "YE": {
        "name": "Yemen",
        "longname": "The Republic of Yemen",

@@ -1,58 +1,82 @@
-// SVG World Map
-// v0.0.5
+/**
+ * SVG World Map JS
+ * v0.0.6
+ * 
+ * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
+ * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
+ * Copyleft: GNU General Public License version 3
+ **/
 
 var svgWorldMap = (function(){ 
 
-    // Variables
+    // Global variables
     var svgMap = {};
     var countries = {};
     var countryData = {};
     var countryGroups = {};
 
     // Default options
-    // Alls fills and strokes take hex, rgb or none
     var options = {
-        //countryFill: 'none', // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-        //countryStroke: '#FFFFFF', // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-        //countryStrokeWidth: '0.5', // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-        provinceFill: '#B9B9B9', 
-        provinceStroke: '#FFFFFF', 
-        provinceStrokeWidth: '0.1', 
-        countryHoverFill: '', // TODO
-        countryHoverStroke: '#000000', 
-        provinceHoverFill: '', // TODO
-        provinceHoverStroke: '#000000', 
+        showOcean: true, 
+        oceanColor: '#D8EBFF', 
+        // TODO: Currently this makes no sense for main country groups, until all country borders are existing in the SVG (a lot are missing, e.g. Japan, Greenland, Antarctica)
+        //countryFill: { out: '#B9B9B9',  over: '#CCCCCC',  click: '#666666' }, 
+        //countryStroke: { out: '#FFFFFF',  over: '#000000',  click: '#333333' }, 
+        //countryStrokeWidth: { out: '0.5',  over: '2',  click: '2' }, 
+        provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
+        provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
+        provinceStrokeWidth: { out: '0.1',  over: '0.5',  click: '0.5' }, 
         groupCountries: true, 
         groupBy: [ "region" ], 
-        mapClick: "mapClick", // Callback function from the map to the outside
+        mapClick: "mapClick", // Callback function from the map to the outside, can have a custom name
     };
 
     // Main function: SVG map init, options handling, return svgMap
-    function svgWorldMap(svg, initOptions) {
-        for (var option in initOptions) { 
+    function svgWorldMap(svg, initOptions, initData) {
+        // Overwrite default options with initOptions
+        for (var option in initOptions) {
             if (initOptions.hasOwnProperty(option)) { 
                 options[option] = initOptions[option];
             }
         }
+        // Overwrite countryData with initData
+        if (initData != undefined) { 
+            countryData = initData;
+        }
+        // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
         initMapCountries(svg);
+        // Return svgMap object after everything is ready and bind calling home functions
         svgMap = { 
             'countries': countries, 
-            'countryData': countryData, // TODO: Remove countryData?
+            'countryData': countryData, 
             'countryGroups': countryGroups, 
-            'countryClick': function() { window["countryClick"].apply(window); }  // Call home function from the outside to the map
+            'countryOut': function() { window["countryOut"].apply(window); }, // Call home function from outside into the map -> maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps?
+            'countryOver': function() { window["countryOver"].apply(window); }, 
+            'countryClick': function() { window["countryClick"].apply(window); } 
         };
         return svgMap;
     }
 
-    // Init countries on SVG map: Iterate through child nodes and add them to countries object
+    // Init countries on SVG map
     function initMapCountries(svg) {
-        countryNodes = svg.contentDocument.children[0].childNodes;
+        var countryNodes = svg.contentDocument.children[0].childNodes;
+        // Iterate through child nodes and add them to countries object
         countryNodes.forEach(function(country) {
-             // Skip unclear disputed territories and also metadata, defs etc. - we want a clean node list
+            // Skip unclear disputed territories and also metadata, defs etc. - we want a clean node list
             if (country.id != undefined && country.id.substr(0, 1) != '_' && country.tagName != 'metadata' && country.tagName != 'defs' && country.tagName != 'sodipodi:namedview') { 
                 countries[country.id] = country;
             }
         });
+        // Ocean settings
+        countries['Ocean'].style.fill = options.oceanColor; 
+        if (options.showOcean == false) {
+            countries['Ocean'].style.fill = 'none'; 
+            countries['Ocean'].style.stroke = 'none'; 
+        }
+        delete countries['Ocean']; // Delete ocean from countries object, not from map
+        // Sort countries alphabetically
+        countries = sortObject(countries);
+        // Next steps: country detail sort and country groups 
         sortProvinces();
         if (options.groupCountries == true) {
             buildCountryGroups();
@@ -62,30 +86,32 @@ var svgWorldMap = (function(){
     // Pre-sort sub-provinces in countries for faster access and node cleanup
     function sortProvinces() {
         for (var country in countries) {
-            if (countryData[countries[country].id] != undefined) { // Check for ocean layer and missing countries
-                countries[country].name = countryData[countries[country].id].name; // Add name and region from countrydata to nation
-                countries[country].region = countryData[countries[country].id].region;
-            }
+            // Add name, region (from countryData) and country to nation
+            countries[country].name = countryData[countries[country].id].name; 
+            countries[country].region = countryData[countries[country].id].region;
+            countries[country].country = countries[country]; // Reference to self for hierarchy compatibility - it's a little crazy, i know ;-) 
             var provinces = []; // Empty array for all sub-provinces
-            countries[country].childNodes.forEach(function(child) { // Ungrouped provinces are 1 level deep
-                if (child.id == countries[country].id.toLowerCase()) { // 'id.toLowerCase()' is the nation (border) element, so this is the main country (nation)
-                    //child.setAttribute('fill', options.countryFill); // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-                    //child.setAttribute('stroke', options.countryStroke); // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-                    //child.setAttribute('stroke-width', options.countryStrokeWidth); // TODO: Currently this makes no sense, untill all countris / borders are fixed in the SVG 
-                } else if (child.tagName == 'path' && child.tagName != 'circle' && child.id != countries[country].id.toLowerCase()) { // Skip elements like circles (microstates)
-                    child.setAttribute('fill', options.provinceFill);
-                    child.setAttribute('stroke', options.provinceStroke);
-                    child.setAttribute('stroke-width', options.provinceStrokeWidth);
+            // Ungrouped provinces are 1 level deep
+            countries[country].childNodes.forEach(function(child) { 
+                // Add parent country  for hierarchy compatibility
+                child.country = countries[country]; 
+                // 'id.toLowerCase()' is the nation (border) element, so this is the main country (nation)
+                if (child.id == countries[country].id.toLowerCase()) { 
+                    //pathSetAttributes(child, 'out'); // TODO: Currently this makes no sense, until all countris / borders are fixed in the SVG 
+                    //provinces.push(child); // Don't push the nation (border) element, it's not needed in provinces
+                // Skip elements like circles (microstates)
+                } else if (child.tagName == 'path' && child.tagName != 'circle' && child.id != countries[country].id.toLowerCase()) { 
+                    pathSetAttributes(child, 'out');
                     provinces.push(child);
+                // Grouped provinces are 2 levels deep (We have to go deeper!)
                 } else if (child.tagName == 'g') {
-                    child.childNodes.forEach(function(grandchild) { // Grouped provinces are 2 levels deep
+                    child.childNodes.forEach(function(grandchild) { 
+                        grandchild.country = countries[country];
                         if (grandchild.tagName == 'path') { 
                             if (grandchild.getAttribute('fill') != 'none') {
-                                grandchild.setAttribute('fill', options.provinceFill);
-                                grandchild.setAttribute('stroke', options.provinceStroke);
-                                grandchild.setAttribute('stroke-width', options.provinceStrokeWidth);
+                                pathSetAttributes(grandchild, 'out');
                                 provinces.push(grandchild);
-                            /*} else { // TODO: Check invisible grandchildren in SVG
+                            /*} else { // TODO: Check invisible grandchildren in SVG (also children?)
                                 console.log(country);
                                 console.log(grandchild.id + '.fill = none');*/
                             }
@@ -98,125 +124,126 @@ var svgWorldMap = (function(){
         initMapControls();
     }
 
+    // Set all attributes for a path
+    function pathSetAttributes(path, state) {
+        path.setAttribute('fill', options.provinceFill[state]);
+        path.setAttribute('stroke', options.provinceStroke[state]);
+        path.setAttribute('stroke-width', options.provinceStrokeWidth[state]);
+    }
+
     // Map controls
     function initMapControls() {
         for (var country in countries) {
-            if (countries[country].id == 'Ocean') {
-                countries[country].style.fill = '#d8ebff'; // = rgb(216, 235, 255)
-            } else {
-                countries[country].addEventListener("mouseover", function() { countryOverOut(true); });
-                countries[country].addEventListener("mouseout", function() { countryOverOut(false); });
-                countries[country].addEventListener("click", function() { provinceClick(); });
-            }
+            countries[country].addEventListener("mouseover", function() { provinceOverOut('over'); });
+            countries[country].addEventListener("mouseout", function() { provinceOverOut('out'); });
+            countries[country].addEventListener("click", function() { provinceClick(); });
         }
     }
 
-    // TODO: Optimize?
-    function countryOverOut(over) {
-        if (over) {
-            var color = '#000000';
-        } else {
-            var color = '#FFFFFF';
-        }
+    // Map country hover handling
+    function provinceOverOut(overout) {
         var province = event.srcElement; // Get (sub-)country / province / state
-        var country = getNation(province); // Get the state / nation from the hierarchy
-        province.setAttribute('stroke', color);
-        if (province.tagName == 'circle' && !over) { // Remove highlight from circles for microstates on out
-            province.removeAttribute('stroke');
-        }
-        if (country.children[country.id.toLowerCase()] != undefined) { // Check if border layer for nation exists
-            var border = country.children[country.id.toLowerCase()];
-            border.setAttribute('stroke', color);
-            if (border.childNodes.length > 1) { // Some countries have borders in groups
-                border.childNodes.forEach(function(child) { if (child.tagName == 'path') { child.setAttribute('stroke', color); } }); 
+        var country = province.country; 
+        // Check if (parent) country for path exists
+        if (country != undefined) { 
+            // 'id.toLowerCase()' is the nation (border) element, skip this (currently) // TODO: Fix SVG map border paths
+            if (province.id != country.id.toLowerCase()) { 
+                pathSetAttributes(province, overout);
+                // Remove highlight from circles for microstates on out
+                if (province.tagName == 'circle' && overout == 'out') { 
+                    province.removeAttribute('fill');
+                    province.removeAttribute('stroke');
+                }
             }
         } else {
-            //console.log('Border not found for ' + country.id);
+            console.log('Country not found for ' + province.id);
         }
     }
 
-    // Function for calling home from the outside, defined in 'svgMap.countryClick' 
-    window.countryClick = function countryClick() {
+    // Hover out function for calling home from the outside, defined in 'svgMap.countryOut' 
+    window.countryOut = function countryOut() {
         var countryid = event.srcElement.id; // Countryid from caller, e.g.: 'AT', 'CN', 'US'
-        var country = countries[countryid];
-        var provinces = countries[countryid].provinces;
-        var province = provinces[provinces.length-1]; // Get the last sub element
-        callBack(country, province);
+        var country = countries[countryid]; // We simply pass the main country here
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'out') }); 
+    }
+
+    // Hover out function for calling home from the outside, defined in 'svgMap.countryOver' 
+    window.countryOver = function countryOver() {
+        var countryid = event.srcElement.id; 
+        var country = countries[countryid]; 
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'over') }); 
+    }
+
+    // Click function for calling home from the outside, defined in 'svgMap.countryClick' 
+    window.countryClick = function countryClick() {
+        var countryid = event.srcElement.id; 
+        var country = countries[countryid]; 
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'click') }); 
+        callBack(country);
     }
  
     // Map click handling and internal callback routing
     function provinceClick() {
         var province = event.srcElement; // Get (sub-)country / province / state
-        var country = getNation(province); // Get the state / nation from the hierarchy
-        callBack(country, province);
+        pathSetAttributes(province, 'click');
+        callBack(province);
     }
 
     // Fire the (custom) callback, defined in 'options.mapClick'
-    function callBack(country, province) {
-        if (countryData[country.id] != undefined) {
-            if (window[options.mapClick] && typeof(window[options.mapClick]) === "function") { // Check if the custom callback function exists and call it
-                window[options.mapClick].apply(window, [province, country]);
+    function callBack(province) {
+        if (countryData[province.country.id] != undefined) {
+            // Check if the custom callback function exists and call it
+            if (window[options.mapClick] && typeof(window[options.mapClick]) === "function") { 
+                window[options.mapClick].apply(window, [province]);
             }
         } else {
             //console.log('Country data missing: ' + country.id);
         }
     }
 
-    // Traverse the SVG hierarchy to get the level of the nation
-    // TODO: Work with matches() or closest()?
-    function getNation(country) {
-        if (country.parentNode.id == 'Earth') {
-            return country; 
-        } else if (country.parentNode.parentNode.id == 'Earth') {
-            return country.parentNode; 
-        } else {
-            return country.parentNode.parentNode; 
-        }
-
-        // TODO: Re-check for svg-pan-zoom integration
-        /*console.log(country.id);
-        console.log(country.parentNode.id);
-        console.log(country.parentNode.parentNode.id);
-        console.log(country.parentNode.parentNode.parentNode.id);*/
-        /*if (country.parentNode.id == 'Earth') {
-            return country; 
-        } else if (country.parentNode.parentNode.id == 'Earth' && country.parentNode.parentNode.id.substr(0, 8) != 'viewport') {
-            return country.parentNode; 
-        } else if(country.parentNode.parentNode.id.substr(0, 8) != 'viewport') {
-            return country.parentNode.parentNode; 
-        } else {
-            return country.parentNode.parentNode.parentNode; 
-        }*/
-    }
-
     // Build groups of countries with countryData (or passed JSON countryData) 
     function buildCountryGroups() {
         for (var country in countries) {
-            if (countries[country].id != 'Ocean') {
-                if (countryData[countries[country].id] != undefined) { // Check if country exists in countryData
-                    for (var i=0; i<options.groupBy.length; i++) {
-                        var mainGroup = options.groupBy[i]; // E.g. "region"
-                        var subGroup = countryData[countries[country].id][mainGroup]; // E.g. "EU"
-                        if (countryGroups[mainGroup] == undefined) { // Add new mainGroup, if it doesn't exist
-                            countryGroups[mainGroup] = {}; // New object for each mainGroup
-                        }
-                        if (countryGroups[mainGroup][subGroup] == undefined) { // Add new subGroup, if it doesn't exist
-                            countryGroups[mainGroup][subGroup] = {}; // New object for each subGroup
-                        }
-                        countryGroups[mainGroup][subGroup][countries[country].id] = countries[country]; // Push country to subGroup
+            // Check if country exists in countryData
+            if (countryData[countries[country].id] != undefined) { 
+                // Add new mainGroups and subGroups
+                for (var i=0; i<options.groupBy.length; i++) {
+                    var mainGroup = options.groupBy[i]; // E.g. "region"
+                    var subGroup = countryData[countries[country].id][mainGroup]; // E.g. "EU"
+                    // Add new mainGroup, if it doesn't exist
+                    if (countryGroups[mainGroup] == undefined) { 
+                        countryGroups[mainGroup] = {}; // New object for each mainGroup
                     }
-                } else {
-                    //console.log('Country data missing: ' + countries[country].id);
+                    // Add new subGroup, if it doesn't exist
+                    if (countryGroups[mainGroup][subGroup] == undefined) { 
+                        countryGroups[mainGroup][subGroup] = {}; // New object for each subGroup
+                    }
+                    // Push country to subGroup
+                    countryGroups[mainGroup][subGroup][countries[country].id] = countries[country]; 
                 }
+            } else {
+                //console.log('Country data missing: ' + countries[country].id);
             }
         }
+        // Sort groups alphabetically
+        for (var group in countryGroups) {
+            countryGroups[group] = sortObject(countryGroups[group]); 
+        }
+    }
+
+    // Helper function for object alphabetical sort
+    function sortObject(input) {
+        return Object.keys(input).sort().reduce(function (object, key) { 
+            object[key] = input[key];
+            return object;
+        }, {});
     }
 
     // Fallback for countryData if no other is passed
     var countryData = { 
         "AD": { "name": "Andorra", "region": "EU" }, "AE": { "name": "United Arab Emirates", "region": "AS" }, "AF": { "name": "Afghanistan", "region": "AS" }, "AG": { "name": "Antigua and Barbuda", "region": "NA" }, "AI": { "name": "Anguilla", "region": "NA" }, "AL": { "name": "Albania", "region": "EU" }, "AM": { "name": "Armenia", "region": "AS" }, "AO": { "name": "Angola", "region": "AF" }, "AQ": { "name": "Antarctica", "region": "AN" }, "AR": { "name": "Argentina", "region": "SA" }, "AS": { "name": "American Samoa", "region": "OC" }, "AT": { "name": "Austria", "region": "EU" }, "AU": { "name": "Australia", "region": "OC" }, "AW": { "name": "Aruba", "region": "SA" }, "AX": { "name": "Åland Islands", "region": "EU" }, "AZ": { "name": "Azerbaijan", "region": "AS" }, 
         "BA": { "name": "Bosnia and Herzegovina", "region": "EU" }, "BB": { "name": "Barbados", "region": "SA" }, "BD": { "name": "Bangladesh", "region": "AS" }, "BE": { "name": "Belgium", "region": "EU" }, "BF": { "name": "Burkina Faso", "region": "AF" }, "BG": { "name": "Bulgaria", "region": "EU" }, "BH": { "name": "Bahrain", "region": "AS" }, "BI": { "name": "Burundi", "region": "AF" }, "BJ": { "name": "Benin", "region": "AF" }, "BL": { "name": "Saint Barthélemy", "region": "NA" }, "BM": { "name": "Bermuda", "region": "NA" }, "BN": { "name": "Brunei", "region": "AS" }, "BO": { "name": "Bolivia", "region": "SA" }, "BQ": { "name": "Bonaire, Sint Eustatius and Saba", "region": "SA" }, "BR": { "name": "Brazil", "region": "SA" }, "BS": { "name": "Bahamas", "region": "NA" }, "BT": { "name": "Bhutan", "region": "AS" }, "BV": { "name": "Bouvet Island", "region": "AN" }, "BW": { "name": "Botswana", "region": "AF" }, "BY": { "name": "Belarus", "region": "EU" }, "BZ": { "name": "Belize", "region": "NA" }, 
-        "CA": { "name": "Canada", "region": "NA" }, "CC": { "name": "Cocos (Keeling) Islands", "region": "AS" }, "CD": { "name": "Congo (the Democratic Republic of the)", "region": "AF" }, "CF": { "name": "Central African Republic", "region": "AF" }, "CG": { "name": "Congo", "region": "AF" }, "CH": { "name": "Switzerland", "region": "EU" }, "CI": { "name": "Côte d'Ivoire", "region": "AF" }, "CK": { "name": "Cook Islands", "region": "OC" }, "CL": { "name": "Chile", "region": "SA" }, "CM": { "name": "Cameroon", "region": "AF" }, "CN": { "name": "China", "region": "AS" }, "CO": { "name": "Colombia", "region": "SA" }, "CR": { "name": "Costa Rica", "region": "NA" }, "CU": { "name": "Cuba", "region": "NA" }, "CV": { "name": "Cabo Verde", "region": "AF" }, "CW": { "name": "Curaçao", "region": "SA" }, "CX": { "name": "Christmas Island", "region": "AS" }, "CY": { "name": "Cyprus", "region": "EU" }, "CZ": { "name": "Czechia", "region": "EU" }, 
+        "CA": { "name": "Canada", "region": "NA" }, "CC": { "name": "Cocos (Keeling) Islands", "region": "AS" }, "CD": { "name": "Congo (Democratic Rep. of the)", "region": "AF" }, "CF": { "name": "Central African Republic", "region": "AF" }, "CG": { "name": "Congo", "region": "AF" }, "CH": { "name": "Switzerland", "region": "EU" }, "CI": { "name": "Côte d'Ivoire", "region": "AF" }, "CK": { "name": "Cook Islands", "region": "OC" }, "CL": { "name": "Chile", "region": "SA" }, "CM": { "name": "Cameroon", "region": "AF" }, "CN": { "name": "China", "region": "AS" }, "CO": { "name": "Colombia", "region": "SA" }, "CR": { "name": "Costa Rica", "region": "NA" }, "CU": { "name": "Cuba", "region": "NA" }, "CV": { "name": "Cabo Verde", "region": "AF" }, "CW": { "name": "Curaçao", "region": "SA" }, "CX": { "name": "Christmas Island", "region": "AS" }, "CY": { "name": "Cyprus", "region": "EU" }, "CZ": { "name": "Czechia", "region": "EU" }, 
         "DE": { "name": "Germany", "region": "EU" }, "DJ": { "name": "Djibouti", "region": "AF" }, "DK": { "name": "Denmark", "region": "EU" }, "DM": { "name": "Dominica", "region": "NA" }, "DO": { "name": "Dominican Republic", "region": "NA" }, "DZ": { "name": "Algeria", "region": "AF" }, 
         "EC": { "name": "Ecuador", "region": "SA" }, "EE": { "name": "Estonia", "region": "EU" }, "EG": { "name": "Egypt", "region": "AF" }, "EH": { "name": "Western Sahara", "region": "AF" }, "ER": { "name": "Eritrea", "region": "AF" }, "ES": { "name": "Spain", "region": "EU" }, "ET": { "name": "Ethiopia", "region": "AF" }, 
         "FI": { "name": "Finland", "region": "EU" }, "FJ": { "name": "Fiji", "region": "OC" }, "FK": { "name": "Falkland Islands", "region": "SA" }, "FM": { "name": "Micronesia", "region": "OC" }, "FO": { "name": "Faroe Islands", "region": "EU" }, "FR": { "name": "France", "region": "EU" }, 
@@ -237,6 +264,7 @@ var svgWorldMap = (function(){
         "UA": { "name": "Ukraine", "region": "EU" }, "UG": { "name": "Uganda", "region": "AF" }, "UM": { "name": "United States Minor Outlying Islands", "region": "OC" }, "US": { "name": "United States of America", "region": "NA" }, "UY": { "name": "Uruguay", "region": "SA" }, "UZ": { "name": "Uzbekistan", "region": "AS" }, 
         "VA": { "name": "Holy See", "region": "EU" }, "VC": { "name": "Saint Vincent and the Grenadines", "region": "NA" }, "VE": { "name": "Venezuela", "region": "SA" }, "VG": { "name": "Virgin Islands (British)", "region": "NA" }, "VI": { "name": "Virgin Islands (U.S.)", "region": "NA" }, "VN": { "name": "Viet Nam", "region": "AS" }, "VU": { "name": "Vanuatu", "region": "OC" }, 
         "WF": { "name": "Wallis and Futuna", "region": "OC" }, "WS": { "name": "Samoa", "region": "OC" }, 
+        "XK": { "name": "Kosovo", "region": "EU" }, 
         "YE": { "name": "Yemen", "region": "AS" }, "YT": { "name": "Mayotte", "region": "AF" }, 
         "ZA": { "name": "South Africa", "region": "AF" }, "ZM": { "name": "Zambia", "region": "AF" }, "ZW": { "name": "Zimbabwe", "region": "AF" }
     };
