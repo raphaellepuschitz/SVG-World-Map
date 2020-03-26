@@ -11,6 +11,7 @@
             ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
             ul li:hover { background-color: #444444; }
             .box { position: fixed; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
+            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 585px; margin-top: -5px; }
             .hidden { display: none; }
             #container, #svg-world-map { width: 100%; height: 100%; }
             #info { bottom: 10px; left: calc(50vw - 300px); width: 600px; height: 200px; }
@@ -25,8 +26,9 @@
         <div id="info" class="box hidden"></div>
         <div id="groups" class="box"></div>
         <div id="countries" class="box"></div>
-        <!--<script src="svg-pan-zoom.min.js"></script>-->
         <script src="svg-world-map.js"></script>
+        <!--<script src="svg-pan-zoom.min.js"></script>--> 
+        <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
         <script>
 
             var myWorldMap;
@@ -54,8 +56,8 @@
                         buildCountryControls();
                         buildGroupControls();
 
-                        // TODO: Check svg-pan-zoom.js integration - it inserts a viewport layer into the SVG DOM, this fucks up the internal hierarchy
-                        //svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+                        // Test svgPanZoom 
+                        svgPanZoom = svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
                     });
 
                 }, false);
@@ -64,11 +66,12 @@
             // Custom callback function for map click, defined in 'options.mapClick'
             function mapClick(country) {
                 if (country != undefined) {
-                    nation = country.country; // Because countries can be (sub)grouped provinces
-                    country = country.id;
-                    document.getElementById("info").innerHTML = 'Country: ' + country + '<br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
-                    document.getElementById("info").innerHTML += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
-                    nation.provinces.forEach(function(province) { document.getElementById("info").innerHTML += province.id + '<br>'; }); 
+                    var nation = country.country; // Get parent nation
+                    var out = '<a class="hide" onclick="document.getElementById(\'info\').classList.add(\'hidden\')">×</a>';
+                    out += 'Country: ' + country.id + '<br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
+                    out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
+                    nation.provinces.forEach(function(province) { out += province.id + '<br>'; }); 
+                    document.getElementById("info").innerHTML = out;
                     document.getElementById("info").classList.remove("hidden");
                 } else {
                     console.log('Country not found');
@@ -78,8 +81,8 @@
             // Demo country list
             function buildCountryControls() {
                 var out = '<u>Countries:</u><br><ul>';
-                for (var country in myWorldMap.countries) {
-                    out += '<li id="' + country + '" onmouseout="myWorldMap.countryOut()" onmouseover="myWorldMap.countryOver()" onclick="myWorldMap.countryClick()">[' + country + '] ' + myWorldMap.countries[country].name + '</li>'; 
+                for (var countryid in myWorldMap.countries) {
+                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
                 }
                 out += '</ul>';
                 document.getElementById("countries").innerHTML = out;
@@ -92,37 +95,44 @@
                 for (var group in myWorldMap.countryGroups) {
                     out += '<u>' + group.charAt(0).toUpperCase() + group.slice(1) + ':</u><br><ul>'; // Capitalize first letter
                     for (var subgroup in myWorldMap.countryGroups[group]) {
-                        if (group == 'region') {
-                            out += '<li id="' + subgroup + '" onclick="highlightGroup(\'' + group + '\')">' + regionNames[subgroup] + '</li>'; 
-                        } else {
-                            out += '<li id="' + subgroup + '" onclick="highlightGroup(\'' + group + '\')">' + subgroup + '</li>'; 
-                        }
+                        if (group == 'region') { var name = regionNames[subgroup]; } else { var name = subgroup; }
+                        out += '<li id="' + subgroup + '" onmouseout="highlightGroup(\'' + group + '\', \'out\')" onmouseover="highlightGroup(\'' + group + '\', \'over\')" onclick="highlightGroup(\'' + group + '\', \'click\')">' + name + '</li>'; 
                     }
                     out += '</ul><br>';
                 }
                 document.getElementById("groups").innerHTML = out;
             }
 
+            // Highlight country 
+            function highlightCountry() {
+                var id = event.srcElement.id;
+                var color = getHighlightColor(id);
+                myWorldMap.update({ [id]: color });
+            }
+
             // Highlight country group
-            function highlightGroup(group) {
+            function highlightGroup(group, trigger) {
                 var id = event.srcElement.id;
                 var group = myWorldMap.countryGroups[group];
-                var color = getGroupColor(group, id);
-                for (var country in group[id]) {
-                    group[id][country].provinces.forEach(function(province) { 
-                        province.setAttribute('fill', color);
-                    }); 
+                if (trigger == 'out') {
+                    for (var country in group[id]) {
+                        myWorldMap.out(country);
+                    }
+                } else if (trigger == 'over' || trigger == 'click') {
+                    var color = getHighlightColor(id);
+                    var data = {};
+                    for (var country in group[id]) {
+                        data[country] = color; // Set data for map update
+                    }
+                    myWorldMap.update(data);
                 }
             }
 
-            // Get some random colors from the current and 2 other group elements
-            function getGroupColor(group, id) {
-                var keys = Object.keys(group);
-                var pos = keys.indexOf(id);
-                // Check the position of the key, if it's too close to the end take the other elements from before and not after the key
-                keys = (pos < (keys.length-2) ? keys.slice(pos, pos+3) : keys.slice(pos-2, pos+1));
-                // Get number for first character of every group key, put them together and cut, if hexcode is too long
-                var hex = ('#' + keys[0].substr(0, 1).charCodeAt(0) + keys[1].substr(0, 1).charCodeAt(0) + keys[2].substr(0, 1).charCodeAt(0)).substr(0, 7); 
+            // Get some random color from the element name
+            function getHighlightColor(id) {
+                // Get the numbers for the id letters, add them, square them and take the last 6 digits
+                var number = parseInt(id.substr(0, 1).charCodeAt(0) + '' + id.substr(1, 2).charCodeAt(0));
+                var hex = '#' + parseInt(number * number).toString().substr(-6, 6);
                 return hex;
             }
 

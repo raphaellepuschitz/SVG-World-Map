@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.0.6
+ * v0.0.7
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -31,7 +31,7 @@ var svgWorldMap = (function(){
         mapClick: "mapClick", // Callback function from the map to the outside, can have a custom name
     };
 
-    // Main function: SVG map init, options handling, return svgMap
+    // Main function: SVG map init, options handling, return the map object
     function svgWorldMap(svg, initOptions, initData) {
         // Overwrite default options with initOptions
         for (var option in initOptions) {
@@ -50,9 +50,12 @@ var svgWorldMap = (function(){
             'countries': countries, 
             'countryData': countryData, 
             'countryGroups': countryGroups, 
-            'countryOut': function() { window["countryOut"].apply(window); }, // Call home function from outside into the map -> maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps?
-            'countryOver': function() { window["countryOver"].apply(window); }, 
-            'countryClick': function() { window["countryClick"].apply(window); } 
+            // Calling home functions from outside into the map 
+            // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
+            'out': function(id) { window["countryOut"].call(null, id); }, 
+            'over': function(id) { window["countryOver"].call(null, id); }, 
+            'click': function(id) { window["countryClick"].call(null, id); }, 
+            'update': function(data) { window["updateData"].call(null, data); } 
         };
         return svgMap;
     }
@@ -125,10 +128,17 @@ var svgWorldMap = (function(){
     }
 
     // Set all attributes for a path
-    function pathSetAttributes(path, state) {
-        path.setAttribute('fill', options.provinceFill[state]);
-        path.setAttribute('stroke', options.provinceStroke[state]);
-        path.setAttribute('stroke-width', options.provinceStrokeWidth[state]);
+    function pathSetAttributes(path, event) {
+        // Hover and click colors and stroke width are defined in options
+        if ((event == 'out' || event == 'over' || event == 'click') && path.getAttribute('fill') != 'none') { // Skip border layer
+            path.setAttribute('fill', options.provinceFill[event]);
+            path.setAttribute('stroke', options.provinceStroke[event]);
+            path.setAttribute('stroke-width', options.provinceStrokeWidth[event]);
+        // Set color to path directly
+        } else if (event.substr(0, 1) == '#') {
+            path.setAttribute('fill', event);
+            path.setAttribute('stroke', event);
+        }
     }
 
     // Map controls
@@ -156,30 +166,8 @@ var svgWorldMap = (function(){
                 }
             }
         } else {
-            console.log('Country not found for ' + province.id);
+            //console.log('Country not found for ' + province.id);
         }
-    }
-
-    // Hover out function for calling home from the outside, defined in 'svgMap.countryOut' 
-    window.countryOut = function countryOut() {
-        var countryid = event.srcElement.id; // Countryid from caller, e.g.: 'AT', 'CN', 'US'
-        var country = countries[countryid]; // We simply pass the main country here
-        country.provinces.forEach(function(province) { pathSetAttributes(province, 'out') }); 
-    }
-
-    // Hover out function for calling home from the outside, defined in 'svgMap.countryOver' 
-    window.countryOver = function countryOver() {
-        var countryid = event.srcElement.id; 
-        var country = countries[countryid]; 
-        country.provinces.forEach(function(province) { pathSetAttributes(province, 'over') }); 
-    }
-
-    // Click function for calling home from the outside, defined in 'svgMap.countryClick' 
-    window.countryClick = function countryClick() {
-        var countryid = event.srcElement.id; 
-        var country = countries[countryid]; 
-        country.provinces.forEach(function(province) { pathSetAttributes(province, 'click') }); 
-        callBack(country);
     }
  
     // Map click handling and internal callback routing
@@ -187,6 +175,33 @@ var svgWorldMap = (function(){
         var province = event.srcElement; // Get (sub-)country / province / state
         pathSetAttributes(province, 'click');
         callBack(province);
+    }
+
+    // Hover out function for calling home from the outside, defined in 'svgMap.out' 
+    window.countryOut = function(id) {
+        var country = countries[id]; // We simply pass the main country here
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'out') }); 
+    }
+
+    // Hover over function for calling home from the outside, defined in 'svgMap.over' 
+    window.countryOver = function(id) {
+        var country = countries[id]; 
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'over') }); 
+    }
+
+    // Click function for calling home from the outside, defined in 'svgMap.click' 
+    window.countryClick = function(id) {
+        var country = countries[id]; 
+        country.provinces.forEach(function(province) { pathSetAttributes(province, 'click') }); 
+        callBack(country);
+    }
+
+    // Update function for calling home from the outside, defined in 'svgMap.update' 
+    window.updateData = function(updateData) {
+        for (var id in updateData) {
+            var country = countries[id]; 
+            country.provinces.forEach(function(province) { pathSetAttributes(province, updateData[id]) }); 
+        };
     }
 
     // Fire the (custom) callback, defined in 'options.mapClick'
@@ -269,6 +284,7 @@ var svgWorldMap = (function(){
         "ZA": { "name": "South Africa", "region": "AF" }, "ZM": { "name": "Zambia", "region": "AF" }, "ZW": { "name": "Zimbabwe", "region": "AF" }
     };
 
+    // Return the main function
     return svgWorldMap;
 
 })();
