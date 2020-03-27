@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.0.7
+ * v0.0.8
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
