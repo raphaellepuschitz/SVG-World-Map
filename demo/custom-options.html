@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        <title>SVG World Map Demo</title>
+        <style>
+            html { width: 100%; height: 100%; overflow: hidden; }
+            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; background-color: #000000; }
+            .box { position: fixed; top: 10px; right: 10px; min-width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
+            .hidden { display: none; }
+            .hide { position: fixed; margin-top: -5px; right: 20px; cursor: pointer; font-size: 25px; }
+            #options { left: 10px; right: unset; }
+            #code { border: 1px solid #FFFFFF; padding: 10px; background-color: #000000; color: #00FF00; font-size: 12px; font-family: 'Courier New', Courier, monospace; white-space: pre; }
+            #out { margin-left: 8px; }
+        </style>
+	</head>
+	<body>
+        <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        <div id="options" class="box">
+            Custom options:<br><br>
+<div id="code">var myCustomOptions = { <br>
+    showOcean: true, <br>
+    oceanColor: 'rgb(64, 2, 2)', <br>
+    worldColor: '#000000', <br>
+    countryStroke: { 
+        out: '#00FF00',  
+        over: '#FFFFFF',  
+        click: '#FF0000' 
+    }, <br>
+    countryStrokeWidth: { 
+        out: '0.5',  
+        over: '2',  
+        click: '2' 
+    }, <br>
+    provinceFill: { 
+        out: '#090909',  
+        over: '#00FF00',  
+        click: '#FF0000' 
+    }, <br>
+    provinceStroke: { 
+        out: '#FFFFFF',  
+        over: '#FF0000',  
+        click: '#666666' 
+    }, <br>
+    provinceStrokeWidth: { 
+        out: '0.1',  
+        over: '1',  
+        click: '0.5' 
+    }<br>
+};</div>
+        </div>
+        <div id="overout" class="box">
+            Path over: <span id="over"></span><br><br>
+            Path out: <span id="out"></span><br><br>
+            Path click: <span id="click"></span>
+        </div>
+        <script src="../src/svg-world-map.js"></script>
+        <script>
+            // Quick and dirty map load
+            window.onload = function() {
+                var myCustomOptions = { 
+                    showOcean: true, 
+                    oceanColor: 'rgb(64, 2, 2)', 
+                    worldColor: '#000000', 
+                    countryStroke: { out: '#00FF00',  over: '#FFFFFF',  click: '#FF0000' }, 
+                    countryStrokeWidth: { out: '0.5',  over: '2',  click: '2' }, 
+                    provinceFill: { out: '#090909',  over: '#00FF00',  click: '#FF0000' }, 
+                    provinceStroke: { out: '#FFFFFF',  over: '#FF0000',  click: '#666666' }, 
+                    provinceStrokeWidth: { out: '0.1',  over: '1',  click: '0.5' }
+                };
+                svgWorldMap('svg-world-map', myCustomOptions);
+            };
+
+            // Default callback functions, custom names can be defined in 'options.mapOver', 'options.mapOut' and 'options.mapClick'
+            function mapOver(country) {
+                document.getElementById("over").innerHTML = country.id;
+            }
+            function mapOut(country) {
+                document.getElementById("out").innerHTML = country.id;
+            }
+            function mapClick(country) {
+                document.getElementById("click").innerHTML = country.id;
+            }
+        </script>
+    </body>
+</html>

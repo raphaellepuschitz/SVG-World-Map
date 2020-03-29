@@ -1,0 +1,1002 @@
+{
+   "AD": {
+      "name": "Andoria",
+      "region": "EU"
+   },
+   "AE": {
+      "name": "Ardana",
+      "region": "AS"
+   },
+   "AF": {
+      "name": "Benzar",
+      "region": "AS"
+   },
+   "AG": {
+      "name": "Betazed",
+      "region": "NA"
+   },
+   "AI": {
+      "name": "Bolarus IX",
+      "region": "NA"
+   },
+   "AL": {
+      "name": "Coridan",
+      "region": "EU"
+   },
+   "AM": {
+      "name": "Delta IV",
+      "region": "EU"
+   },
+   "AO": {
+      "name": "Deneb IV",
+      "region": "AF"
+   },
+   "AQ": {
+      "name": "Draylax",
+      "region": "AN"
+   },
+   "AR": {
+      "name": "Earth",
+      "region": "SA"
+   },
+   "AS": {
+      "name": "Hekaras II",
+      "region": "OC"
+   },
+   "AT": {
+      "name": "Peliar Zel II",
+      "region": "EU"
+   },
+   "AU": {
+      "name": "Ramatis III",
+      "region": "OC"
+   },
+   "AW": {
+      "name": "Risa",
+      "region": "SA"
+   },
+   "AX": {
+      "name": "Tellar Prime",
+      "region": "EU"
+   },
+   "AZ": {
+      "name": "Trill",
+      "region": "EU"
+   },
+   "BA": {
+      "name": "Vulcan",
+      "region": "EU"
+   },
+   "BB": {
+      "name": "Ajilon Prime",
+      "region": "SA"
+   },
+   "BD": {
+      "name": "Aldebaron III",
+      "region": "AS"
+   },
+   "BE": {
+      "name": "Alpha III",
+      "region": "EU"
+   },
+   "BF": {
+      "name": "Alpha 5",
+      "region": "AF"
+   },
+   "BG": {
+      "name": "Alpha Centauri system",
+      "region": "EU"
+   },
+   "BH": {
+      "name": "Alpha Eridani II",
+      "region": "AS"
+   },
+   "BI": {
+      "name": "Archanis IV",
+      "region": "AF"
+   },
+   "BJ": {
+      "name": "Archer IV",
+      "region": "AF"
+   },
+   "BL": {
+      "name": "Arvada III",
+      "region": "NA"
+   },
+   "BM": {
+      "name": "Barisa Prime",
+      "region": "NA"
+   },
+   "BN": {
+      "name": "Benecia",
+      "region": "AS"
+   },
+   "BO": {
+      "name": "Berengaria VII",
+      "region": "SA"
+   },
+   "BQ": {
+      "name": "Bersallis III",
+      "region": "SA"
+   },
+   "BR": {
+      "name": "Beta VI",
+      "region": "SA"
+   },
+   "BS": {
+      "name": "Beta Agni II",
+      "region": "NA"
+   },
+   "BT": {
+      "name": "Boradis III",
+      "region": "AS"
+   },
+   "BV": {
+      "name": "Caldos",
+      "region": "AN"
+   },
+   "BW": {
+      "name": "Campor III",
+      "region": "AF"
+   },
+   "BY": {
+      "name": "Cerberus",
+      "region": "EU"
+   },
+   "BZ": {
+      "name": "Cestus III",
+      "region": "NA"
+   },
+   "CA": {
+      "name": "Coltar IV",
+      "region": "NA"
+   },
+   "CC": {
+      "name": "Cygnia Minor",
+      "region": "AS"
+   },
+   "CD": {
+      "name": "Deneva",
+      "region": "AF"
+   },
+   "CF": {
+      "name": "Dorvan V",
+      "region": "AF"
+   },
+   "CG": {
+      "name": "Dulisian IV",
+      "region": "AF"
+   },
+   "CH": {
+      "name": "Earth Colony II",
+      "region": "EU"
+   },
+   "CI": {
+      "name": "Elba II",
+      "region": "AF"
+   },
+   "CK": {
+      "name": "Gagarin IV",
+      "region": "OC"
+   },
+   "CL": {
+      "name": "Galen IV",
+      "region": "SA"
+   },
+   "CM": {
+      "name": "Gamma Hydra IV",
+      "region": "AF"
+   },
+   "CN": {
+      "name": "Gault",
+      "region": "AS"
+   },
+   "CO": {
+      "name": "Hakton VII",
+      "region": "SA"
+   },
+   "CR": {
+      "name": "Iadara colony",
+      "region": "NA"
+   },
+   "CU": {
+      "name": "Ivor Prime",
+      "region": "NA"
+   },
+   "CV": {
+      "name": "Janus VI",
+      "region": "AF"
+   },
+   "CW": {
+      "name": "Jouret IV",
+      "region": "SA"
+   },
+   "CX": {
+      "name": "Juhraya",
+      "region": "AS"
+   },
+   "CY": {
+      "name": "Kessik IV",
+      "region": "EU"
+   },
+   "CZ": {
+      "name": "Luna",
+      "region": "EU"
+   },
+   "DE": {
+      "name": "Lya IV",
+      "region": "EU"
+   },
+   "DJ": {
+      "name": "Mantilles",
+      "region": "AF"
+   },
+   "DK": {
+      "name": "Manzar colony",
+      "region": "EU"
+   },
+   "DM": {
+      "name": "Mars",
+      "region": "NA"
+   },
+   "DO": {
+      "name": "Marcos XII",
+      "region": "NA"
+   },
+   "DZ": {
+      "name": "Melona colony",
+      "region": "AF"
+   },
+   "EC": {
+      "name": "Midos V",
+      "region": "SA"
+   },
+   "EE": {
+      "name": "Moab IV",
+      "region": "EU"
+   },
+   "EG": {
+      "name": "MS I colony",
+      "region": "AF"
+   },
+   "EH": {
+      "name": "Nehru colony",
+      "region": "AF"
+   },
+   "ER": {
+      "name": "New Berlin Colony",
+      "region": "AF"
+   },
+   "ES": {
+      "name": "New France colony",
+      "region": "EU"
+   },
+   "ET": {
+      "name": "New Paris",
+      "region": "AF"
+   },
+   "FI": {
+      "name": "Norpin V",
+      "region": "EU"
+   },
+   "FJ": {
+      "name": "Omicron Ceti III",
+      "region": "OC"
+   },
+   "FK": {
+      "name": "Omicron Theta",
+      "region": "SA"
+   },
+   "FM": {
+      "name": "Ophiucus III",
+      "region": "OC"
+   },
+   "FO": {
+      "name": "Orellius",
+      "region": "EU"
+   },
+   "FR": {
+      "name": "Penthara IV",
+      "region": "EU"
+   },
+   "GA": {
+      "name": "Planet Q",
+      "region": "AF"
+   },
+   "GB": {
+      "name": "Quadra Sigma III",
+      "region": "EU"
+   },
+   "GD": {
+      "name": "Rana IV",
+      "region": "NA"
+   },
+   "GE": {
+      "name": "Rigel X",
+      "region": "EU"
+   },
+   "GF": {
+      "name": "Rigel XII",
+      "region": "SA"
+   },
+   "GG": {
+      "name": "Setlik III",
+      "region": "EU"
+   },
+   "GH": {
+      "name": "Solarion IV colony",
+      "region": "AF"
+   },
+   "GI": {
+      "name": "Strnad colony",
+      "region": "EU"
+   },
+   "GL": {
+      "name": "Talos III",
+      "region": "NA"
+   },
+   "GM": {
+      "name": "Tantalus V",
+      "region": "AF"
+   },
+   "GN": {
+      "name": "Taranko colony",
+      "region": "AF"
+   },
+   "GP": {
+      "name": "Tarsus IV",
+      "region": "NA"
+   },
+   "GQ": {
+      "name": "Tendara colony",
+      "region": "AF"
+   },
+   "GR": {
+      "name": "Terra 10",
+      "region": "EU"
+   },
+   "GS": {
+      "name": "Terra Nova",
+      "region": "AN"
+   },
+   "GT": {
+      "name": "Tessic's species mining colony",
+      "region": "NA"
+   },
+   "GU": {
+      "name": "Theta VII",
+      "region": "OC"
+   },
+   "GW": {
+      "name": "Trellium mining colony",
+      "region": "AF"
+   },
+   "GY": {
+      "name": "Turkana IV",
+      "region": "SA"
+   },
+   "HK": {
+      "name": "Vega colony",
+      "region": "AS"
+   },
+   "HM": {
+      "name": "Venus",
+      "region": "AN"
+   },
+   "HN": {
+      "name": "Verdanis",
+      "region": "NA"
+   },
+   "HR": {
+      "name": "Volan II",
+      "region": "EU"
+   },
+   "HT": {
+      "name": "Vulcanis Lunar colony",
+      "region": "NA"
+   },
+   "HU": {
+      "name": "Weytahn/Paan Mokar ",
+      "region": "EU"
+   },
+   "ID": {
+      "name": "aucdet IX",
+      "region": "AS"
+   },
+   "IE": {
+      "name": "Aldebaran III",
+      "region": "EU"
+   },
+   "IL": {
+      "name": "Altair IV",
+      "region": "AS"
+   },
+   "IM": {
+      "name": "Andor",
+      "region": "EU"
+   },
+   "IN": {
+      "name": "Ariannus",
+      "region": "AS"
+   },
+   "IO": {
+      "name": "Beta Aquilae II",
+      "region": "AS"
+   },
+   "IQ": {
+      "name": "Beta Ursae Minor II",
+      "region": "AS"
+   },
+   "IR": {
+      "name": "Brentalia",
+      "region": "AS"
+   },
+   "IS": {
+      "name": "Calder II",
+      "region": "EU"
+   },
+   "IT": {
+      "name": "Caldik Prime",
+      "region": "EU"
+   },
+   "JE": {
+      "name": "Caleb IV",
+      "region": "EU"
+   },
+   "JM": {
+      "name": "Corinth IV",
+      "region": "NA"
+   },
+   "JO": {
+      "name": "Dalvos Prime",
+      "region": "AS"
+   },
+   "JP": {
+      "name": "Decos Prime",
+      "region": "AS"
+   },
+   "KE": {
+      "name": "Deriben V",
+      "region": "AF"
+   },
+   "KG": {
+      "name": "Draken IV",
+      "region": "AS"
+   },
+   "KH": {
+      "name": "Galor IV",
+      "region": "AS"
+   },
+   "KI": {
+      "name": "Gravesworld",
+      "region": "OC"
+   },
+   "KM": {
+      "name": "Haven",
+      "region": "AF"
+   },
+   "KN": {
+      "name": "Inferna Prime",
+      "region": "NA"
+   },
+   "KP": {
+      "name": "Jaros II",
+      "region": "AS"
+   },
+   "KR": {
+      "name": "Lya III",
+      "region": "AS"
+   },
+   "KW": {
+      "name": "Memory Alpha",
+      "region": "AS"
+   },
+   "KY": {
+      "name": "Merak II",
+      "region": "NA"
+   },
+   "KZ": {
+      "name": "Nervala IV",
+      "region": "AS"
+   },
+   "LA": {
+      "name": "Ohniaka III",
+      "region": "AS"
+   },
+   "LB": {
+      "name": "Otar II",
+      "region": "AS"
+   },
+   "LC": {
+      "name": "Pacifica",
+      "region": "NA"
+   },
+   "LI": {
+      "name": "Psi Epsilon III",
+      "region": "EU"
+   },
+   "LK": {
+      "name": "Qualor II",
+      "region": "AS"
+   },
+   "LR": {
+      "name": "Relva VII",
+      "region": "AF"
+   },
+   "LS": {
+      "name": "Soltok IV",
+      "region": "AF"
+   },
+   "LT": {
+      "name": "Styris IV",
+      "region": "EU"
+   },
+   "LU": {
+      "name": "Tarod IX",
+      "region": "EU"
+   },
+   "LV": {
+      "name": "Vandor IV",
+      "region": "EU"
+   },
+   "LY": {
+      "name": "Zayra IV ",
+      "region": "AF"
+   },
+   "MA": {
+      "name": "Breen",
+      "region": "AF"
+   },
+   "MC": {
+      "name": "Dozaria",
+      "region": "EU"
+   },
+   "MD": {
+      "name": "Portas V ",
+      "region": "EU"
+   },
+   "ME": {
+      "name": "Adarak Prime",
+      "region": "EU"
+   },
+   "MF": {
+      "name": "Amleth Prime",
+      "region": "NA"
+   },
+   "MG": {
+      "name": "Atbar Prime",
+      "region": "AF"
+   },
+   "MH": {
+      "name": "Bryma",
+      "region": "OC"
+   },
+   "MK": {
+      "name": "Cardassia Prime",
+      "region": "EU"
+   },
+   "ML": {
+      "name": "Cardassia III",
+      "region": "AF"
+   },
+   "MM": {
+      "name": "Cardassia IV",
+      "region": "AS"
+   },
+   "MN": {
+      "name": "Cardassia V",
+      "region": "AS"
+   },
+   "MO": {
+      "name": "Felton Prime",
+      "region": "AS"
+   },
+   "MP": {
+      "name": "Juhraya",
+      "region": "AS"
+   },
+   "MQ": {
+      "name": "Kelvas Prime",
+      "region": "NA"
+   },
+   "MR": {
+      "name": "Kelvas V",
+      "region": "AF"
+   },
+   "MS": {
+      "name": "Kora II",
+      "region": "NA"
+   },
+   "MT": {
+      "name": "Korma",
+      "region": "EU"
+   },
+   "MU": {
+      "name": "Loval",
+      "region": "AF"
+   },
+   "MV": {
+      "name": "Omekla III",
+      "region": "AS"
+   },
+   "MW": {
+      "name": "Pentath III",
+      "region": "AF"
+   },
+   "MX": {
+      "name": "Pullock V",
+      "region": "NA"
+   },
+   "MY": {
+      "name": "Quatal Prime",
+      "region": "AS"
+   },
+   "MZ": {
+      "name": "Quinor VII",
+      "region": "AF"
+   },
+   "NA": {
+      "name": "Regulak IV",
+      "region": "AF"
+   },
+   "NC": {
+      "name": "Rondac III",
+      "region": "OC"
+   },
+   "NE": {
+      "name": "Sarpedion V",
+      "region": "AF"
+   },
+   "NF": {
+      "name": "Septimus III",
+      "region": "OC"
+   },
+   "NG": {
+      "name": "Sheva II",
+      "region": "AF"
+   },
+   "NI": {
+      "name": "Simperia",
+      "region": "NA"
+   },
+   "NL": {
+      "name": "Torros III",
+      "region": "EU"
+   },
+   "NO": {
+      "name": "Trelka V",
+      "region": "EU"
+   },
+   "NP": {
+      "name": "Unefra III",
+      "region": "AS"
+   },
+   "NR": {
+      "name": "Vanden Prime",
+      "region": "OC"
+   },
+   "NU": {
+      "name": "Velos VII",
+      "region": "OC"
+   },
+   "NZ": {
+      "name": "Veloz Prime",
+      "region": "OC"
+   },
+   "OM": {
+      "name": "Soukara ",
+      "region": "AS"
+   },
+   "PA": {
+      "name": "Clarus",
+      "region": "NA"
+   },
+   "PE": {
+      "name": "Ferenginar",
+      "region": "SA"
+   },
+   "PF": {
+      "name": "Hupyrian homeworld",
+      "region": "OC"
+   },
+   "PG": {
+      "name": "Irtok",
+      "region": "OC"
+   },
+   "PH": {
+      "name": "Lappa IV",
+      "region": "AS"
+   },
+   "PK": {
+      "name": "Volchok Prime ",
+      "region": "AS"
+   },
+   "PL": {
+      "name": "Archanis IV",
+      "region": "EU"
+   },
+   "PM": {
+      "name": "Boreth",
+      "region": "NA"
+   },
+   "PN": {
+      "name": "H'atoria",
+      "region": "OC"
+   },
+   "PR": {
+      "name": "Khitomer",
+      "region": "NA"
+   },
+   "PS": {
+      "name": "Korvat colony",
+      "region": "AS"
+   },
+   "PT": {
+      "name": "Krios",
+      "region": "EU"
+   },
+   "PW": {
+      "name": "Maranga IV",
+      "region": "OC"
+   },
+   "PY": {
+      "name": "Morska",
+      "region": "SA"
+   },
+   "QA": {
+      "name": "Narendra III",
+      "region": "AS"
+   },
+   "RE": {
+      "name": "N'Vak Colony",
+      "region": "AF"
+   },
+   "RO": {
+      "name": "Ogat",
+      "region": "EU"
+   },
+   "RS": {
+      "name": "Praxis",
+      "region": "EU"
+   },
+   "RU": {
+      "name": "Qo'noS",
+      "region": "AS"
+   },
+   "RW": {
+      "name": "Qu'Vat Colony",
+      "region": "AF"
+   },
+   "SA": {
+      "name": "Raatooras",
+      "region": "AS"
+   },
+   "SB": {
+      "name": "Rura Penthe",
+      "region": "OC"
+   },
+   "SC": {
+      "name": "Ty'Gokor ",
+      "region": "AF"
+   },
+   "SD": {
+      "name": "Verex III ",
+      "region": "AF"
+   },
+   "SE": {
+      "name": "Carraya IV",
+      "region": "EU"
+   },
+   "SG": {
+      "name": "Chaltok IV",
+      "region": "AS"
+   },
+   "SH": {
+      "name": "Remus",
+      "region": "AF"
+   },
+   "SI": {
+      "name": "Romulus",
+      "region": "EU"
+   },
+   "SJ": {
+      "name": "M'kemas III",
+      "region": "EU"
+   },
+   "SK": {
+      "name": "Tzenketh ",
+      "region": "EU"
+   },
+   "SL": {
+      "name": "Azati Prime",
+      "region": "AF"
+   },
+   "SM": {
+      "name": "Xindi-Arboreal colony",
+      "region": "EU"
+   },
+   "SN": {
+      "name": "Xindus",
+      "region": "AF"
+   },
+   "SO": {
+      "name": "Bajor",
+      "region": "AF"
+   },
+   "SR": {
+      "name": "Bajor VIII",
+      "region": "SA"
+   },
+   "SS": {
+      "name": "Freecloud",
+      "region": "AF"
+   },
+   "ST": {
+      "name": "Talos IV",
+      "region": "AF"
+   },
+   "SV": {
+      "name": "Dosi homeworld",
+      "region": "NA"
+   },
+   "SX": {
+      "name": "Founders' homeworld",
+      "region": "NA"
+   },
+   "SY": {
+      "name": "Karemma homeworld",
+      "region": "AS"
+   },
+   "SZ": {
+      "name": "Kurill Prime",
+      "region": "AF"
+   },
+   "TC": {
+      "name": "Vandros IV",
+      "region": "NA"
+   },
+   "TD": {
+      "name": "Yadera Prime",
+      "region": "AF"
+   },
+   "TF": {
+      "name": "Argratha",
+      "region": "AF"
+   },
+   "TG": {
+      "name": "Brax",
+      "region": "AF"
+   },
+   "TH": {
+      "name": "Ennis and Nol-Ennis homeworld",
+      "region": "AS"
+   },
+   "TJ": {
+      "name": "Errikang VII",
+      "region": "AS"
+   },
+   "TK": {
+      "name": "Gaia",
+      "region": "OC"
+   },
+   "TL": {
+      "name": "L-S VI",
+      "region": "AS"
+   },
+   "TM": {
+      "name": "Meridian",
+      "region": "AS"
+   },
+   "TN": {
+      "name": "Parada II",
+      "region": "AF"
+   },
+   "TO": {
+      "name": "Parada IV",
+      "region": "AF"
+   },
+   "TR": {
+      "name": "Rakhar",
+      "region": "AS"
+   },
+   "TT": {
+      "name": "Saltah'na",
+      "region": "NA"
+   },
+   "TV": {
+      "name": "Stakoron II",
+      "region": "OC"
+   },
+   "TW": {
+      "name": "Gema IV",
+      "region": "AS"
+   },
+   "TZ": {
+      "name": "Ocampa",
+      "region": "AF"
+   },
+   "UA": {
+      "name": "Runara IV",
+      "region": "EU"
+   },
+   "UG": {
+      "name": "Sobras",
+      "region": "AF"
+   },
+   "UM": {
+      "name": "Tarok",
+      "region": "OC"
+   },
+   "US": {
+      "name": "Trabe homeworld",
+      "region": "NA"
+   },
+   "UY": {
+      "name": "Avery III",
+      "region": "SA"
+   },
+   "UZ": {
+      "name": "Fina Prime ",
+      "region": "AS"
+   },
+   "VA": {
+      "name": "Talax",
+      "region": "EU"
+   },
+   "VC": {
+      "name": "Kyana Prime",
+      "region": "NA"
+   },
+   "VE": {
+      "name": "Malon Prime",
+      "region": "SA"
+   },
+   "VG": {
+      "name": "Akritiri",
+      "region": "NA"
+   },
+   "VI": {
+      "name": "Banea",
+      "region": "NA"
+   },
+   "VN": {
+      "name": "Benthos",
+      "region": "AS"
+   },
+   "VU": {
+      "name": "Brunali homeworld",
+      "region": "OC"
+   },
+   "WF": {
+      "name": "Cravic homeworld",
+      "region": "OC"
+   },
+   "WS": {
+      "name": "Dedestris",
+      "region": "OC"
+   },
+   "YE": {
+      "name": "Dinaal",
+      "region": "AS"
+   },
+   "XK": { 
+      "name": "Hemikek IV", 
+      "region": "EU"
+  }, 
+   "YT": {
+      "name": "Drayan II",
+      "region": "AF"
+   },
+   "ZA": {
+      "name": "Eblar Prime",
+      "region": "AF"
+   },
+   "ZM": {
+      "name": "Enara Prime",
+      "region": "AF"
+   },
+   "ZW": {
+      "name": "Hanon IV",
+      "region": "AF"
+   }
+}

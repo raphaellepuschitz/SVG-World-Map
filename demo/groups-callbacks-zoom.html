@@ -21,14 +21,14 @@
 	</head>
 	<body>
 		<div id="container">
-			<object id="svg-world-map" data="../src/World_States_Provinces.svg" type="image/svg+xml"></object>
+		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
         </div>
-        <div id="info" class="box hidden"></div>
-        <div id="groups" class="box"></div>
         <div id="countries" class="box"></div>
+        <div id="groups" class="box"></div>
+        <div id="info" class="box hidden"></div>
         <script src="../src/svg-world-map.js"></script>
-        <script src="svg-pan-zoom.min.js"></script>
-        <!--<script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>--> 
+        <!-- Let's test SVG pan zoom integration: --> 
+        <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
         <script>
 
             var myWorldMap;
@@ -42,17 +42,16 @@
                     // Load country data via async request, then startup map init
                     loadCountryData().then(function(countryData) {
 
+                        // Custom options
                         var params = { 
-                            //showOcean: true, 
-                            //oceanColor: '#FF0000', 
-                            //groupCountries: true, 
                             groupBy: [ "region", "sovereignty" ],
                             mapClick: "mapClick"
                         };
 
+                        // Startup
                         myWorldMap = svgWorldMap(mySVG, params, countryData);
 
-                        //console.log(myWorldMap);
+                        // Controls
                         buildCountryControls();
                         buildGroupControls();
 
@@ -138,7 +137,6 @@
 
             // Asynchronous JSON load
             async function loadCountryData() {
-                //let response = await fetch('countrydata_startrek.json');
                 let response = await fetch('../src/countrydata.json');
                 let data = await response.json();
                 return data;

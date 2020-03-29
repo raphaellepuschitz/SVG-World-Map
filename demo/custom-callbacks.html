@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        <title>SVG World Map Demo</title>
+        <style>
+            html { width: 100%; height: 100%; overflow: hidden; }
+            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+            .box { position: fixed; top: 10px; right: 10px; width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
+            .hidden { display: none; }
+            .hide { position: fixed; margin-top: -5px; right: 20px; cursor: pointer; font-size: 25px; }
+            #click { top: 100px; max-height: calc(100vh - 130px); }
+            #out { margin-left: 8px; }
+        </style>
+	</head>
+	<body>
+        <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        <div id="overout" class="box">
+            Path over: <span id="over"></span><br><br>
+            Path out: <span id="out"></span>
+        </div>
+        <div id="click" class="box hidden"></div>
+        <script src="../src/svg-world-map.js"></script>
+        <script>
+            // Quick and dirty map load
+            window.onload = function() {
+                var myCustomOptions = {
+                    mapOut: "myCustomOut", // Callback functions from the map to the outside, can have custom names
+                    mapOver: "myCustomOver", 
+                    mapClick: "myCustomClick", 
+                };
+                svgWorldMap('svg-world-map', myCustomOptions);
+            };
+
+            // Custom callback functions, names can be defined in 'options.mapOver', 'options.mapOut' and 'options.mapClick'
+            function myCustomOver(country) {
+                document.getElementById("over").innerHTML = country.id;
+            }
+
+            function myCustomOut(country) {
+                document.getElementById("out").innerHTML = country.id;
+            }
+            
+            function myCustomClick(country) {
+                var out = '<a class="hide" onclick="document.getElementById(\'click\').classList.add(\'hidden\')">×</a>';
+                out += 'Path clicked: ' + country.id;
+                if (country.country.name != undefined) {
+                    var nation = country.country; // Get parent nation
+                    out += '<br><br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
+                    out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br><br>';
+                    nation.provinces.forEach(function(province) { out += province.id + '<br>'; }); 
+                }
+                document.getElementById("click").innerHTML = out;
+                document.getElementById("click").classList.remove("hidden");
+            }
+        </script>
+    </body>
+</html>

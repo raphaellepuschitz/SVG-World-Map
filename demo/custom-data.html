@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SVG World Map Demo</title>
+        <style>
+            html { width: 100%; height: 100%; overflow: hidden; }
+            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+            ul { list-style: none; padding: 0; }
+            ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
+            ul li:hover { background-color: #444444; }
+            .box { position: fixed; top: 10px; left: 10px; min-width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
+            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 585px; margin-top: -5px; }
+            .hidden { display: none; }
+            #countries { max-height: calc(100vh - 40px); }
+            #overout { right: 10px; left: unset; }
+            #out { margin-left: 8px; }
+        </style>
+	</head>
+	<body>
+		<object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        <div id="countries" class="box"></div>
+        <div id="overout" class="box">
+            Path over: <span id="over"></span><br><br>
+            Path out: <span id="out"></span><br><br>
+            Path click: <span id="click"></span>
+        </div>
+        <script src="../src/svg-world-map.js"></script>
+        <script>
+
+            var myWorldMap;
+            var mySVG = document.getElementById('svg-world-map'); 
+
+            // Wait for asynchronous svg load
+            loadSVGMap(mySVG);
+            function loadSVGMap(mySVG) {
+                mySVG.addEventListener("load", function() {
+
+                    // Load country data via async request, then startup map init
+                    loadCountryData().then(function(countryData) {
+                        myWorldMap = svgWorldMap(mySVG, {}, countryData);
+                        buildCountryControls();
+                    });
+
+                }, false);
+            }
+
+            // Asynchronous JSON load
+            async function loadCountryData() {
+                let response = await fetch('countrydata_startrek.json');
+                let data = await response.json();
+                return data;
+            }
+
+            // Demo country list
+            function buildCountryControls() {
+                var out = '<u>Star Trek planets as countries:</u><br><ul>';
+                for (var countryid in myWorldMap.countries) {
+                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                }
+                out += '</ul>';
+                document.getElementById("countries").innerHTML = out;
+            }
+
+            // Highlight country 
+            function highlightCountry() {
+                var id = event.srcElement.id;
+                var color = getHighlightColor(id);
+                myWorldMap.update({ [id]: color });
+            }
+
+            // Get some random color from the element name
+            function getHighlightColor(id) {
+                // Get the numbers for the id letters, add them, square them and take the last 6 digits
+                var number = parseInt(id.substr(0, 1).charCodeAt(0) + '' + id.substr(1, 2).charCodeAt(0));
+                var hex = '#' + parseInt(number * number).toString().substr(-6, 6);
+                return hex;
+            }
+
+            // Default callback functions, custom names can be defined in 'options.mapOver', 'options.mapOut' and 'options.mapClick'
+            function mapOver(country) {
+                document.getElementById("over").innerHTML = country.id;
+            }
+
+            function mapOut(country) {
+                document.getElementById("out").innerHTML = country.id;
+            }
+
+            function mapClick(country) {
+                document.getElementById("click").innerHTML = country.id;
+            }
+
+        </script>
+    </body>
+</html>

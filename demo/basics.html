@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        <title>SVG World Map Demo</title>
+	</head>
+	<body>
+        <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        <!-- This also works: <embed id="svg-world-map" src="../src/world-states-provinces.svg" />-->
+        <script src="../src/svg-world-map.js"></script>
+        <script>
+            // Quick and dirty
+            window.onload = function() {
+                svgWorldMap('svg-world-map');
+            };
+            // Recommended implementation
+            /*var mySVG = document.getElementById('svg-world-map'); 
+            mySVG.addEventListener("load", function() {
+                var myWorldMap = svgWorldMap(mySVG); 
+            })*/
+        </script>
+    </body>
+</html>

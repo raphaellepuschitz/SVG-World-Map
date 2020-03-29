@@ -4,9 +4,9 @@ SVG World Map JS
 
 A JavaScript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states).  
 
-Use this map and library as a boilerplate for a **Strategy Game**, for **Data Visualization** of scientific research and other data, or as an **Interactive Map** for your article, paper, website or app. 
+Use this map and library as boilerplate for a **Strategy Game**, for **Data Visualization** of scientific research and other data, or as **Interactive Map** for your article, paper, website or app. 
 
-> ***Attention:*** This library is under development and currently in an early alpha phase. Use it carefully! 
+> ***Attention:*** This library is under development and currently in early alpha phase. Use it carefully! 
 
 The SVG World Map JS library constists of 3 parts, which can be used separately:
 
@@ -20,19 +20,22 @@ To unleash the full power of the SVG map you should of course use all 3 combined
 Demos
 -----
 
+* [Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html)
+* [Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html)
+* [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)
+* [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)
+* [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
+
 <!---
-* Basics
-* Callbacks
-* Custom data
-* Custom options
+* Corona world map
+* Strategy game
 -->
-* [Groups, callbacks & zoom](./demo/groups-callbacks-zoom.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
 
 
 Part 1: The Map
 ---------------
 
-Download current version: [World_States_Provinces.svg](./src/World_States_Provinces.svg)  
+Download current version: [world-states-provinces.svg](./src/world-states-provinces.svg)  
 
 The map is based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) from [Wikimedia Commons](https://commons.wikimedia.org).  
 It was modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
@@ -78,21 +81,27 @@ Although this project only uses frontend technologies, most browsers nowadays do
 
 ### How to use
 
-First, add [World_States_Provinces.svg](./src/World_States_Provinces.svg) and [svg-world-map.js](./src/svg-world-map.js) to your HTML document:
+First, add [world-states-provinces.svg](./src/world-states-provinces.svg) and [svg-world-map.js](./src/svg-world-map.js) to your HTML document, then initialize the library:
 
 ```html
-<object id="svg-world-map" data="World_States_Provinces.svg" type="image/svg+xml"></object>
+<object id="svg-world-map" data="world-states-provinces.svg" type="image/svg+xml"></object>
 ```
 
 ```html
 <script src="svg-world-map.js"></script>
 ```
 
-Then initialize the library with the SVG map added before:
+```js
+window.onload = function() { svgWorldMap('svg-world-map'); }; // Quick and dirty basic implementation
+```
+
+The better way of calling the library is of course to load the SVG via `addEventListener()` and bind the world map to a variable: 
 
 ```js
 var mySVG = document.getElementById('svg-world-map'); 
-var myWorldMap = svgWorldMap(mySVG); 
+mySVG.addEventListener("load", function() {
+    var myWorldMap = svgWorldMap(mySVG); 
+})
 ```
 
 So far for the basic setup.
@@ -108,12 +117,16 @@ The default options can be overruled by passing an object of custom options. All
 var options = {
     showOcean: true, 
     oceanColor: '#D8EBFF', 
+    countryStroke: { out: '#FFFFFF',  over: '#000000',  click: '#333333' }, 
+    countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
     provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStrokeWidth: { out: '0.1',  over: '0.5',  click: '0.5' }, 
     groupCountries: true, 
     groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
-    mapClick: "mapClick", // Callback function from the map to the outside, can have a custom name
+    mapOut: "mapOut", // Callback functions from the map to the outside, can have custom names
+    mapOver: "mapOver", 
+    mapClick: "mapClick" 
 };
 ```
 
@@ -138,7 +151,7 @@ After initialization, the `svgWorldMap()` function will give you an object in re
 If the map is called like this `var myWorldMap = svgWorldMap(mySVG);`, then the return data looks something like this: 
 
 ```js
-myWorldMap = { 
+myWorldMap: { 
     countries: { AD: '<g id="AD">', AE: '<g id="AE">', ... }, 
     countryData: { AD: { name: "Andorra", longname: ... }, ... }, 
     countryGroups: { region: { AF: {...}, AN: {...}, ... }, ... }, 
@@ -279,11 +292,21 @@ var countryData = {
 
 #### Calling back from the map
 
-As seen in the options setup, there's a callback function for a click on the map, which can also have a custom name. Let's say you named it `"customMapClick"` and you want to to catch the callback for the clicked country, then the code would look something like this: 
+As seen in the options setup, there are 3 callback functions for over, out and click, which can also have custom names. Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"` and `"myCustomOut()"`, then the code to catch the hovered or clicked country looks something like this: 
 
 ```js
-function customMapClick(country) {
-    var countryid = country.id; // Id of clicked path on map
+function myCustomClick(country) {
+    var countryid = country.id; // Id of the clicked path on the map
+    ...
+}
+
+function myCustomOver(country) {
+    var countryid = country.id; // Id of the hovered over path 
+    ...
+}
+
+function myCustomOut(country) {
+    var countryid = country.id; // Id of the hovered out path 
     ...
 }
 ```
@@ -301,6 +324,8 @@ myWorldMap.over('AT');
 myWorldMap.click('AT');
 ```
 
+Or as inline HTML:
+
 ```html
 <li id="AT" onmouseover="myWorldMap.over('AT')" onmouseout="myWorldMap.out('AT')" onclick="myWorldMap.click('AT')">Austria</li>
 ```
@@ -315,14 +340,16 @@ myWorldMap.update({ DE: '#00FF00', AT: '#00FF00', CH: '#00FF00' });
 TODOs & Further Development
 ---------------------------
 
-* Add demos
-* Fix path bugs
+* ~~Add basic demos~~ (V 0.0.9)
+* ~~Fix path bugs~~ (V 0.0.9)
+* ~~Add further options~~ (V 0.0.9)
+* ~~Improve the callback API~~ (V 0.0.9)
+* Add data visualization demo
+* Add strategy game demo
 * Name all provinces in the SVG (This may take a while... Help appreciated!)
-* Add further options
 * Add info boxes to the map
 * Add country names to the map
 * Add bubbles / circles to the map
-* Improve the API
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
 
 
