@@ -1,251 +1,252 @@
-code;name;longname;sovereignty;region
-AD;Andorra;The Principality of Andorra;UN;EU
-AE;United Arab Emirates;The United Arab Emirates;UN;AS
-AF;Afghanistan;The Islamic Republic of Afghanistan;UN;AS
-AG;Antigua and Barbuda;Antigua and Barbuda;UN;NA
-AI;Anguilla;Anguilla;United Kingdom;NA
-AL;Albania;The Republic of Albania;UN;EU
-AM;Armenia;The Republic of Armenia;UN;AS
-AO;Angola;The Republic of Angola;UN;AF
-AQ;Antarctica;All land and ice shelves south of the 60th parallel south;Antarctic Treaty;AN
-AR;Argentina;The Argentine Republic;UN;SA
-AS;American Samoa;The Territory of American Samoa;United States;OC
-AT;Austria;The Republic of Austria;UN;EU
-AU;Australia;The Commonwealth of Australia;UN;OC
-AW;Aruba;Aruba;Netherlands;SA
-AX;Åland Islands;Åland;Finland;EU
-AZ;Azerbaijan;The Republic of Azerbaijan;UN;AS
-BA;Bosnia and Herzegovina;Bosnia and Herzegovina;UN;EU
-BB;Barbados;Barbados;UN;SA
-BD;Bangladesh;The People's Republic of Bangladesh;UN;AS
-BE;Belgium;The Kingdom of Belgium;UN;EU
-BF;Burkina Faso;Burkina Faso;UN;AF
-BG;Bulgaria;The Republic of Bulgaria;UN;EU
-BH;Bahrain;The Kingdom of Bahrain;UN;AS
-BI;Burundi;The Republic of Burundi;UN;AF
-BJ;Benin;The Republic of Benin;UN;AF
-BL;Saint Barthélemy;The Collectivity of Saint-Barthélemy;France;NA
-BM;Bermuda;Bermuda;United Kingdom;NA
-BN;Brunei;The Nation of Brunei;UN;AS
-BO;Bolivia;The Plurinational State of Bolivia;UN;SA
-BQ;Bonaire, Sint Eustatius and Saba;Bonaire, Sint Eustatius and Saba;Netherlands;SA
-BR;Brazil;The Federative Republic of Brazil;UN;SA
-BS;Bahamas;The Commonwealth of The Bahamas;UN;NA
-BT;Bhutan;The Kingdom of Bhutan;UN;AS
-BV;Bouvet Island;Bouvet Island;Norway;AN
-BW;Botswana;The Republic of Botswana;UN;AF
-BY;Belarus;The Republic of Belarus;UN;EU
-BZ;Belize;Belize;UN;NA
-CA;Canada;Canada;UN;NA
-CC;Cocos (Keeling) Islands;The Territory of Cocos (Keeling) Islands;Australia;AS
-CD;Congo (Democratic Republic of the);The Democratic Republic of the Congo;UN;AF
-CF;Central African Republic;The Central African Republic;UN;AF
-CG;Congo;The Republic of the Congo;UN;AF
-CH;Switzerland;The Swiss Confederation;UN;EU
-CI;Côte d'Ivoire;The Republic of Côte d'Ivoire;UN;AF
-CK;Cook Islands;The Cook Islands;New Zealand;OC
-CL;Chile;The Republic of Chile;UN;SA
-CM;Cameroon;The Republic of Cameroon;UN;AF
-CN;China;The People's Republic of China;UN;AS
-CO;Colombia;The Republic of Colombia;UN;SA
-CR;Costa Rica;The Republic of Costa Rica;UN;NA
-CU;Cuba;The Republic of Cuba;UN;NA
-CV;Cabo Verde;The Republic of Cabo Verde;UN;AF
-CW;Curaçao;The Country of Curaçao;Netherlands;SA
-CX;Christmas Island;The Territory of Christmas Island;Australia;AS
-CY;Cyprus;The Republic of Cyprus;UN;EU
-CZ;Czechia;The Czech Republic;UN;EU
-DE;Germany;The Federal Republic of Germany;UN;EU
-DJ;Djibouti;The Republic of Djibouti;UN;AF
-DK;Denmark;The Kingdom of Denmark;UN;EU
-DM;Dominica;The Commonwealth of Dominica;UN;NA
-DO;Dominican Republic;The Dominican Republic;UN;NA
-DZ;Algeria;The People's Democratic Republic of Algeria;UN;AF
-EC;Ecuador;The Republic of Ecuador;UN;SA
-EE;Estonia;The Republic of Estonia;UN;EU
-EG;Egypt;The Arab Republic of Egypt;UN;AF
-EH;Western Sahara;The Sahrawi Arab Democratic Republic;disputed;AF
-ER;Eritrea;The State of Eritrea;UN;AF
-ES;Spain;The Kingdom of Spain;UN;EU
-ET;Ethiopia;The Federal Democratic Republic of Ethiopia;UN;AF
-FI;Finland;The Republic of Finland;UN;EU
-FJ;Fiji;The Republic of Fiji;UN;OC
-FK;Falkland Islands;The Falkland Islands;United Kingdom;SA
-FM;Micronesia;The Federated States of Micronesia;UN;OC
-FO;Faroe Islands;The Faroe Islands;Denmark;EU
-FR;France;The French Republic;UN;EU
-GA;Gabon;The Gabonese Republic;UN;AF
-GB;United Kingdom of Great Britain and Northern Ireland;The United Kingdom of Great Britain and Northern Ireland;UN;EU
-GD;Grenada;Grenada;UN;NA
-GE;Georgia;Georgia;UN;AS
-GF;French Guiana;Guyane;France;SA
-GG;Guernsey;The Bailiwick of Guernsey;British Crown;EU
-GH;Ghana;The Republic of Ghana;UN;AF
-GI;Gibraltar;Gibraltar;United Kingdom;EU
-GL;Greenland;Kalaallit Nunaat;Denmark;NA
-GM;Gambia;The Republic of The Gambia;UN;AF
-GN;Guinea;The Republic of Guinea;UN;AF
-GP;Guadeloupe;Guadeloupe;France;NA
-GQ;Equatorial Guinea;The Republic of Equatorial Guinea;UN;AF
-GR;Greece;The Hellenic Republic;UN;EU
-GS;South Georgia and the South Sandwich Islands;South Georgia and the South Sandwich Islands;United Kingdom;AN
-GT;Guatemala;The Republic of Guatemala;UN;NA
-GU;Guam;The Territory of Guam;United States;OC
-GW;Guinea-Bissau;The Republic of Guinea-Bissau;UN;AF
-GY;Guyana;The Co-operative Republic of Guyana;UN;SA
-HK;Hong Kong;The Hong Kong Special Administrative Region of China;China;AS
-HM;Heard Island and McDonald Islands;The Territory of Heard Island and McDonald Islands;Australia;AN
-HN;Honduras;The Republic of Honduras;UN;NA
-HR;Croatia;The Republic of Croatia;UN;EU
-HT;Haiti;The Republic of Haiti;UN;NA
-HU;Hungary;Hungary;UN;EU
-ID;Indonesia;The Republic of Indonesia;UN;AS
-IE;Ireland;Ireland;UN;EU
-IL;Israel;The State of Israel;UN;AS
-IM;Isle of Man;The Isle of Man;British Crown;EU
-IN;India;The Republic of India;UN;AS
-IO;British Indian Ocean Territory;The British Indian Ocean Territory;United Kingdom;AS
-IQ;Iraq;The Republic of Iraq;UN;AS
-IR;Iran;The Islamic Republic of Iran;UN;AS
-IS;Iceland;Iceland;UN;EU
-IT;Italy;The Italian Republic;UN;EU
-JE;Jersey;The Bailiwick of Jersey;British Crown;EU
-JM;Jamaica;Jamaica;UN;NA
-JO;Jordan;The Hashemite Kingdom of Jordan;UN;AS
-JP;Japan;Japan;UN;AS
-KE;Kenya;The Republic of Kenya;UN;AF
-KG;Kyrgyzstan;The Kyrgyz Republic;UN;AS
-KH;Cambodia;The Kingdom of Cambodia;UN;AS
-KI;Kiribati;The Republic of Kiribati;UN;OC
-KM;Comoros;The Union of the Comoros;UN;AF
-KN;Saint Kitts and Nevis;Saint Kitts and Nevis;UN;NA
-KP;North Korea;The Democratic People's Republic of Korea;UN;AS
-KR;South Korea;The Republic of Korea;UN;AS
-KW;Kuwait;The State of Kuwait;UN;AS
-KY;Cayman Islands;The Cayman Islands;United Kingdom;NA
-KZ;Kazakhstan;The Republic of Kazakhstan;UN;AS
-LA;Laos;The Lao People's Democratic Republic;UN;AS
-LB;Lebanon;The Lebanese Republic;UN;AS
-LC;Saint Lucia;Saint Lucia;UN;NA
-LI;Liechtenstein;The Principality of Liechtenstein;UN;EU
-LK;Sri Lanka;The Democratic Socialist Republic of Sri Lanka;UN;AS
-LR;Liberia;The Republic of Liberia;UN;AF
-LS;Lesotho;The Kingdom of Lesotho;UN;AF
-LT;Lithuania;The Republic of Lithuania;UN;EU
-LU;Luxembourg;The Grand Duchy of Luxembourg;UN;EU
-LV;Latvia;The Republic of Latvia;UN;EU
-LY;Libya;The State of Libya;UN;AF
-MA;Morocco;The Kingdom of Morocco;UN;AF
-MC;Monaco;The Principality of Monaco;UN;EU
-MD;Moldova;The Republic of Moldova;UN;EU
-ME;Montenegro;Montenegro;UN;EU
-MF;Saint Martin (French part);The Collectivity of Saint-Martin;France;NA
-MG;Madagascar;The Republic of Madagascar;UN;AF
-MH;Marshall Islands;The Republic of the Marshall Islands;UN;OC
-MK;North Macedonia;Republic of North Macedonia;UN;EU
-ML;Mali;The Republic of Mali;UN;AF
-MM;Myanmar;The Republic of the Union of Myanmar;UN;AS
-MN;Mongolia;The State of Mongolia;UN;AS
-MO;Macao;Macao Special Administrative Region of China;China;AS
-MP;Northern Mariana Islands;The Commonwealth of the Northern Mariana Islands;United States;AS
-MQ;Martinique;Martinique;France;NA
-MR;Mauritania;The Islamic Republic of Mauritania;UN;AF
-MS;Montserrat;Montserrat;United Kingdom;NA
-MT;Malta;The Republic of Malta;UN;EU
-MU;Mauritius;The Republic of Mauritius;UN;AF
-MV;Maldives;The Republic of Maldives;UN;AS
-MW;Malawi;The Republic of Malawi;UN;AF
-MX;Mexico;The United Mexican States;UN;NA
-MY;Malaysia;Malaysia;UN;AS
-MZ;Mozambique;The Republic of Mozambique;UN;AF
-NA;Namibia;The Republic of Namibia;UN;AF
-NC;New Caledonia;New Caledonia;France;OC
-NE;Niger;The Republic of the Niger;UN;AF
-NF;Norfolk Island;The Territory of Norfolk Island;Australia;OC
-NG;Nigeria;The Federal Republic of Nigeria;UN;AF
-NI;Nicaragua;The Republic of Nicaragua;UN;NA
-NL;Netherlands;The Kingdom of the Netherlands;UN;EU
-NO;Norway;The Kingdom of Norway;UN;EU
-NP;Nepal;The Federal Democratic Republic of Nepal;UN;AS
-NR;Nauru;The Republic of Nauru;UN;OC
-NU;Niue;Niue;New Zealand;OC
-NZ;New Zealand;New Zealand;UN;OC
-OM;Oman;The Sultanate of Oman;UN;AS
-PA;Panama;The Republic of Panamá;UN;NA
-PE;Peru;The Republic of Perú;UN;SA
-PF;French Polynesia;French Polynesia;France;OC
-PG;Papua New Guinea;The Independent State of Papua New Guinea;UN;OC
-PH;Philippines;The Republic of the Philippines;UN;AS
-PK;Pakistan;The Islamic Republic of Pakistan;UN;AS
-PL;Poland;The Republic of Poland;UN;EU
-PM;Saint Pierre and Miquelon;The Overseas Collectivity of Saint-Pierre and Miquelon;France;NA
-PN;Pitcairn;The Pitcairn, Henderson, Ducie and Oeno Islands;United Kingdom;OC
-PR;Puerto Rico;The Commonwealth of Puerto Rico;United States;NA
-PS;Palestine;The State of Palestine;UN observer;AS
-PT;Portugal;The Portuguese Republic;UN;EU
-PW;Palau;The Republic of Palau;UN;OC
-PY;Paraguay;The Republic of Paraguay;UN;SA
-QA;Qatar;The State of Qatar;UN;AS
-RE;Réunion;Réunion;France;AF
-RO;Romania;Romania;UN;EU
-RS;Serbia;The Republic of Serbia;UN;EU
-RU;Russian Federation;The Russian Federation;UN;EU
-RW;Rwanda;The Republic of Rwanda;UN;AF
-SA;Saudi Arabia;The Kingdom of Saudi Arabia;UN;AS
-SB;Solomon Islands;The Solomon Islands;UN;OC
-SC;Seychelles;The Republic of Seychelles;UN;AF
-SD;Sudan;The Republic of the Sudan;UN;AF
-SE;Sweden;The Kingdom of Sweden;UN;EU
-SG;Singapore;The Republic of Singapore;UN;AS
-SH;Saint Helena, Ascension and Tristan da Cunha;Saint Helena, Ascension and Tristan da Cunha;United Kingdom;AF
-SI;Slovenia;The Republic of Slovenia;UN;EU
-SJ;Svalbard and Jan Mayen;Svalbard and Jan Mayen;Norway;EU
-SK;Slovakia;The Slovak Republic;UN;EU
-SL;Sierra Leone;The Republic of Sierra Leone;UN;AF
-SM;San Marino;The Republic of San Marino;UN;EU
-SN;Senegal;The Republic of Senegal;UN;AF
-SO;Somalia;The Federal Republic of Somalia;UN;AF
-SR;Suriname;The Republic of Suriname;UN;SA
-SS;South Sudan;The Republic of South Sudan;UN;AF
-ST;Sao Tome and Principe;The Democratic Republic of São Tomé and Príncipe;UN;AF
-SV;El Salvador;The Republic of El Salvador;UN;NA
-SX;Sint Maarten (Dutch part);Sint Maarten;Netherlands;NA
-SY;Syria;The Syrian Arab Republic;UN;AS
-SZ;Eswatini (Swaziland);The Kingdom of Eswatini;UN;AF
-TC;Turks and Caicos Islands;The Turks and Caicos Islands;United Kingdom;NA
-TD;Chad;The Republic of Chad;UN;AF
-TF;French Southern Territories;The French Southern and Antarctic Lands;France;AF
-TG;Togo;The Togolese Republic;UN;AF
-TH;Thailand;The Kingdom of Thailand;UN;AS
-TJ;Tajikistan;The Republic of Tajikistan;UN;AS
-TK;Tokelau;Tokelau;New Zealand;OC
-TL;Timor-Leste (East Timor);The Democratic Republic of Timor-Leste;UN;AS
-TM;Turkmenistan;Turkmenistan;UN;AS
-TN;Tunisia;The Republic of Tunisia;UN;AF
-TO;Tonga;The Kingdom of Tonga;UN;AF
-TR;Turkey;The Republic of Turkey;UN;AS
-TT;Trinidad and Tobago;The Republic of Trinidad and Tobago;UN;NA
-TV;Tuvalu;Tuvalu;UN;OC
-TW;Taiwan;The Republic of China;disputed;AS
-TZ;Tanzania;The United Republic of Tanzania;UN;AF
-UA;Ukraine;Ukraine;UN;EU
-UG;Uganda;The Republic of Uganda;UN;AF
-UM;United States Minor Outlying Islands;Baker Island, Howland Island, Jarvis Island, Johnston Atoll, Kingman Reef, Midway Atoll, Navassa Island, Palmyra Atoll, and Wake Island;United States;OC
-US;United States of America;The United States of America;UN;NA
-UY;Uruguay;The Oriental Republic of Uruguay;UN;SA
-UZ;Uzbekistan;The Republic of Uzbekistan;UN;AS
-VA;Holy See;The Holy See;UN observer;EU
-VC;Saint Vincent and the Grenadines;Saint Vincent and the Grenadines;UN;NA
-VE;Venezuela;The Bolivarian Republic of Venezuela;UN;SA
-VG;Virgin Islands (British);The Virgin Islands;United Kingdom;NA
-VI;Virgin Islands (U.S.);The Virgin Islands of the United States;United States;NA
-VN;Viet Nam;The Socialist Republic of Viet Nam;UN;AS
-VU;Vanuatu;The Republic of Vanuatu;UN;OC
-WF;Wallis and Futuna;The Territory of the Wallis and Futuna Islands;France;OC
-WS;Samoa;The Independent State of Samoa;UN;OC
-XK;Kosovo;The Republic of Kosovo;disputed;EU
-YE;Yemen;The Republic of Yemen;UN;AS
-YT;Mayotte;The Department of Mayotte;France;AF
-ZA;South Africa;The Republic of South Africa;UN;AF
-ZM;Zambia;The Republic of Zambia;UN;AF
-ZW;Zimbabwe;The Republic of Zimbabwe;UN;AF
+code;name;longname;sovereignty;region;population
+World;Earth;;;;7658209137
+AD;Andorra;The Principality of Andorra;UN;EU;77543
+AE;United Arab Emirates;The United Arab Emirates;UN;AS;9890400
+AF;Afghanistan;The Islamic Republic of Afghanistan;UN;AS;32225560
+AG;Antigua and Barbuda;Antigua and Barbuda;UN;NA;96453
+AI;Anguilla;Anguilla;United Kingdom;NA;14869
+AL;Albania;The Republic of Albania;UN;EU;2862427
+AM;Armenia;The Republic of Armenia;UN;AS;2957500
+AO;Angola;The Republic of Angola;UN;AF;31127674
+AQ;Antarctica;All land and ice shelves south of the 60th parallel south;Antarctic Treaty;AN;0
+AR;Argentina;The Argentine Republic;UN;SA;44938712
+AS;American Samoa;The Territory of American Samoa;United States;OC;55191
+AT;Austria;The Republic of Austria;UN;EU;8902600
+AU;Australia;The Commonwealth of Australia;UN;OC;25646823
+AW;Aruba;Aruba;Netherlands;SA;112309
+AX;Åland Islands;Åland;Finland;EU;29789
+AZ;Azerbaijan;The Republic of Azerbaijan;UN;AS;10067108
+BA;Bosnia and Herzegovina;Bosnia and Herzegovina;UN;EU;3301000
+BB;Barbados;Barbados;UN;SA;287025
+BD;Bangladesh;The People's Republic of Bangladesh;UN;AS;168270652
+BE;Belgium;The Kingdom of Belgium;UN;EU;11524454
+BF;Burkina Faso;Burkina Faso;UN;AF;20870060
+BG;Bulgaria;The Republic of Bulgaria;UN;EU;7000039
+BH;Bahrain;The Kingdom of Bahrain;UN;AS;1569446
+BI;Burundi;The Republic of Burundi;UN;AF;10953317
+BJ;Benin;The Republic of Benin;UN;AF;11733059
+BL;Saint Barthélemy;The Collectivity of Saint-Barthélemy;France;NA;9793
+BM;Bermuda;Bermuda;United Kingdom;NA;64027
+BN;Brunei;The Nation of Brunei;UN;AS;442400
+BO;Bolivia;The Plurinational State of Bolivia;UN;SA;11469896
+BQ;Bonaire, Sint Eustatius and Saba;Bonaire, Sint Eustatius and Saba;Netherlands;SA;25157
+BR;Brazil;The Federative Republic of Brazil;UN;SA;211257279
+BS;Bahamas;The Commonwealth of The Bahamas;UN;NA;385340
+BT;Bhutan;The Kingdom of Bhutan;UN;AS;741672
+BV;Bouvet Island;Bouvet Island;Norway;AN;0
+BW;Botswana;The Republic of Botswana;UN;AF;2338851
+BY;Belarus;The Republic of Belarus;UN;EU;9413446
+BZ;Belize;Belize;UN;NA;408487
+CA;Canada;Canada;UN;NA;37958039
+CC;Cocos (Keeling) Islands;The Territory of Cocos (Keeling) Islands;Australia;AS;544
+CD;Congo (Democratic Republic of the);The Democratic Republic of the Congo;UN;AF;89561404
+CF;Central African Republic;The Central African Republic;UN;AF;5496011
+CG;Congo;The Republic of the Congo;UN;AF;5518092
+CH;Switzerland;The Swiss Confederation;UN;EU;8586550
+CI;Côte d'Ivoire;The Republic of Côte d'Ivoire;UN;AF;25823071
+CK;Cook Islands;The Cook Islands;New Zealand;OC;17518
+CL;Chile;The Republic of Chile;UN;SA;19107216
+CM;Cameroon;The Republic of Cameroon;UN;AF;26545864
+CN;China;The People's Republic of China;UN;AS;1401768800
+CO;Colombia;The Republic of Colombia;UN;SA;49395678
+CR;Costa Rica;The Republic of Costa Rica;UN;NA;5058007
+CU;Cuba;The Republic of Cuba;UN;NA;11209628
+CV;Cabo Verde;The Republic of Cabo Verde;UN;AF;550483
+CW;Curaçao;The Country of Curaçao;Netherlands;SA;158665
+CX;Christmas Island;The Territory of Christmas Island;Australia;AS;1843
+CY;Cyprus;The Republic of Cyprus;UN;EU;875900
+CZ;Czechia;The Czech Republic;UN;EU;10681161
+DE;Germany;The Federal Republic of Germany;UN;EU;83149300
+DJ;Djibouti;The Republic of Djibouti;UN;AF;1078373
+DK;Denmark;The Kingdom of Denmark;UN;EU;5822763
+DM;Dominica;The Commonwealth of Dominica;UN;NA;71808
+DO;Dominican Republic;The Dominican Republic;UN;NA;10358320
+DZ;Algeria;The People's Democratic Republic of Algeria;UN;AF;43000000
+EC;Ecuador;The Republic of Ecuador;UN;SA;17444556
+EE;Estonia;The Republic of Estonia;UN;EU;1328360
+EG;Egypt;The Arab Republic of Egypt;UN;AF;100131097
+EH;Western Sahara;The Sahrawi Arab Democratic Republic;disputed;AF;582463
+ER;Eritrea;The State of Eritrea;UN;AF;582463
+ES;Spain;The Kingdom of Spain;UN;EU;47100396
+ET;Ethiopia;The Federal Democratic Republic of Ethiopia;UN;AF;98665000
+FI;Finland;The Republic of Finland;UN;EU;5527573
+FJ;Fiji;The Republic of Fiji;UN;OC;884887
+FK;Falkland Islands;The Falkland Islands;United Kingdom;SA;3198
+FM;Micronesia;The Federated States of Micronesia;UN;OC;112640
+FO;Faroe Islands;The Faroe Islands;Denmark;EU;52124
+FR;France;The French Republic;UN;EU;67064000
+GA;Gabon;The Gabonese Republic;UN;AF;2172579
+GB;United Kingdom;The United Kingdom of Great Britain and Northern Ireland;UN;EU;66435600
+GD;Grenada;Grenada;UN;NA;112003
+GE;Georgia;Georgia;UN;AS;3723464
+GF;French Guiana;Guyane;France;SA;290691
+GG;Guernsey;The Bailiwick of Guernsey;British Crown;EU;63026
+GH;Ghana;The Republic of Ghana;UN;AF;30280811
+GI;Gibraltar;Gibraltar;United Kingdom;EU;32194
+GL;Greenland;Kalaallit Nunaat;Denmark;NA;56081
+GM;Gambia;The Republic of The Gambia;UN;AF;2347706
+GN;Guinea;The Republic of Guinea;UN;AF;12218357
+GP;Guadeloupe;Guadeloupe;France;NA;395700
+GQ;Equatorial Guinea;The Republic of Equatorial Guinea;UN;AF;1358276
+GR;Greece;The Hellenic Republic;UN;EU;10724599
+GS;South Georgia and the South Sandwich Islands;South Georgia and the South Sandwich Islands;United Kingdom;AN;30
+GT;Guatemala;The Republic of Guatemala;UN;NA;16604026
+GU;Guam;The Territory of Guam;United States;OC;165768
+GW;Guinea-Bissau;The Republic of Guinea-Bissau;UN;AF;12218357
+GY;Guyana;The Co-operative Republic of Guyana;UN;SA;782766
+HK;Hong Kong;The Hong Kong Special Administrative Region of China;China;AS;7500700
+HM;Heard Island and McDonald Islands;The Territory of Heard Island and McDonald Islands;Australia;AN;0
+HN;Honduras;The Republic of Honduras;UN;NA;9158345
+HR;Croatia;The Republic of Croatia;UN;EU;4076246
+HT;Haiti;The Republic of Haiti;UN;NA;11577779
+HU;Hungary;Hungary;UN;EU;9772756
+ID;Indonesia;The Republic of Indonesia;UN;AS;266911900
+IE;Ireland;Ireland;UN;EU;4921500
+IL;Israel;The State of Israel;UN;AS;9171900
+IM;Isle of Man;The Isle of Man;British Crown;EU;83314
+IN;India;The Republic of India;UN;AS;1359812346
+IO;British Indian Ocean Territory;The British Indian Ocean Territory;United Kingdom;AS;0
+IQ;Iraq;The Republic of Iraq;UN;AS;39127900
+IR;Iran;The Islamic Republic of Iran;UN;AS;83281956
+IS;Iceland;Iceland;UN;EU;364260
+IT;Italy;The Italian Republic;UN;EU;60243406
+JE;Jersey;The Bailiwick of Jersey;British Crown;EU;106800
+JM;Jamaica;Jamaica;UN;NA;2726667
+JO;Jordan;The Hashemite Kingdom of Jordan;UN;AS;10636364
+JP;Japan;Japan;UN;AS;126010000
+KE;Kenya;The Republic of Kenya;UN;AF;47564296
+KG;Kyrgyzstan;The Kyrgyz Republic;UN;AS;6523500
+KH;Cambodia;The Kingdom of Cambodia;UN;AS;15288489
+KI;Kiribati;The Republic of Kiribati;UN;OC;115847
+KM;Comoros;The Union of the Comoros;UN;AF;873724
+KN;Saint Kitts and Nevis;Saint Kitts and Nevis;UN;NA;52823
+KP;North Korea;The Democratic People's Republic of Korea;UN;AS;25450000
+KR;South Korea;The Republic of Korea;UN;AS;51780579
+KW;Kuwait;The State of Kuwait;UN;AS;4420110
+KY;Cayman Islands;The Cayman Islands;United Kingdom;NA;65813
+KZ;Kazakhstan;The Republic of Kazakhstan;UN;AS;18663384
+LA;Laos;The Lao People's Democratic Republic;UN;AS;7123205
+LB;Lebanon;The Lebanese Republic;UN;AS;6825442
+LC;Saint Lucia;Saint Lucia;UN;NA;178696
+LI;Liechtenstein;The Principality of Liechtenstein;UN;EU;38557
+LK;Sri Lanka;The Democratic Socialist Republic of Sri Lanka;UN;AS;21803000
+LR;Liberia;The Republic of Liberia;UN;AF;4475353
+LS;Lesotho;The Kingdom of Lesotho;UN;AF;2007201
+LT;Lithuania;The Republic of Lithuania;UN;EU;2793350
+LU;Luxembourg;The Grand Duchy of Luxembourg;UN;EU;613894
+LV;Latvia;The Republic of Latvia;UN;EU;1906800
+LY;Libya;The State of Libya;UN;AF;6871287
+MA;Morocco;The Kingdom of Morocco;UN;AF;35839345
+MC;Monaco;The Principality of Monaco;UN;EU;38300
+MD;Moldova;The Republic of Moldova;UN;EU;2681735
+ME;Montenegro;Montenegro;UN;EU;622359
+MF;Saint Martin (French part);The Collectivity of Saint-Martin;France;NA;35107
+MG;Madagascar;The Republic of Madagascar;UN;AF;25680342
+MH;Marshall Islands;The Republic of the Marshall Islands;UN;OC;58413
+MK;North Macedonia;Republic of North Macedonia;UN;EU;2077132
+ML;Mali;The Republic of Mali;UN;AF;19973000
+MM;Myanmar;The Republic of the Union of Myanmar;UN;AS;54339766
+MN;Mongolia;The State of Mongolia;UN;AS;3307640
+MO;Macao;Macao Special Administrative Region of China;China;AS;667400
+MP;Northern Mariana Islands;The Commonwealth of the Northern Mariana Islands;United States;AS;53883
+MQ;Martinique;Martinique;France;NA;376480
+MR;Mauritania;The Islamic Republic of Mauritania;UN;AF;4077347
+MS;Montserrat;Montserrat;United Kingdom;NA;4989
+MT;Malta;The Republic of Malta;UN;EU;493559
+MU;Mauritius;The Republic of Mauritius;UN;AF;1265985
+MV;Maldives;The Republic of Maldives;UN;AS;374775
+MW;Malawi;The Republic of Malawi;UN;AF;17563749
+MX;Mexico;The United Mexican States;UN;NA;126577691
+MY;Malaysia;Malaysia;UN;AS;32719760
+MZ;Mozambique;The Republic of Mozambique;UN;AF;30066648
+NA;Namibia;The Republic of Namibia;UN;AF;2458936
+NC;New Caledonia;New Caledonia;France;OC;282200
+NE;Niger;The Republic of the Niger;UN;AF;22314743
+NF;Norfolk Island;The Territory of Norfolk Island;Australia;OC;1748
+NG;Nigeria;The Federal Republic of Nigeria;UN;AF;206139587
+NI;Nicaragua;The Republic of Nicaragua;UN;NA;6460411
+NL;Netherlands;The Kingdom of the Netherlands;UN;EU;17444731
+NO;Norway;The Kingdom of Norway;UN;EU;5367580
+NP;Nepal;The Federal Democratic Republic of Nepal;UN;AS;29609623
+NR;Nauru;The Republic of Nauru;UN;OC;11000
+NU;Niue;Niue;New Zealand;OC;1620
+NZ;New Zealand;New Zealand;UN;OC;4970447
+OM;Oman;The Sultanate of Oman;UN;AS;4664790
+PA;Panama;The Republic of Panamá;UN;NA;4218808
+PE;Peru;The Republic of Perú;UN;SA;32131400
+PF;French Polynesia;French Polynesia;France;OC;275918
+PG;Papua New Guinea;The Independent State of Papua New Guinea;UN;OC;8935000
+PH;Philippines;The Republic of the Philippines;UN;AS;108407287
+PK;Pakistan;The Islamic Republic of Pakistan;UN;AS;218950520
+PL;Poland;The Republic of Poland;UN;EU;38386000
+PM;Saint Pierre and Miquelon;The Overseas Collectivity of Saint-Pierre and Miquelon;France;NA;6008
+PN;Pitcairn Islands;The Pitcairn, Henderson, Ducie and Oeno Islands;United Kingdom;OC;50
+PR;Puerto Rico;The Commonwealth of Puerto Rico;United States;NA;3193694
+PS;Palestine;The State of Palestine;UN observer;AS;4976684
+PT;Portugal;The Portuguese Republic;UN;EU;10276617
+PW;Palau;The Republic of Palau;UN;OC;17907
+PY;Paraguay;The Republic of Paraguay;UN;SA;7152703
+QA;Qatar;The State of Qatar;UN;AS;2747282
+RE;Réunion;Réunion;France;AF;859959
+RO;Romania;Romania;UN;EU;19405156
+RS;Serbia;The Republic of Serbia;UN;EU;6963764
+RU;Russia;The Russian Federation;UN;EU;146745098
+RW;Rwanda;The Republic of Rwanda;UN;AF;12374397
+SA;Saudi Arabia;The Kingdom of Saudi Arabia;UN;AS;34218169
+SB;Solomon Islands;The Solomon Islands;UN;OC;680806
+SC;Seychelles;The Republic of Seychelles;UN;AF;97625
+SD;Sudan;The Republic of the Sudan;UN;AF;42345710
+SE;Sweden;The Kingdom of Sweden;UN;EU;10333456
+SG;Singapore;The Republic of Singapore;UN;AS;5703600
+SH;Saint Helena, Ascension and Tristan da Cunha;Saint Helena, Ascension and Tristan da Cunha;United Kingdom;AF;5633
+SI;Slovenia;The Republic of Slovenia;UN;EU;2094060
+SJ;Svalbard and Jan Mayen;Svalbard and Jan Mayen;Norway;EU;0
+SK;Slovakia;The Slovak Republic;UN;EU;5456362
+SL;Sierra Leone;The Republic of Sierra Leone;UN;AF;7901454
+SM;San Marino;The Republic of San Marino;UN;EU;33344
+SN;Senegal;The Republic of Senegal;UN;AF;16209125
+SO;Somalia;The Federal Republic of Somalia;UN;AF;15893219
+SR;Suriname;The Republic of Suriname;UN;SA;581372
+SS;South Sudan;The Republic of South Sudan;UN;AF;12778250
+ST;São Tomé and Principe;The Democratic Republic of São Tomé and Príncipe;UN;AF;201784
+SV;El Salvador;The Republic of El Salvador;UN;NA;6486201
+SX;Sint Maarten (Dutch part);Sint Maarten;Netherlands;NA;41486
+SY;Syria;The Syrian Arab Republic;UN;AS;17500657
+SZ;Eswatini (Swaziland);The Kingdom of Eswatini;UN;AF;1093238
+TC;Turks and Caicos Islands;The Turks and Caicos Islands;United Kingdom;NA;41369
+TD;Chad;The Republic of Chad;UN;AF;15692969
+TF;French Southern Territories;The French Southern and Antarctic Lands;France;AF;0
+TG;Togo;The Togolese Republic;UN;AF;7538000
+TH;Thailand;The Kingdom of Thailand;UN;AS;66481630
+TJ;Tajikistan;The Republic of Tajikistan;UN;AS;9127000
+TK;Tokelau;Tokelau;New Zealand;OC;1499
+TL;Timor-Leste (East Timor);The Democratic Republic of Timor-Leste;UN;AS;1387149
+TM;Turkmenistan;Turkmenistan;UN;AS;6031187
+TN;Tunisia;The Republic of Tunisia;UN;AF;11722038
+TO;Tonga;The Kingdom of Tonga;UN;AF;100651
+TR;Turkey;The Republic of Turkey;UN;AS;83154997
+TT;Trinidad and Tobago;The Republic of Trinidad and Tobago;UN;NA;1363985
+TV;Tuvalu;Tuvalu;UN;OC;11192
+TW;Taiwan;The Republic of China;disputed;AS;23604265
+TZ;Tanzania;The United Republic of Tanzania;UN;AF;55890747
+UA;Ukraine;Ukraine;UN;EU;41902416
+UG;Uganda;The Republic of Uganda;UN;AF;40299300
+UM;United States Minor Outlying Islands;Baker Island, Howland Island, Jarvis Island, Johnston Atoll, Kingman Reef, Midway Atoll, Navassa Island, Palmyra Atoll, and Wake Island;United States;OC;0
+US;United States of America;The United States of America;UN;NA;329453849
+UY;Uruguay;The Oriental Republic of Uruguay;UN;SA;3518552
+UZ;Uzbekistan;The Republic of Uzbekistan;UN;AS;34070275
+VA;Holy See;The Holy See;UN observer;EU;1000
+VC;Saint Vincent and the Grenadines;Saint Vincent and the Grenadines;UN;NA;110211
+VE;Venezuela;The Bolivarian Republic of Venezuela;UN;SA;32219521
+VG;Virgin Islands (British);The Virgin Islands;United Kingdom;NA;30030
+VI;Virgin Islands (U.S.);The Virgin Islands of the United States;United States;NA;104578
+VN;Viet Nam;The Socialist Republic of Viet Nam;UN;AS;96208984
+VU;Vanuatu;The Republic of Vanuatu;UN;OC;304500
+WF;Wallis and Futuna;The Territory of the Wallis and Futuna Islands;France;OC;11558
+WS;Samoa;The Independent State of Samoa;UN;OC;195843
+XK;Kosovo;The Republic of Kosovo;disputed;EU;1810463
+YE;Yemen;The Republic of Yemen;UN;AS;29825968
+YT;Mayotte;The Department of Mayotte;France;AF;279471
+ZA;South Africa;The Republic of South Africa;UN;AF;58775022
+ZM;Zambia;The Republic of Zambia;UN;AF;17381168
+ZW;Zimbabwe;The Republic of Zimbabwe;UN;AF;15159624

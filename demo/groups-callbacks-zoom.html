@@ -67,9 +67,13 @@
                 if (country != undefined) {
                     var nation = country.country; // Get parent nation
                     var out = '<a class="hide" onclick="document.getElementById(\'info\').classList.add(\'hidden\')">×</a>';
-                    out += 'Country: ' + country.id + '<br>Nation: ' + nation.name + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region;
-                    out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
-                    nation.provinces.forEach(function(province) { out += province.id + '<br>'; }); 
+                    if  (country.id == 'Ocean') {
+                        out += 'Country: ' + country.id;
+                    } else {
+                        out += 'Country: ' + country.id + '<br>Nation: ' + nation.name + '<br>Official name: ' + nation.longname + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region + '<br>Population: ' + formatInteger(nation.population);
+                        out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
+                        nation.provinces.forEach(function(province) { out += province.id + '<br>'; }); 
+                    }
                     document.getElementById("info").innerHTML = out;
                     document.getElementById("info").classList.remove("hidden");
                 } else {
@@ -140,6 +144,11 @@
                 let response = await fetch('../src/countrydata.json');
                 let data = await response.json();
                 return data;
+            }
+
+            // Number format helper function
+            function formatInteger(number) {
+                return new Intl.NumberFormat('en-GB').format(number);
             }
 
         </script>

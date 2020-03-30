@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.0.9
+ * v0.1.0
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -20,10 +20,10 @@ var svgWorldMap = (function(){
     var options = {
         showOcean: true, 
         oceanColor: '#D8EBFF', 
-        //worldColor: '#FFFFFF', 
+        worldColor: '#FFFFFF', 
         // TODO: Currently this makes no sense for main country groups, until all country borders are existing in the SVG (a lot are missing, e.g. Japan, Greenland, Antarctica)
         //countryFill: { out: '#B9B9B9',  over: '#CCCCCC',  click: '#666666' }, 
-        countryStroke: { out: '#FFFFFF',  over: '#000000',  click: '#333333' }, 
+        countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
         countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
         provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
         provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
@@ -79,7 +79,7 @@ var svgWorldMap = (function(){
             }
         });
         // World & ocean settings
-        //countries['World'].style.fill = options.worldColor; 
+        countries['World'].style.fill = options.worldColor; 
         countries['Ocean'].style.fill = options.oceanColor; 
         if (options.showOcean == false) {
             countries['Ocean'].style.fill = 'none'; 
@@ -99,10 +99,12 @@ var svgWorldMap = (function(){
     // TODO: Cleanup, optimize?
     function sortProvinces() {
         for (var country in countries) {
-            // Add name and region to nation, if it exists in countryData
+            // Add all details from countryData to country
             if (countryData[countries[country].id] != undefined) {
-                countries[country].name = countryData[countries[country].id].name; 
-                countries[country].region = countryData[countries[country].id].region;
+                var currentCountryData = countryData[countries[country].id];
+                for (var key in currentCountryData) {
+                    countries[country][key] = currentCountryData[key]; 
+                }
             }
             countries[country].country = countries[country]; // Reference to self for hierarchy compatibility - it's a little crazy, i know ;-) 
             var provinces = []; // Empty array for all sub-provinces
@@ -274,12 +276,14 @@ var svgWorldMap = (function(){
                     if (countryGroups[mainGroup] == undefined) { 
                         countryGroups[mainGroup] = {}; // New object for each mainGroup
                     }
-                    // Add new subGroup, if it doesn't exist
-                    if (countryGroups[mainGroup][subGroup] == undefined) { 
-                        countryGroups[mainGroup][subGroup] = {}; // New object for each subGroup
+                    if (subGroup != '') {
+                        // Add new subGroup, if it doesn't exist
+                        if (countryGroups[mainGroup][subGroup] == undefined) { 
+                            countryGroups[mainGroup][subGroup] = {}; // New object for each subGroup
+                        }
+                        // Push country to subGroup
+                        countryGroups[mainGroup][subGroup][countries[country].id] = countries[country]; 
                     }
-                    // Push country to subGroup
-                    countryGroups[mainGroup][subGroup][countries[country].id] = countries[country]; 
                 }
             } else {
                 //console.log('Country data missing: ' + countries[country].id);

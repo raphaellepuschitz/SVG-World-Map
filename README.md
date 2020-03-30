@@ -117,7 +117,8 @@ The default options can be overruled by passing an object of custom options. All
 var options = {
     showOcean: true, 
     oceanColor: '#D8EBFF', 
-    countryStroke: { out: '#FFFFFF',  over: '#000000',  click: '#333333' }, 
+    worldColor: '#FFFFFF', 
+    countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
     countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
     provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
@@ -344,8 +345,11 @@ TODOs & Further Development
 * ~~Fix path bugs~~ (V 0.0.9)
 * ~~Add further options~~ (V 0.0.9)
 * ~~Improve the callback API~~ (V 0.0.9)
+* ~~Cleanup SVG~~ (V 0.1.0)
+* ~~Add population to country data~~ (V 0.1.0)
 * Add data visualization demo
 * Add strategy game demo
+* Add mobile support
 * Name all provinces in the SVG (This may take a while... Help appreciated!)
 * Add info boxes to the map
 * Add country names to the map
