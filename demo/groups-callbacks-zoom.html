@@ -7,16 +7,19 @@
         <style>
             html { width: 100%; height: 100%; overflow: hidden; }
             body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+            a { color: #CCCCCC; text-decoration: dotted underline; cursor: pointer; }
+            button { cursor: pointer; width: 100%; padding: 5px 0; font-size: 13px; text-align: center; border: none;  border-radius: 5px; color: #FFFFFF; background-color: #444444; }
+            button:hover { background-color: #999999; }
             ul { list-style: none; padding: 0; }
             ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
             ul li:hover { background-color: #444444; }
             .box { position: fixed; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
-            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 585px; margin-top: -5px; }
+            .hide { font-size: 25px; position: fixed; margin-left: 585px; margin-top: -5px; text-decoration: none; color: #FFFFFF; }
             .hidden { display: none; }
             #container, #svg-world-map { width: 100%; height: 100%; }
             #info { bottom: 10px; left: calc(50vw - 300px); width: 600px; height: 200px; }
             #groups { top: 10px; right: 10px; }
-            #countries { top: 10px; left: 10px; max-width: 300px; max-height: calc(100vh - 40px); }
+            #countries { top: 10px; left: 10px; max-width: 230px; max-height: calc(100vh - 40px); }
         </style>
 	</head>
 	<body>
@@ -28,9 +31,11 @@
         <div id="info" class="box hidden"></div>
         <script src="../src/svg-world-map.js"></script>
         <!-- Let's test SVG pan zoom integration: --> 
-        <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+        <!-- CDN: <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script> -->
+        <script src="svg-pan-zoom.min.js"></script>
         <script>
 
+            // Global variables
             var myWorldMap;
             var mySVG = document.getElementById('svg-world-map'); 
 
@@ -44,6 +49,7 @@
 
                         // Custom options
                         var params = { 
+                            showCountryLabels: true, // Attention: Showing country title names may take longer to load
                             groupBy: [ "region", "sovereignty" ],
                             mapClick: "mapClick"
                         };
@@ -64,20 +70,25 @@
 
             // Custom callback function for map click, defined in 'options.mapClick'
             function mapClick(country) {
-                if (country != undefined) {
+                if (country != undefined && country.id != 'Ocean') {
                     var nation = country.country; // Get parent nation
-                    var out = '<a class="hide" onclick="document.getElementById(\'info\').classList.add(\'hidden\')">×</a>';
-                    if  (country.id == 'Ocean') {
+                    if (nation != undefined) {
+                        var out = '<a class="hide" onclick="document.getElementById(\'info\').classList.add(\'hidden\')">×</a>';
                         out += 'Country: ' + country.id;
-                    } else {
-                        out += 'Country: ' + country.id + '<br>Nation: ' + nation.name + '<br>Official name: ' + nation.longname + '<br>Code: ' + nation.id + '<br>Region: ' + nation.region + '<br>Population: ' + formatInteger(nation.population);
+                        out += '<br><a onmouseover="highlightCountry(\'' + nation.id + '\')" onmouseout="myWorldMap.out(\'' + nation.id + '\')" onclick="myWorldMap.click(\'' + nation.id + '\')">Nation: ' + nation.name + '</a><br>';
+                        out += 'Official name: ' + nation.longname + '<br>Code: ' + nation.id + '<br>';
+                        out += '<a onmouseout="highlightGroup(\'' + nation.region + '\', \'region\', \'out\')" onmouseover="highlightGroup(\'' + nation.region + '\', \'region\', \'over\')" onclick="highlightGroup(\'' + nation.region + '\', \'region\', \'click\')">Region: ' + nation.region + '</a><br>';
+                        out += 'Population: ' + formatInteger(nation.population);
                         out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
-                        nation.provinces.forEach(function(province) { out += province.id + '<br>'; }); 
+                        nation.provinces.forEach(function(province) { 
+                            out += '<a onmouseover="myWorldMap.over(\'' + province.id + '\')" onmouseout="myWorldMap.out(\'' + province.id + '\')" onclick="myWorldMap.click(\'' + province.id + '\')">' + province.id + '</a>, '; 
+                        }); 
+                        document.getElementById("info").innerHTML = out;
+                        document.getElementById("info").classList.remove("hidden");
                     }
-                    document.getElementById("info").innerHTML = out;
-                    document.getElementById("info").classList.remove("hidden");
                 } else {
-                    console.log('Country not found');
+                    //console.log('Country not found');
+                    //document.getElementById("info").classList.add("hidden");
                 }
             }
 
@@ -85,7 +96,7 @@
             function buildCountryControls() {
                 var out = '<u>Countries:</u><br><ul>';
                 for (var countryid in myWorldMap.countries) {
-                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                    out += '<li id="' + countryid + '" onmouseover="highlightCountry(\'' + countryid + '\')" onmouseout="myWorldMap.out(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
                 }
                 out += '</ul>';
                 document.getElementById("countries").innerHTML = out;
@@ -95,11 +106,14 @@
             function buildGroupControls() {
                 var regionNames = { AF: "Afrika", AN: "Antarctica", AS: "Asia", EU: "Europe", NA: "North America", OC: "Ocania", SA: "South America" };
                 var out = '';
+                // Add country label toggle 
+                out += '<button onclick="myWorldMap.labels(\'all\')">Country labels</button><br><br>';
+                out += '<button onclick="myWorldMap.labels(\'micro\')">Microstate labels</button><br><br><br>';
                 for (var group in myWorldMap.countryGroups) {
                     out += '<u>' + group.charAt(0).toUpperCase() + group.slice(1) + ':</u><br><ul>'; // Capitalize first letter
                     for (var subgroup in myWorldMap.countryGroups[group]) {
                         if (group == 'region') { var name = regionNames[subgroup]; } else { var name = subgroup; }
-                        out += '<li id="' + subgroup + '" onmouseout="highlightGroup(\'' + group + '\', \'out\')" onmouseover="highlightGroup(\'' + group + '\', \'over\')" onclick="highlightGroup(\'' + group + '\', \'click\')">' + name + '</li>'; 
+                        out += '<li id="' + subgroup + '" onmouseout="highlightGroup(\'' + subgroup + '\', \'' + group + '\', \'out\')" onmouseover="highlightGroup(\'' + subgroup + '\', \'' + group + '\', \'over\')" onclick="highlightGroup(\'' + group + '\', \'' + group + '\', \'click\')">' + name + '</li>'; 
                     }
                     out += '</ul><br>';
                 }
@@ -107,15 +121,13 @@
             }
 
             // Highlight country 
-            function highlightCountry() {
-                var id = event.srcElement.id;
+            function highlightCountry(id) {
                 var color = getHighlightColor(id);
                 myWorldMap.update({ [id]: color });
             }
 
             // Highlight country group
-            function highlightGroup(group, trigger) {
-                var id = event.srcElement.id;
+            function highlightGroup(id, group, trigger) {
                 var group = myWorldMap.countryGroups[group];
                 if (trigger == 'out') {
                     for (var country in group[id]) {

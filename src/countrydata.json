@@ -280,7 +280,7 @@
 		"population": 544
 	},
 	"CD": {
-		"name": "Congo (Democratic Republic of the)",
+		"name": "Congo (Dem. Rep.)",
 		"longname": "The Democratic Republic of the Congo",
 		"sovereignty": "UN",
 		"region": "AF",
@@ -1631,7 +1631,7 @@
 		"population": 0
 	},
 	"US": {
-		"name": "United States of America",
+		"name": "United States",
 		"longname": "The United States of America",
 		"sovereignty": "UN",
 		"region": "NA",

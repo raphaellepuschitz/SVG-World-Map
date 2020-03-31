@@ -46,7 +46,12 @@
         out: '0.1',  
         over: '1',  
         click: '0.5' 
-    }<br>
+    }, <br>
+    labelFill: { 
+        out: '#006600',  
+        over: '#FF0000',  
+        click: '#000000' 
+    }
 };</div>
         </div>
         <div id="overout" class="box">
@@ -66,7 +71,8 @@
                     countryStrokeWidth: { out: '0.5',  over: '2',  click: '2' }, 
                     provinceFill: { out: '#090909',  over: '#00FF00',  click: '#FF0000' }, 
                     provinceStroke: { out: '#FFFFFF',  over: '#FF0000',  click: '#666666' }, 
-                    provinceStrokeWidth: { out: '0.1',  over: '1',  click: '0.5' }
+                    provinceStrokeWidth: { out: '0.1',  over: '1',  click: '0.5' }, 
+                    labelFill: { out: '#006600',  over: '#FF0000',  click: '#000000' }
                 };
                 svgWorldMap('svg-world-map', myCustomOptions);
             };

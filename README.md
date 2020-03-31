@@ -123,7 +123,11 @@ var options = {
     provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStrokeWidth: { out: '0.1',  over: '0.5',  click: '0.5' }, 
-    groupCountries: true, 
+    labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
+    showLabels: true, // Show normal country labels
+    showMicroLabels: false, // Show microstate labels
+    showMicroStates: true, // Show microstates on map
+    groupCountries: true, // Enable or disable country grouping
     groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
     mapOut: "mapOut", // Callback functions from the map to the outside, can have custom names
     mapOver: "mapOver", 
@@ -156,10 +160,12 @@ myWorldMap: {
     countries: { AD: '<g id="AD">', AE: '<g id="AE">', ... }, 
     countryData: { AD: { name: "Andorra", longname: ... }, ... }, 
     countryGroups: { region: { AF: {...}, AN: {...}, ... }, ... }, 
+    countryLabels: { AD: '<text id="AD-label">', AE: '<text id="AE-label">', ... }, 
     out: function(id) { ... }, // Calling home functions from outside into the map 
     over: function(id) { ... }, 
     click: function(id) { ... }, 
-    update: function(data) { ... } 
+    update: function(data) { ... }, 
+    labels: function(data) { ... } 
 };
 ```
 
@@ -170,13 +176,18 @@ Let's break this down in detail, as each return object can be very useful:
 
 This sub object `svgWorldMap.countries` includes a list of all top level countries (the main groups in the SVG), where key is the country code and value is the `<g id="AD">` group element (which includes all sub provinces).  
 
-There are also some special informations added **directly to the `<g>` and all child `<path>`** elements, which can come in very handy for quick element access. Let's have a look at Canada: 
+There are also some special informations added **directly to the `<g>` and all child `<path>`** elements, which can come in very handy for quick element and information access. Let's have a look at Canada: 
 
 ```js
-svgWorldMap.countries['CA'].name = 'Canada'; 
-svgWorldMap.countries['CA'].region = 'NA'; // North America
-svgWorldMap.countries['CA'].country = '<g id="CA">'; // The group element of the main country
-svgWorldMap.countries['CA'].provinces = [ '<path id="CA-AB" fill="#B9B9B9" ...>', '<path id="CA-BC" fill="#B9B9B9" ...>', ... ]; // Array with all sub-province paths
+svgWorldMap.countries['CA']: <g id="CA">: {
+    ...
+    border: '<path id="ca" fill="none" stroke="#FFFFFF" stroke-width="0.5" d="...">', // Border path (= nation path stroke)
+    country: '<g id="CA">'; // The group element of the main country
+    name: 'Canada'; 
+    region: 'NA'; // North America
+    provinces: [ '<path id="CA-AB" fill="#B9B9B9" ...>', '<path id="CA-BC" fill="#B9B9B9" ...>', ... ]; // Array with all sub-province paths
+    ...
+}
 ```
 
 > The political subdivisions (countries, provinces, states) are mostly not named correctly, like `<path id="path12345" ...>`. This issue will be addressed in future versions. 
@@ -187,10 +198,22 @@ svgWorldMap.countries['CA'].provinces = [ '<path id="CA-AB" fill="#B9B9B9" ...>'
 The `svgWorldMap.countryData` is a copy of the (optional) `countryData` parameter at startup (see next section) or the fallback data from the library. If you don't modify the basic country data, this object inculdes the following information: 
 
 ```js
-svgWorldMap.countryData['CA'].name = 'Canada'; 
-svgWorldMap.countryData['CA'].longname = 'Canada'; 
-svgWorldMap.countryData['CA'].region = 'NA'; // North America
-svgWorldMap.countryData['CA'].sovereignty = 'UN'; // United Nations member state
+svgWorldMap.countryData['CA']: {
+    name: "Canada",
+    region: "NA", // North America
+}
+```
+
+If you load the basic cutom data from [countrydata.json](./src/countrydata.json) (see below), the data provides a little more (and is also added to each country in `svgWorldMap.countries`): 
+
+```js
+svgWorldMap.countryData['CA']: {
+    name: "Canada",
+    longname: "Canada",
+    population: 37958039,
+    region: "NA", // North America
+    sovereignty: "UN" // United Nations member state
+}
 ```
 
 
@@ -236,9 +259,21 @@ var myWorldMap = svgWorldMap(mySVG, myCustomOptions);
 ```
 
 
-#### Country over, out, click and update
+#### Country labels
 
-These functions are part of the **API**, see below for further information.
+The labels are a group in the SVG map and are sorted like the country list. They are basically controlled via the `labels()` API function (see there). Each one has a attribute called `microstate` which can be `true` or `false`: 
+
+```js
+svgWorldMap.countryLabels['AD']: <text id="AD-label">: {
+    ...
+    microstate: true,
+    ...
+}
+```
+
+#### Country `over()`, `out()`, `click()`, `update()` and `labels()`
+
+All these functions are part of the **API**, please see below for further information.
 
 
 ### Change the basic country data
@@ -315,7 +350,7 @@ function myCustomOut(country) {
 
 #### Calling home to the map
 
-There are currently 4 calling home functions, 3 for country over, out and click and one for update.  
+There are currently 5 calling home functions, 3 for country over, out and click and one for country update and label control.  
 
 The `over()`, `out()` and `click()` functions will trigger the attribute changes for `fill`, `stroke` and `stroke-width` defined in `options`. They only need the country id parameter:  
 
@@ -337,6 +372,18 @@ The `update()` function changes the color of one or more countries at once. The 
 myWorldMap.update({ DE: '#00FF00', AT: '#00FF00', CH: '#00FF00' });
 ```
 
+The `label()` function toggles the visibility of the country labels on and off. The input parameter can be `"all"` or `"micro"` (for microstates):  
+
+```js
+myWorldMap.labels('all');
+```
+
+Or as inline HTML:
+
+```html
+<button onclick="myWorldMap.labels('micro')">Show microstates</button>
+```
+
 
 TODOs & Further Development
 ---------------------------
@@ -347,13 +394,16 @@ TODOs & Further Development
 * ~~Improve the callback API~~ (V 0.0.9)
 * ~~Cleanup SVG~~ (V 0.1.0)
 * ~~Add population to country data~~ (V 0.1.0)
+* ~~Improve country over, out, click~~ (V 0.1.1)
+* ~~Add country labels (names) to the map~~ (V 0.1.1)
+* ~~Add microstate handling~~ (V 0.1.1)
 * Add data visualization demo
 * Add strategy game demo
 * Add mobile support
-* Name all provinces in the SVG (This may take a while... Help appreciated!)
 * Add info boxes to the map
-* Add country names to the map
 * Add bubbles / circles to the map
+* Optimize drag and click
+* Name all provinces in the SVG (This may take a while... Help appreciated!)
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
 
 
