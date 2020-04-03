@@ -1,9 +1,10 @@
 /**
  * SVG World Map JS
- * v0.1.1
+ * v0.1.2
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
+ * URL: https://github.com/raphaellepuschitz/SVG-World-Map
  * Copyleft: GNU General Public License version 3
  **/
 
@@ -16,6 +17,8 @@ var svgWorldMap = (function(){
     var countryData = {};
     var countryGroups = {};
     var countryLabels = {};
+    // Start library addon module, if it's set in options.mapTimeControls
+    var mapTimeControls = {}; // Set to 'true' to activate controls, but make sure to include 'svg-world-map-time-controls.js' 
     var selectedCountry;
     //var dragMap = false; // TODO: Check, doesn't work smooth 
 
@@ -39,7 +42,8 @@ var svgWorldMap = (function(){
         groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
         mapOut: "mapOut", // Callback functions from the map to the outside, can have custom names
         mapOver: "mapOver", 
-        mapClick: "mapClick" 
+        mapClick: "mapClick", 
+        timeControls: false // Set to 'true' to activate controls, but make sure to include 'svg-world-map-time-controls.js' 
     };
 
     // Main function: SVG map init, options handling, return the map object
@@ -66,6 +70,7 @@ var svgWorldMap = (function(){
             'countryData': countryData, 
             'countryGroups': countryGroups, 
             'countryLabels': countryLabels, 
+            'mapTimeControls': mapTimeControls, 
             // Calling home functions from outside into the map 
             // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
             'out': function(id) { window["countryOut"].call(null, id); }, 
@@ -114,7 +119,7 @@ var svgWorldMap = (function(){
         }
     }
 
-    // Pre-sort sub-provinces in countries for faster access and node cleanup
+    // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
     // TODO: Cleanup, optimize?
     function sortProvinces() {
         for (var country in countries) {
@@ -126,11 +131,12 @@ var svgWorldMap = (function(){
                 }
             }
             countries[country].country = countries[country]; // Reference to self for hierarchy compatibility - it's a little crazy, i know ;-) 
-            var provinces = []; // Empty array for all sub-provinces
+            var provinces = []; // Empty array for all provinces
             // Ungrouped provinces are 1 level deep
             countries[country].childNodes.forEach(function(child) { 
-                // Add parent country  for hierarchy compatibility
+                // Add parent country and province for hierarchy compatibility
                 child.country = countries[country]; 
+                child.province = child; // Reference to self for hierarchy compatibility
                 // 'id.toLowerCase()' is the nation (border) element, so this is the main country (nation)
                 if (child.id == countries[country].id.toLowerCase()) { 
                     countries[country].border = child; // Add border to nation
@@ -140,7 +146,9 @@ var svgWorldMap = (function(){
                     } else {
                         child.childNodes.forEach(function(grandchild) { 
                             if (grandchild.nodeType != Node.TEXT_NODE) {
+                                // Add country and parent province for hierarchy compatibility
                                 grandchild.country = countries[country];
+                                grandchild.province = child; 
                                 pathSetAttributes(grandchild, 'out');
                             }
                         });
@@ -151,11 +159,15 @@ var svgWorldMap = (function(){
                     provinces.push(child);
                 // Grouped provinces are 2 levels deep (We have to go deeper!)
                 } else if (child.tagName == 'g') {
+                    var subprovinces = []; // Empty array for all sub-provinces
                     child.childNodes.forEach(function(grandchild) { 
+                        // Add country and parent province for hierarchy compatibility
                         grandchild.country = countries[country];
+                        grandchild.province = child; 
                         if (grandchild.tagName == 'path') { 
                             if (grandchild.getAttribute('fill') != 'none') { // Don't push border grandchilds
-                                provinces.push(grandchild);
+                            //provinces.push(grandchild);
+                            subprovinces.push(grandchild);
                             /*} else {
                                 console.log(grandchild); // Only path15677, TODO: Cleanup SVG */
                             }
@@ -164,11 +176,14 @@ var svgWorldMap = (function(){
                             console.log(grandchild);  // Only <circle id="tf."> and <circle id="hk_">, TODO: Cleanup SVG  */
                         }
                     }); 
+                    child.provinces = subprovinces; // Add subprovinces to province
+                    provinces.push(child);
                 }
             }); 
             countries[country].provinces = provinces; // Add provinces to country
         }
         initMapControls();
+        //countCountries();
     }
 
     // Get microstates from labels
@@ -229,12 +244,17 @@ var svgWorldMap = (function(){
                     path.setAttribute('stroke-width', options.countryStrokeWidth[event]);
                 // Other provinces
                 } else {
-                    path.setAttribute('fill', options.provinceFill[event]);
+                    // Keep updated color 
+                    if (path.updateColor != undefined) {
+                        path.setAttribute('fill', path.updateColor);
+                    } else {
+                        path.setAttribute('fill', options.provinceFill[event]);
+                    }
                     path.setAttribute('stroke', options.provinceStroke[event]);
                     path.setAttribute('stroke-width', options.provinceStrokeWidth[event]);
                 }
             // Set color to path directly, but not selected country
-            } else if (event.substr(0, 1) == '#' && path != selectedCountry && path.country != selectedCountry) {
+            } else if ((event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb') && path != selectedCountry && path.country != selectedCountry) {
                 path.setAttribute('fill', event);
                 path.setAttribute('stroke', event);
             }
@@ -248,6 +268,10 @@ var svgWorldMap = (function(){
             countries[country].addEventListener("mouseout", function() { provinceOverOut('out'); });
             countries[country].addEventListener("mouseup", function() { provinceClick(); });
         }
+        // Start library addon module, if it's set in options.mapTimeControls
+        /*if (options.timeControls == true) {
+            timeControls = svgWorldMapTimeControls(svgMap);
+        }*/
     }
 
     // Map country hover handling
@@ -297,7 +321,10 @@ var svgWorldMap = (function(){
     window.countryOver = function(id) {
         var country = countries[id]; 
         if (country != undefined && country != selectedCountry) {
-            country.provinces.forEach(function(province) { pathSetAttributes(province, 'over') }); 
+            country.provinces.forEach(function(province) { 
+                pathSetAttributes(province, 'over'); 
+                if (province.provinces != undefined) { province.provinces.forEach(function(subprovince) { pathSetAttributes(subprovince, 'over') }); } 
+            }); 
             setLabelFill(id, 'over');
         } else {
             province = findProvinceById(id);
@@ -309,7 +336,10 @@ var svgWorldMap = (function(){
     window.countryOut = function(id) {
         var country = countries[id]; 
         if (country != undefined && country != selectedCountry) {
-            country.provinces.forEach(function(province) { pathSetAttributes(province, 'out') }); 
+            country.provinces.forEach(function(province) { 
+                pathSetAttributes(province, 'out'); 
+                if (province.provinces != undefined) { province.provinces.forEach(function(subprovince) { pathSetAttributes(subprovince, 'out') }); } 
+            }); 
             setLabelFill(id, 'out');
         } else {
             province = findProvinceById(id);
@@ -323,7 +353,10 @@ var svgWorldMap = (function(){
         var selectedOld = selectedCountry;
         // Set new selected
         if (country != undefined && country != selectedCountry) {
-            country.provinces.forEach(function(province) { pathSetAttributes(province, 'click') }); 
+            country.provinces.forEach(function(province) { 
+                pathSetAttributes(province, 'click'); 
+                if (province.provinces != undefined) { province.provinces.forEach(function(subprovince) { pathSetAttributes(subprovince, 'click') }); } 
+            }); 
             setLabelFill(id, 'click');
         } else {
             country = findProvinceById(id);
@@ -337,8 +370,28 @@ var svgWorldMap = (function(){
     // Update function for calling home from the outside, defined in 'svgMap.update' 
     window.updateData = function(updateData) {
         for (var id in updateData) {
-            var country = countries[id]; 
-            country.provinces.forEach(function(province) { pathSetAttributes(province, updateData[id]) }); 
+            if (countries[id] != undefined) {
+                var country = countries[id]; 
+            } else {
+                var country = findProvinceById(id);
+            }
+            if (country != undefined) {
+                if (country.provinces == undefined) { // Is mostly a province and no country. TODO: Rename variables? 
+                    country.updateColor = updateData[id];
+                    pathSetAttributes(country, updateData[id]);
+                } else {
+                    country.provinces.forEach(function(province) { 
+                        province.updateColor = updateData[id];
+                        pathSetAttributes(province, updateData[id]);
+                        if (province.provinces != undefined) {
+                            province.provinces.forEach(function(subprovince) { 
+                                subprovince.updateColor = updateData[id];
+                                pathSetAttributes(subprovince, updateData[id]);
+                            });
+                        }
+                    }); 
+                }
+            } 
         };
     }
 
@@ -381,7 +434,14 @@ var svgWorldMap = (function(){
         if (selectedOld != undefined) {
             pathSetAttributes(selectedOld, 'out');
             if (selectedOld.provinces != undefined) {
-                selectedOld.provinces.forEach(function(province) { pathSetAttributes(province, 'out') }); 
+                selectedOld.provinces.forEach(function(province) { 
+                    pathSetAttributes(province, 'out'); 
+                    if (province.provinces != undefined) {
+                        province.provinces.forEach(function(subprovince) { 
+                            pathSetAttributes(subprovince, 'out'); 
+                        }); 
+                    }
+                }); 
             }
             setLabelFill(selectedOld.id, 'out'); // Reset selectedOld label
         }
@@ -437,6 +497,23 @@ var svgWorldMap = (function(){
             object[key] = input[key];
             return object;
         }, {});
+    }
+
+    // Helper function for all countries and provinces
+    function countCountries() {
+        var countCountries = 0;
+        var countProvinces = 0;
+        for (var country in countries) {
+            var countSub = 0;
+            countCountries++;
+            for (var province in countries[country].provinces) {
+                countSub++;
+                countProvinces++;
+            }
+            console.log(country + ': ' + countSub);
+        }
+        console.log('Total countries: ' + countCountries);
+        console.log('Total provinces: ' + countProvinces);
     }
 
     // Fallback for countryData if no other is passed

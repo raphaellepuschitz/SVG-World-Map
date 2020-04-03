@@ -25,7 +25,7 @@ BG;Bulgaria;The Republic of Bulgaria;UN;EU;7000039
 BH;Bahrain;The Kingdom of Bahrain;UN;AS;1569446
 BI;Burundi;The Republic of Burundi;UN;AF;10953317
 BJ;Benin;The Republic of Benin;UN;AF;11733059
-BL;Saint Barthélemy;The Collectivity of Saint-Barthélemy;France;NA;9793
+BL;Saint Barthelemy;The Collectivity of Saint-Barthélemy;France;NA;9793
 BM;Bermuda;Bermuda;United Kingdom;NA;64027
 BN;Brunei;The Nation of Brunei;UN;AS;442400
 BO;Bolivia;The Plurinational State of Bolivia;UN;SA;11469896
@@ -52,7 +52,7 @@ CO;Colombia;The Republic of Colombia;UN;SA;49395678
 CR;Costa Rica;The Republic of Costa Rica;UN;NA;5058007
 CU;Cuba;The Republic of Cuba;UN;NA;11209628
 CV;Cabo Verde;The Republic of Cabo Verde;UN;AF;550483
-CW;Curaçao;The Country of Curaçao;Netherlands;SA;158665
+CW;Curacao;The Country of Curaçao;Netherlands;SA;158665
 CX;Christmas Island;The Territory of Christmas Island;Australia;AS;1843
 CY;Cyprus;The Republic of Cyprus;UN;EU;875900
 CZ;Czechia;The Czech Republic;UN;EU;10681161
@@ -140,7 +140,7 @@ MA;Morocco;The Kingdom of Morocco;UN;AF;35839345
 MC;Monaco;The Principality of Monaco;UN;EU;38300
 MD;Moldova;The Republic of Moldova;UN;EU;2681735
 ME;Montenegro;Montenegro;UN;EU;622359
-MF;Saint Martin (French part);The Collectivity of Saint-Martin;France;NA;35107
+MF;St Martin;The Collectivity of Saint-Martin;France;NA;35107
 MG;Madagascar;The Republic of Madagascar;UN;AF;25680342
 MH;Marshall Islands;The Republic of the Marshall Islands;UN;OC;58413
 MK;North Macedonia;Republic of North Macedonia;UN;EU;2077132
@@ -187,7 +187,7 @@ PT;Portugal;The Portuguese Republic;UN;EU;10276617
 PW;Palau;The Republic of Palau;UN;OC;17907
 PY;Paraguay;The Republic of Paraguay;UN;SA;7152703
 QA;Qatar;The State of Qatar;UN;AS;2747282
-RE;Réunion;Réunion;France;AF;859959
+RE;Reunion;Réunion;France;AF;859959
 RO;Romania;Romania;UN;EU;19405156
 RS;Serbia;The Republic of Serbia;UN;EU;6963764
 RU;Russia;The Russian Federation;UN;EU;146745098
@@ -210,7 +210,7 @@ SR;Suriname;The Republic of Suriname;UN;SA;581372
 SS;South Sudan;The Republic of South Sudan;UN;AF;12778250
 ST;São Tomé and Principe;The Democratic Republic of São Tomé and Príncipe;UN;AF;201784
 SV;El Salvador;The Republic of El Salvador;UN;NA;6486201
-SX;Sint Maarten (Dutch part);Sint Maarten;Netherlands;NA;41486
+SX;Sint Maarten;Sint Maarten;Netherlands;NA;41486
 SY;Syria;The Syrian Arab Republic;UN;AS;17500657
 SZ;Eswatini (Swaziland);The Kingdom of Eswatini;UN;AF;1093238
 TC;Turks and Caicos Islands;The Turks and Caicos Islands;United Kingdom;NA;41369
@@ -238,7 +238,7 @@ UZ;Uzbekistan;The Republic of Uzbekistan;UN;AS;34070275
 VA;Holy See;The Holy See;UN observer;EU;1000
 VC;Saint Vincent and the Grenadines;Saint Vincent and the Grenadines;UN;NA;110211
 VE;Venezuela;The Bolivarian Republic of Venezuela;UN;SA;32219521
-VG;Virgin Islands (British);The Virgin Islands;United Kingdom;NA;30030
+VG;British Virgin Islands;The Virgin Islands;United Kingdom;NA;30030
 VI;Virgin Islands (U.S.);The Virgin Islands of the United States;United States;NA;104578
 VN;Viet Nam;The Socialist Republic of Viet Nam;UN;AS;96208984
 VU;Vanuatu;The Republic of Vanuatu;UN;OC;304500

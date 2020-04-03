@@ -95,7 +95,17 @@
 		"longname": "The Commonwealth of Australia",
 		"sovereignty": "UN",
 		"region": "OC",
-		"population": 25646823
+		"population": 25646823,
+		"provinces": {
+			"AU-ACT": { "name": "Australian Capital Territory", "capital": "Canberra", "population": 426709 },
+			"AU-NSW": { "name": "New South Wales", "capital": "Sydney", "population": 8089526 },
+			"AU-NT": { "name": "Northern Territory", "capital": "Darwin", "population": 245869 },
+			"AU-QLD": { "name": "Queensland", "capital": "Brisbane", "population": 5095100 },
+			"AU-SA": { "name": "South Australia", "capital": "Adelaide", "population": 1751693 },
+			"AU-TAS": { "name": "Tasmania", "capital": "Hobart", "population": 534281 },
+			"AU-VIC": { "name": "Victoria", "capital": "Melbourne", "population": 6594804 },
+			"AU-WA": { "name": "Western Australia", "capital": "Perth", "population": 2621680 }
+		}
 	},
 	"AW": {
 		"name": "Aruba",
@@ -182,7 +192,7 @@
 		"population": 11733059
 	},
 	"BL": {
-		"name": "Saint Barthélemy",
+		"name": "Saint Barthelemy",
 		"longname": "The Collectivity of Saint-Barthélemy",
 		"sovereignty": "France",
 		"region": "NA",
@@ -270,7 +280,22 @@
 		"longname": "Canada",
 		"sovereignty": "UN",
 		"region": "NA",
-		"population": 37958039
+		"population": 37958039,
+		"provinces": {
+			"CA-AB": { "name": "Alberta", "capital": "Edmonton", "population": 4413146 },
+			"CA-BC": { "name": "British Columbia", "capital": "Victoria", "population": 5110917 },
+			"CA-MB": { "name": "Manitoba", "capital": "Winnipeg", "population": 1377517 },
+			"CA-NB": { "name": "New Brunswick", "capital": "Fredericton", "population": 779993 },
+			"CA-NL": { "name": "Newfoundland and Labrador", "capital": "St. John's", "population": 521365 },
+			"CA-NT": { "name": "Northwest Territories", "capital": "Yellowknife", "population": 44904 },
+			"CA-NU": { "name": "Nunavut", "capital": "Iqaluit", "population": 39097 },
+			"CA-NS": { "name": "Nova Scotia", "capital": "Halifax", "population": 977457 },
+			"CA-ON": { "name": "Ontario", "capital": "Toronto", "population": 14711827 },
+			"CA-PE": { "name": "Prince Edward Island", "capital": "Charlottetown", "population": 158158 },
+			"CA-QC": { "name": "Quebec", "capital": "Quebec City", "population": 8537674 },
+			"CA-SK": { "name": "Saskatchewan", "capital": "Regina", "population": 1181666 },
+			"CA-YT": { "name": "Yukon", "capital": "Whitehorse", "population": 41078 }
+		}
 	},
 	"CC": {
 		"name": "Cocos (Keeling) Islands",
@@ -340,7 +365,42 @@
 		"longname": "The People's Republic of China",
 		"sovereignty": "UN",
 		"region": "AS",
-		"population": 1401768800
+		"population": 1401768800,
+		"provinces": {
+			"CN-AH": { "name": "Anhui", "capital": "Hefei", "population": "59500510" },
+			"CN-BJ": { "name": "Beijing", "capital": "Beijing", "population": "19612368" },
+			"CN-CQ": { "name": "Chongqing", "capital": "Chongqing", "population": "28846170" },
+			"CN-FJ": { "name": "Fujian", "capital": "Fuzhou", "population": "36894216" },
+			"CN-GD": { "name": "Guangdong", "capital": "Guangzhou", "population": "104303132" },
+			"CN-GS": { "name": "Gansu", "capital": "Lanzhou", "population": "25575254" },
+			"CN-GX": { "name": "Guangxi", "capital": "Nanning", "population": "46026629" },
+			"CN-GZ": { "name": "Guizhou", "capital": "Guiyang", "population": "34746468" },
+			"CN-HA": { "name": "Henan", "capital": "Zhengzhou", "population": "94023567" },
+			"CN-HB": { "name": "Hubei", "capital": "Wuhan", "population": "57237740" },
+			"CN-HE": { "name": "Hebei", "capital": "Shijiazhuang", "population": "71854202" },
+			"CN-HI": { "name": "Hainan", "capital": "Haikou", "population": "9171300" },
+			"CN-HK": { "name": "Hong Kong", "capital": "Hong Kong", "population": "7061200" },
+			"CN-HL": { "name": "Heilongjiang", "capital": "Harbin", "population": "38312224" },
+			"CN-HN": { "name": "Hunan", "capital": "Changsha", "population": "65683722" },
+			"CN-JL": { "name": "Jilin", "capital": "Changchun", "population": "27462297" },
+			"CN-JS": { "name": "Jiangsu", "capital": "Nanjing", "population": "78659903" },
+			"CN-JX": { "name": "Jiangxi", "capital": "Nanchang", "population": "44567475" },
+			"CN-LN": { "name": "Liaoning", "capital": "Shenyang", "population": "43746323" },
+			"CN-MO": { "name": "Macau", "capital": "Macau", "population": "5523" },
+			"CN-NM": { "name": "Inner Mongolia", "capital": "Hohhot", "population": "24706321" },
+			"CN-NX": { "name": "Ningxia", "capital": "Yinchuan", "population": "6301350" },
+			"CN-QH": { "name": "Qinghai", "capital": "Xining", "population": "5626722" },
+			"CN-SC": { "name": "Sichuan", "capital": "Chengdu", "population": "80418200" },
+			"CN-SD": { "name": "Shandong", "capital": "Jinan", "population": "95793065" },
+			"CN-SH": { "name": "Shanghai", "capital": "Shanghai", "population": "23019148" },
+			"CN-SN": { "name": "Shaanxi", "capital": "Xi'an", "population": "37327378" },
+			"CN-SX": { "name": "Shanxi", "capital": "Taiyuan", "population": "35712111" },
+			"CN-TJ": { "name": "Tianjin", "capital": "Tianjin", "population": "12938224" },
+			"CN-XJ": { "name": "Xinjiang", "capital": "Ürümqi", "population": "21813334" },
+			"CN-XZ": { "name": "Tibet", "capital": "Lhasa", "population": "3002166" },
+			"CN-YN": { "name": "Yunnan", "capital": "Kunming", "population": "45966239" },
+			"CN-ZJ": { "name": "Zhejiang", "capital": "Hangzhou", "population": "54426891" }
+		}
 	},
 	"CO": {
 		"name": "Colombia",
@@ -371,7 +431,7 @@
 		"population": 550483
 	},
 	"CW": {
-		"name": "Curaçao",
+		"name": "Curacao",
 		"longname": "The Country of Curaçao",
 		"sovereignty": "Netherlands",
 		"region": "SA",
@@ -987,7 +1047,7 @@
 		"population": 622359
 	},
 	"MF": {
-		"name": "Saint Martin (French part)",
+		"name": "St Martin",
 		"longname": "The Collectivity of Saint-Martin",
 		"sovereignty": "France",
 		"region": "NA",
@@ -1316,7 +1376,7 @@
 		"population": 2747282
 	},
 	"RE": {
-		"name": "Réunion",
+		"name": "Reunion",
 		"longname": "Réunion",
 		"sovereignty": "France",
 		"region": "AF",
@@ -1477,7 +1537,7 @@
 		"population": 6486201
 	},
 	"SX": {
-		"name": "Sint Maarten (Dutch part)",
+		"name": "Sint Maarten",
 		"longname": "Sint Maarten",
 		"sovereignty": "Netherlands",
 		"region": "NA",
@@ -1673,7 +1733,7 @@
 		"population": 32219521
 	},
 	"VG": {
-		"name": "Virgin Islands (British)",
+		"name": "British Virgin Islands",
 		"longname": "The Virgin Islands",
 		"sovereignty": "United Kingdom",
 		"region": "NA",

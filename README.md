@@ -25,9 +25,9 @@ Demos
 * [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)
 * [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)
 * [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
+* [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom) and [chart.js](https://www.chartjs.org/))
 
 <!---
-* Corona world map
 * Strategy game
 -->
 
@@ -67,8 +67,9 @@ The list includes 250 countries and microstates from Andorra to Zimbabwe with th
 * The official **longname**, e.g. "The Republic of Austria"
 * The countries **sovereignty**, e.g. "UN"
 * The world **region**, e.g. "EU"
+* (For some countries also the **provinces**, e.g. "Vienna")
 
-> The political subdivisions (countries, provinces, states) are currently not included in the country list. They will be added in future versions. 
+> Note: Most political subdivisions (countries, provinces, states) are currently not included in the country list. They will be added in future versions. 
 
 
 Part 3: The Library
@@ -147,8 +148,6 @@ Or as inline paramater:
 var myWorldMap = svgWorldMap(mySVG, { showOcean: false, groupCountries: false, mapClick: "customMapClick" }); 
 ```
 
-> More options like countryFill, countryStroke and countryStrokeWidth will be added when the SVG map has all country borders (currently a lot are missing).  
-
 
 ### Map object return values
 
@@ -210,9 +209,13 @@ If you load the basic cutom data from [countrydata.json](./src/countrydata.json)
 svgWorldMap.countryData['CA']: {
     name: "Canada",
     longname: "Canada",
-    population: 37958039,
     region: "NA", // North America
     sovereignty: "UN" // United Nations member state
+    population: 37958039,
+    provinces: { // Note: Most countries currently don't have province detail data 
+        "CA-AB": { name: "Alberta", capital: "Edmonton", population: 4413146 },
+        "CA-BC": { name: "British Columbia", capital: "Victoria", population: 5110917 }, ...
+    }
 }
 ```
 
@@ -366,7 +369,7 @@ Or as inline HTML:
 <li id="AT" onmouseover="myWorldMap.over('AT')" onmouseout="myWorldMap.out('AT')" onclick="myWorldMap.click('AT')">Austria</li>
 ```
 
-The `update()` function changes the color of one or more countries at once. The input object uses the same format as the `svgWorldMap.countries` object. Each country can have an individual color, which is passed via country id and a color value:  
+The `update()` function changes the fill color of one or more countries at once. The input object uses the same format as `svgWorldMap.countries`. Each country can have an individual color, which it will also keep on mouseover. The data is passed via country id and a color value:  
 
 ```js
 myWorldMap.update({ DE: '#00FF00', AT: '#00FF00', CH: '#00FF00' });
@@ -397,14 +400,19 @@ TODOs & Further Development
 * ~~Improve country over, out, click~~ (V 0.1.1)
 * ~~Add country labels (names) to the map~~ (V 0.1.1)
 * ~~Add microstate handling~~ (V 0.1.1)
-* Add data visualization demo
+* ~~Improve provinces handling~~ (V 0.1.2)
+* ~~Add Corona virus data visualization demo~~ (V 0.1.2)
 * Add strategy game demo
+* Add time controls
+* Add game controls
 * Add mobile support
+* Add capitals to countrydata
 * Add info boxes to the map
 * Add bubbles / circles to the map
 * Optimize drag and click
-* Name all provinces in the SVG (This may take a while... Help appreciated!)
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
+* Name all provinces in the SVG correctly (This may take a while... Help appreciated!)
+* Name all provinces in the JSON and CSV correctly (This may take a while... Help appreciated!)
 
 
 Pitfalls, Known Issues & Bugs

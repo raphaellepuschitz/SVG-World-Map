@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Corona Virus World Map</title>
+        <link rel="stylesheet" type="text/css" href="corona-world-map.css">
+        <link rel="stylesheet" type="text/css" href="font/flaticon.css"> 
+	</head>
+	<body>
+        <!-- SVG Map -->
+		<div id="container">
+		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        </div>
+        <div id="settings" class="box">
+            <button id="togglecountries" onclick="toogleBox()">🗉</button>
+            <button id="toggledetails" onclick="toogleBox()">🗠</button>
+            <button id="togglehelp" onclick="toogleBox()">?</button>
+            <button id="toggleinfo" onclick="toogleBox()">i</button>
+            <button id="toggledebug" onclick="toogleBox()">〈〉</button> 
+        </div>
+        <!-- Time Control -->
+        <div id="controls" class="box">
+            <div id="controlbuttons">
+                <button id="start" onclick="clickControl()"><i class="flaticon-previous"></i></button>
+                <button id="back" onclick="clickControl()"><i class="flaticon-rewind"></i></button>
+                <button id="playpause" onclick="clickPlayPause()"><i class="flaticon-play"></i></button>
+                <button id="forward" onclick="clickControl()"><i class="flaticon-fast-forward"></i></button>
+                <button id="end" onclick="clickControl()"><i class="flaticon-skip"></i></button>
+            </div>
+            <div id="slidecontainer">
+                <input type="range" min="1" max="100" value="1" class="slider" id="daysilder">
+            </div>
+            <div id="speedcontrols">
+                Speedcontrol: <button id="slower" onclick="clickSpeed()">➖</button> <button id="faster" onclick="clickSpeed()">➕</button><br> 
+                Speed: <span id="speed"></span> ⑊ Ticks: <span id="ticks"></span> ⑊ Day: <span id="day"></span>
+            </div>
+        </div>
+        <!-- Overlay Boxes  -->
+        <div id="countries" class="box"></div>
+        <div id="details" class="box">
+            <div id="detailstats">
+            </div>
+            <!--<div id="chartnew">
+                <canvas id="canvasnew"></canvas>
+            </div>-->
+            <div id="charttotal">
+                <canvas id="canvastotal"></canvas>
+            </div>
+        </div>
+        <div id="help" class="box">
+            <b>Help:</b><br><br>
+            + Use the timeline controls or the slider to show the spread of the virus per day<br><br>
+            + You can also use the following keyboard commands: Space (pause), the arrow keys (start, end or one day forward or back), plus and minus(faster and slower)<br><br>
+            + The detail box show the data for the selected country or province (if available), the chart shows the confirmed cases, receovered and deaths<br><br>
+            + You can zoom with the mouse wheel and also drag the map<br><br>
+            <!--+ Double-clicking on a country will zoom it in, double-clicking on the ocean will zoom out-->
+        </div>
+        <div id="info" class="box">
+            <div id="logo"><span class="red">CoronaVirus</span><span class="grey">WorldMap</span></div>
+            This is a demo for the <a href="https://github.com/raphaellepuschitz/SVG-World-Map" title="SVG World Map JS" target="_blank">SVG World Map</a> JavaScript library<br><br>
+            <b>Developed by:</b> <a href="mailto:raphael.lepuschitz@gmail.com">Raphael Lepuschitz</a><br><br>
+            <b>Data sources:</b><br>
+            Corona Virus aggregated data from <a href="https://coronavirus-tracker-api.herokuapp.com" title="Corona Virus Tracker API" target="_blank">Corona Virus Tracker API</a> developed by <a href="https://github.com/ExpDev07/" title="ExpDev07" target="_blank">ExpDev07</a><br>
+            Original data provided by the <a href="https://www.ecdc.europa.eu/en/coronavirus" title="Johns Hopkins CSSE" target="_blank">COVID-19 Data Repository</a> <br>by the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE)<br><br>
+            <b>Tools:</b><br>
+            Map visualization done with <a href="https://github.com/raphaellepuschitz/SVG-World-Map" title="SVG World Map JS" target="_blank">SVG World Map</a><br>
+            <a href="https://github.com/ariutta/svg-pan-zoom" title="SVG pan zoom" target="_blank">SVG pan & zoom</a> library for map movement<br>
+            Charts rendered with <a href="https://www.chartjs.org/" title="chartjs" target="_blank">Chart.js</a><br>
+            Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik" target="_blank">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">Flaticon.com</a><br>
+        </div>
+        <div id="debug" class="box"></div>
+        <div id="loading" class="box">~~~ Loading ~~~</div>
+        <!--<script src="../src/svg-world-map-controls.js"></script>-->
+        <script src="../src/svg-world-map.js"></script>
+        <script src="svg-pan-zoom.min.js"></script>
+        <script src="chart.min.js"></script>
+        <script src="corona-world-map.js"></script>
+    </body>
+</html>
