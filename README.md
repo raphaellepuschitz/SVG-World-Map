@@ -6,7 +6,7 @@ A JavaScript library to easily integrate one or more SVG world map(s) with all n
 
 Use this map and library as boilerplate for a **Strategy Game**, for **Data Visualization** of scientific research and other data, or as **Interactive Map** for your article, paper, website or app. 
 
-> ***Attention:*** This library is under development and currently in early alpha phase. Use it carefully! 
+> ***Attention:*** This library is under development and currently in early beta phase. Use it carefully! 
 
 The SVG World Map JS library constists of 3 parts, which can be used separately:
 
@@ -24,8 +24,8 @@ Demos
 * [Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html)
 * [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)
 * [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)
-* [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
-* [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) (width [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom) and [chart.js](https://www.chartjs.org/))
+* [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) (with [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
+* [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) (with [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom) and [chart.js](https://www.chartjs.org), used dataset from the (Coronavirus Tracker API)[https://github.com/ExpDev07/coronavirus-tracker-api])
 
 <!---
 * Strategy game
@@ -38,9 +38,8 @@ Part 1: The Map
 Download current version: [world-states-provinces.svg](./src/world-states-provinces.svg)  
 
 The map is based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) from [Wikimedia Commons](https://commons.wikimedia.org).  
-It was modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
-The country paths in the SVG are not the work of the library author. See the version history and authorship of the original file [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg). 
-
+It was strongly modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
+The country paths in the SVG are not the work of the library author. See the version history and authorship of the original file [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg).  
 
 Because of all the detailed subregions the map has a lot of vectors and is rather large for an image (~3,9 MB).  
 Make sure to use the SVG only, if:
@@ -402,10 +401,10 @@ TODOs & Further Development
 * ~~Add microstate handling~~ (V 0.1.1)
 * ~~Improve provinces handling~~ (V 0.1.2)
 * ~~Add Corona virus data visualization demo~~ (V 0.1.2)
+* ~~Basic mobile support tested with Corona map demo~~ (V 0.1.3)
 * Add strategy game demo
 * Add time controls
 * Add game controls
-* Add mobile support
 * Add capitals to countrydata
 * Add info boxes to the map
 * Add bubbles / circles to the map

@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.2
+ * v0.1.3
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -253,8 +253,8 @@ var svgWorldMap = (function(){
                     path.setAttribute('stroke', options.provinceStroke[event]);
                     path.setAttribute('stroke-width', options.provinceStrokeWidth[event]);
                 }
-            // Set color to path directly, but not selected country
-            } else if ((event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb') && path != selectedCountry && path.country != selectedCountry) {
+            // Set color to path directly, also to selected country
+            } else if ((event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb')) { // && path != selectedCountry && path.country != selectedCountry
                 path.setAttribute('fill', event);
                 path.setAttribute('stroke', event);
             }

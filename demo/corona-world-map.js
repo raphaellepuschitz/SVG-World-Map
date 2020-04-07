@@ -1,38 +1,48 @@
+// SVG World Map JS Demo
 
 // Global Variables
-var mappanzoom; // For svg-pan-zoom.js
-//var mapsvg = document.getElementById('svg-world-map'); // TODO: Needed globally? 
-var canvasnew = document.getElementById('canvasnew'); // TODO: Needed globally? 
-var chartnew;
+var mapSVG = document.getElementById('svg-world-map'); 
+var coronaWorldMap; // For svg-world-map.js
+var svgPanZoom; // For svg-pan-zoom.js
 var virusdata; // TODO: Needed globally? 
 var countrydata; // TODO: Needed globally? 
 var daydata = {}; /* Empty object for all days complete data */
 var detailcountry = 'World'; // 'World'
 var detailprovince = false; 
-
 var day = 0;
 var maxdays;
-
-var coronaWorldMap;
-var mapSVG = document.getElementById('svg-world-map'); 
-
-var debugout = '';
-
-//console.log(slider);
-
-// Mobile device detection
-var ismobile = false; // Initiate as false
-if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
-    || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
-    ismobile = true;
-}
+var smallscreen = false; 
+var ismobile = false; 
+var keyctrl = true; 
 
 // Startup async map + data load, init charts 
+checkSize();
+checkMobile();
+loadSVGMap();
 loadVirusData();
 initStartup();
-initChart();
-loadSVGMap();
+initCharts();
 
+// Check screen size
+function checkSize() {
+    if (screen.width < 999) {
+        if (screen.width < screen.height) {
+            smallscreen = 'portrait';
+        } else {
+            smallscreen = 'landscape';
+        }
+    }
+}
+
+// Mobile device detection
+function checkMobile() {
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+        || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+        ismobile = true;
+    }
+}
+
+// Asynchronous load for SVG map
 function loadSVGMap() {
     document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
     mapSVG.addEventListener("load", function() {
@@ -56,57 +66,80 @@ function loadSVGMap() {
             };
             // Startup SVG World Map
             coronaWorldMap = svgWorldMap(mapSVG, params, countryData);
-            // Test svgPanZoom 
+            // Init svgPanZoom library
             svgPanZoom = svgPanZoom(mapSVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+            if (smallscreen == false) {
+                svgPanZoom.pan({ x: -90, y: 0 }); // Set map to better start position for big horizontal screens
+            } else if (smallscreen == 'portrait') {
+                svgPanZoom.pan({ x: -5, y: 170 }); // Set map to better start position for small vertical screens
+                svgPanZoom.zoomBy(1.4); // Zoom in for small screens
+            } else if (smallscreen == 'landscape') {
+                svgPanZoom.pan({ x: -5, y: 20 }); // Set map to better start position for small horizontal screens
+                svgPanZoom.zoomBy(1.1); // Zoom in for small screens
+            }
         });
 
     }, false);
 }
 
-// Asynchronous(!) load for virus data
+// Asynchronous load for virus data
 function loadVirusData() {
-    
     document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-
     // Total new dataset: 
-    var url = 'https://coronavirus-tracker-api.herokuapp.com/all';
+    //var url = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
+    var url = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues
     loadFile(url, function(response) {
-    
-        document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
-
-        //virusdata = parseCSV(response);
         virusdata = JSON.parse(response); 
-        //console.log(virusdata);
-        //debug("~~~ Virus data loaded ~~~");
-    
-        document.getElementById('loading').style.display = 'none'; // TODO: Refactor toggleBox()?
     });
 }
 
 // Wait untill everything is fully loaded
 function initStartup() {
+    // Hide boxes and map on startup
+    toggleBox('countries');
+    toggleBox('details');
+    mapSVG.style.visibility = 'hidden';
+    mapSVG.style.opacity = '0';
+    var waitcounter = 0;
     var startuptimer = window.setInterval(function() {
-        if (coronaWorldMap != undefined && virusdata != undefined) {
+        waitcounter++
+        //console.log("Waiting... " + waitcounter);
+        if (waitcounter > 20) { // Wait 20 * 500ms = 10s for data answer
             window.clearInterval(startuptimer);
-            debug("~~~ All data loaded ~~~");
-            debug("...... Initializing ......");
-            debug("<br>Debug start:");
-            debug("ismobile: " + ismobile.toString());
-            paused = true; // Set to 'false' for auto start
+            //console.log("Map or data missing - reload page option");
+            document.getElementById('loading').innerHTML = 'There seems to be a problem...<br><a onclick="javascript:location.reload()">Click here to reload</a>';
+        } else if (virusdata == undefined) {
+            //console.log("Data missing");
+            document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
+            //loadVirusData(); // No, don't make request again... wait
+        } else if (coronaWorldMap == undefined) {
+            //console.log("Map missing");
+            document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
+            //loadSVGMap(); // No, don't load map again... wait
+        } else if (coronaWorldMap != undefined && virusdata != undefined) {
+            window.clearInterval(startuptimer);
+            document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
+            paused = false; // Set to 'false' for auto start
             initDayData();
-        } else if (coronaWorldMap != undefined) {
-            // Sometimes the map svg is loaded, but the map and the countries are not. -> TODO: Check loading logic again...
-            debug("Map missing!");
-            loadSVGMap();
+            // Hide loading and show boxes and map after startup
+            toggleBox('loading');
+            if (smallscreen != 'landscape') {
+                toggleBox('details'); 
+            }
+            if (smallscreen == false) {
+                toggleBox('countries');
+            }
+            mapSVG.style.visibility = 'visible';
+            setTimeout(function() {
+                mapSVG.style.opacity = '1';
+            }, 200);
         }
-    }, 100);
+    }, 500);
 }
 
 // Add Virus data to daydata object
 // TODO: Cleanup & refactor
 function initDayData() {
-
-    //console.log(virusdata);
 
     // TODO: Refactor totaldays logic?
     var firstday = '2020-01-22'; // New first day of virusdata
@@ -245,12 +278,12 @@ function initDayData() {
         }
     }
 
-    // Start all
+    // Start day
     // TODO: Cleanup
     maxdays = totaldays - 1; // Set max days for timeline control
-    //day = maxdays; // Set day to today
-    day = maxdays - 14; // Set day to 14 days ago
-    paused = false; // Set to 'false' for auto start
+    //day = maxdays; // Set day to yesterday
+    //day = maxdays - 14; // Set day to 14 days ago
+    day = 0; // Set day to start
 
     // TODO: Put into time controls
     // Startup map controls
@@ -258,18 +291,19 @@ function initDayData() {
     initDayTimer();
     initSilder();
     initControls();
+
     // Start values for timer controls
-    document.getElementById("speed").innerHTML = speed + '00ms';
-    document.getElementById("ticks").innerHTML = ticks;
+    //document.getElementById("speed").innerHTML = speed + '00ms';
+    //document.getElementById("ticks").innerHTML = ticks;
 
     // Startup all other interfaces
     initCountryList();
-    updateDetailStats();
+    updateDetails();
     updateMap(); 
+
     // Init box toggle
-    document.getElementById("togglehelp").click();
-    document.getElementById("toggleinfo").click();
-    document.getElementById("toggledebug").click();
+    /*document.getElementById("togglehelp").click();
+    document.getElementById("toggleinfo").click();*/
 }
 
 // Update country colors on map
@@ -281,7 +315,8 @@ function updateMap() {
             // Main countries
             if (daydata[countrycode].provinces == undefined) {
                 if (daydata[countrycode].confirmed[day] > 0 && daydata[countrycode].confirmed[day-1] != undefined) { // Check if last day exists
-                    updateData[countrycode] = getCountryColor(daydata[countrycode].confirmed);
+                    //console.log(countrycode);
+                    updateData[countrycode] = getCountryColor(daydata[countrycode]);
                 } else {
                     updateData[countrycode] = '#F2F2F2'; // TODO: Check reset color in lib? // #C0C89E #F2F2F2
                 }
@@ -291,16 +326,32 @@ function updateMap() {
                     if (daydata[countrycode].provinces[province] != undefined && coronaWorldMap.countryData[countrycode].provinces != undefined) {
                         var provinceid = getProvinceId(countrycode, province); // Get map id (ISO code) of province by name
                         if (daydata[countrycode].provinces[province].confirmed[day] > 0 && daydata[countrycode].provinces[province].confirmed[day-1] != undefined) { // Check if last day exists
-                            updateData[provinceid] = getCountryColor(daydata[countrycode].provinces[province].confirmed);
+                            //console.log(countrycode + ' / ' + province);
+                            updateData[provinceid] = getCountryColor(daydata[countrycode].provinces[province]);
                         } else {
                             updateData[provinceid] = '#F2F2F2'; // TODO: Check reset color in lib?  // #C0C89E #F2F2F2
                         }
                     }
                 }
             }
+            // Add confirmed to countrylist
+            if (document.getElementById(countrycode) != null) {
+                var confirmedday = daydata[countrycode].confirmed[day];
+                var countryname = document.getElementById(countrycode).dataset.name;
+                if (confirmedday > 0) { 
+                    document.getElementById(countrycode).dataset.confirmed = confirmedday;
+                    document.getElementById(countrycode).innerHTML = '<span class="small red">' + formatInteger(confirmedday) + '</span>' + countryname;
+                } else {
+                    document.getElementById(countrycode).dataset.confirmed = '';
+                    document.getElementById(countrycode).innerHTML = countryname;
+                }
+            }
         }
     }
+    // Update data on map
     coronaWorldMap.update(updateData);
+    // Sort country list with new confirmed
+    sortCountryList();
 }
 
 // Helper function, searches countryData for country or province id
@@ -321,72 +372,136 @@ function getProvinceId(countrycode, province) {
 }
 
 // Get country color for map by virusdata
-function getCountryColor(countryconfirmed) {
-    var confirmednew = (countryconfirmed[day] - countryconfirmed[day-1]);
-    var confirmedpercent = Math.ceil((confirmednew / countryconfirmed[day]) * 100);
-    return 'rgb(255,' + (180-confirmedpercent) + ',' + (180-confirmedpercent) + ')';
+function getCountryColor(country) {
+    var confirmednew = (country.confirmed[day] - country.confirmed[day-1]);
+    var confirmedpercent = Math.floor((confirmednew / country.confirmed[day]) * 100);
+    var recoveredpercent = Math.floor((country.recovered[day] / country.confirmed[day]) * 100);
+    // Lower boost for countries with growth rate under 5% or less than 10 total confirmed
+    if (confirmedpercent < 5 || country.confirmed[day] < 10) {
+        var redboost = 40;
+    // Higher boost for othter countries with confirmed
+    } else if (country.confirmed[day] > 0) {
+        var redboost = 80;
+    } else {
+        var redboost = 0;
+    }
+    var red = 255 - (recoveredpercent * 1);
+    var green = 255 - redboost - (confirmedpercent * 5);
+    var blue = 255 - redboost - (recoveredpercent * 1) - (confirmedpercent * 5);
+    if (red < 0) { red = 0; }
+    if (green < 0) { green = 0; }
+    if (blue < 0) { blue = 0; }
+    return 'rgb(' + red + ',' + green + ',' + blue + ')';
 }
 
-// Country detail statistics
-function updateDetailStats() {
-    var name = coronaWorldMap.countryData[detailcountry].name + ' (' + detailcountry + ')';
-    if (daydata[detailcountry] != undefined) {
-        // Province
-        if (detailprovince != false && daydata[detailcountry].provinces[detailprovince] != undefined) { 
-            name = detailprovince + ' (' + coronaWorldMap.countryData[detailcountry].name + ')';
-            var location = daydata[detailcountry].provinces[detailprovince];
-        // Country
-        } else { 
-            detailprovince = false; // Reset to avoid errors because of missing province data
-            var location = daydata[detailcountry];
-        }
-        // Output
-        var confirmed = location.confirmed[day];
-        var recovered = location.recovered[day];
-        var deaths = location.deaths[day];
-        var confirmednew = (confirmed - location.confirmed[day-1]);
-        var growthpercent = Math.ceil((confirmednew / confirmed) * 100);
-        var countrydetails = '<b>' + name + '</b><br>Date: ' + location.dates[day];
-        countrydetails += '<br><br>Confirmed: ' + formatInteger(confirmed) + '<br>Recovered: ' + formatInteger(recovered) + '<br>Deaths: ' + formatInteger(deaths);
-        countrydetails += '<br><br>New confirmed: ' + formatInteger(confirmednew) + '<br>Growth rate/day: ' + growthpercent + '%';
-        updateChart();
-    // No data
-    } else {
-        var countrydetails = '<b>' + name + '</b><br>(No data)';
-        debug("Detail data missing for: " + name);
+// Update details
+function updateDetails() {
+    // Avoid 'undefined Date' at midnight
+    if (daydata['World'].confirmed[day] == undefined) { 
+        day--; 
     }
-    document.getElementById("day").innerHTML = (+day+1)
-    document.getElementById("detailstats").innerHTML = countrydetails;
+    // Update charts (first?)
+    updateCharts();
+    // Update day date
+    var daydate = new Date(daydata['World'].dates[day]).toString().split(' ');
+    //document.getElementById('date').innerHTML = '<span class="big red">' + daydate[2] + ' ' + daydate[1] + '. ' + daydate[3] + '</span> ('  + daydate[0] + ')';
+    document.getElementById('date').innerHTML = '<span class="big">' + daydate[2] + ' ' + daydate[1] + '. ' + daydate[3] + '</span>';
+    // Update world stats
+    var countrydetails = updateStats('World'); 
+    document.getElementById('worldstats').innerHTML = countrydetails;
+    // Update detail stats
+    if (daydata[detailcountry] != undefined && detailcountry != 'World') {
+        var countrydetails = updateStats(detailcountry);
+        document.getElementById('countrystats').innerHTML = countrydetails;
+        if (detailprovince != false) {
+            document.getElementById('countrytitle').innerHTML = detailprovince + ' (' + countryData[detailcountry].name + ')';
+        } else {
+            document.getElementById('countrytitle').innerHTML = countryData[detailcountry].name;
+        }
+        document.getElementById("help").classList.add("hidden");
+        document.getElementById("countrydetails").classList.remove("hidden");
+        document.getElementById("countrytitle").classList.remove("hidden");
+    } else {
+        document.getElementById("countrydetails").classList.add("hidden");
+        document.getElementById("countrytitle").classList.add("hidden");
+        document.getElementById("help").classList.remove("hidden");
+    }
     // TODO: Put slider to time controls
     slider.value = day;
 }
 
-// Update charts for new and total cases
+// Update statistics
+function updateStats(country) {
+    if (daydata[country] != undefined) {
+        // Province
+        if (detailprovince != false && daydata[country].provinces != undefined && daydata[country].provinces[detailprovince] != undefined) { 
+            var location = daydata[country].provinces[detailprovince];
+        // Country
+        } else { 
+            var location = daydata[country];
+        }
+        // Set output data
+        var confirmed = location.confirmed[day];
+        var recovered = location.recovered[day];
+        var deaths = location.deaths[day];
+        if (location.confirmed[day-1] == undefined) { // For first day
+            location.confirmed[day-1] = 0;
+        }
+        var confirmednew = (confirmed - location.confirmed[day-1]);
+        var confirmednewpercent = Math.floor((confirmednew / confirmed) * 100);
+        var recoverednew = (recovered - location.recovered[day-1]);
+        var recoveredpercent = Math.floor((recovered / confirmed) * 100);
+        var recoverednewpercent = Math.floor((recoverednew / confirmed) * 100);
+        var deathsnew = (deaths - location.deaths[day-1]);
+        var deathspercent = Math.floor((deaths / confirmed) * 100);
+        var deathsnewpercent = Math.floor((deathsnew / confirmed) * 100);
+        // Output
+        var countrydetails = '';
+        countrydetails += '<div class="totalcount"><span class="big red">' + formatInteger(confirmed) + '</span><span class="small">Confirmed</span><br>';
+        countrydetails += '<span class="big green">' + formatInteger(recovered) + '</span><span class="small">Recovered (' + recoveredpercent + '%)</span><br>';
+        countrydetails += '<span class="big black">' + formatInteger(deaths) + '</span><span class="small">Deaths (' + deathspercent + '%)</span></div>';
+        countrydetails += '<div class="onedaycount">Last 24 hours:<br>';
+        countrydetails += '<span class="small"><span class="red">+' + formatInteger(confirmednew) + '</span> (+' + confirmednewpercent + '%)';
+        countrydetails += '<span class="green">+' + formatInteger(recoverednew) + '</span> (+' + recoverednewpercent + '%)';
+        countrydetails += '<span class="black">+' + formatInteger(deathsnew) + '</span> (+' + deathsnewpercent + '%)</span></div>';
+    }
+    return countrydetails;
+}
+
+// Update charts for world and selected country
 // Format: confirmed, recovered, deaths, but reverse for chart
-function updateChart() {
-    if (daydata[detailcountry] != undefined) {
+function updateCharts() {
+    //console.log(daydata);
+    // World chart
+    var lastdayindex = daydata['World'].dates.indexOf(daydata['World'].dates[day]) + 1;
+    chartworld.data.labels = daydata['World'].dates;
+    chartworld.data.datasets[0].data = daydata['World'].deaths.slice(0, (lastdayindex));// Slice the data at the current day
+    chartworld.data.datasets[1].data = daydata['World'].recovered.slice(0, (lastdayindex));
+    chartworld.data.datasets[2].data = daydata['World'].confirmed.slice(0, (lastdayindex));
+    chartworld.update();
+    // Country chart
+    if (daydata[detailcountry] != undefined && detailcountry != 'World') {
         if (detailprovince != false) { // Show province on chart
             var chartdata = daydata[detailcountry].provinces[detailprovince];
         } else { // Show main country
             var chartdata = daydata[detailcountry];
         }
         var lastdayindex = chartdata.dates.indexOf(chartdata.dates[day]) + 1;
-        charttotal.data.labels = chartdata.dates;
-        charttotal.data.datasets[0].data = chartdata.deaths.slice(0, (lastdayindex));// Slice the data at the current day
-        charttotal.data.datasets[1].data = chartdata.recovered.slice(0, (lastdayindex));
-        charttotal.data.datasets[2].data = chartdata.confirmed.slice(0, (lastdayindex));
-        charttotal.update();
+        chartcountry.data.labels = chartdata.dates;
+        chartcountry.data.datasets[0].data = chartdata.deaths.slice(0, (lastdayindex));// Slice the data at the current day
+        chartcountry.data.datasets[1].data = chartdata.recovered.slice(0, (lastdayindex));
+        chartcountry.data.datasets[2].data = chartdata.confirmed.slice(0, (lastdayindex));
+        chartcountry.update();
     }
 }
 
-// TODO: Refactor to CSS classes
-function toogleBox() {
-    var boxid = event.srcElement.id;
-    var target = document.getElementById(boxid.substr(6));
-    if (target.style.display == '' || target.style.display == 'block') {
-        target.style.display = 'none';
+// Show or hide box
+function toggleBox(targetid) {
+    var target = document.getElementById(targetid);
+    if (target.classList.contains("hidden")) {
+        target.classList.remove("hidden");
     } else {
-        target.style.display = 'block';
+        target.classList.add("hidden");
     }
 }
 
@@ -396,41 +511,52 @@ function initCountryList() {
     for (var country in coronaWorldMap.countries) {
         var countrycode = coronaWorldMap.countries[country].id;
         var countryname = coronaWorldMap.countries[country].name;
-        if (daydata[countrycode] != undefined) {
+        if (daydata[countrycode] != undefined && country != 'World') {
             // Main country
-            if (daydata[countrycode].provinces == undefined) {
-                countylist += '<li onmouseover="coronaWorldMap.over(\'' + countrycode + '\')" onmouseout="coronaWorldMap.out(\'' + countrycode + '\')" onclick="countryListClick(\'' + countrycode + '\')">' + countryname + '</li>';
+            //if (daydata[countrycode].provinces == undefined) {
+                countylist += '<li id="' + countrycode + '" data-name="' + countryname + '" data-confirmed="" onmouseover="coronaWorldMap.over(\'' + countrycode + '\')" onmouseout="coronaWorldMap.out(\'' + countrycode + '\')" onclick="countryListClick(\'' + countrycode + '\')">' + countryname + '</li>';
             // Province
-            } else {
-                for (var province in daydata[countrycode].provinces) {
-                    //console.log(countrycode + ': ' + province);
-
-                    /*
-                    // TODO: Check provinces in SVG...
-                    for (var subcountry in coronaWorldMap.countries) {
-                        if (province == coronaWorldMap.countries[subcountry].name) {
-                            console.log('Found:' + province);
-                            console.log(countryname);
-                            console.log(province);
-                            console.log(daydata[countrycode].provinces[province]);
-                        }
-                    }
-                    */
-                }
-            }
+            //} else {
+                //for (var province in daydata[countrycode].provinces) {
+                //}
+            //}
         /*} else {
             console.log('No data: ' + countrycode + ' / ' + countryname);*/
         }
     }
     countylist += '</ul>';
-    document.getElementById("countries").innerHTML = countylist;
+    document.getElementById("countrylist").innerHTML = countylist;
+}
+
+// Country search
+function searchCountry() {
+    keyctrl = false;
+    // Declare variables
+    var input = document.getElementById('search');
+    var searchval = input.value.toUpperCase();
+    var li = document.getElementById('countrylist').getElementsByTagName('li');
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        if (li[i].dataset.name.toUpperCase().indexOf(searchval) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
 }
 
 // Country list click
 function countryListClick(countrycode) {
     coronaWorldMap.click(countrycode);
     detailcountry = countrycode;
-    updateDetailStats();
+    updateDetails();
+    // Pan map to country (label)
+    if (smallscreen == false) {
+        var coordsX = 500 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("x")); // 500 = SVG width / 2
+        var coordsY = 253 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("y")); // 253 = SVG height / 2
+        svgPanZoom.reset();
+        svgPanZoom.pan({ x: coordsX, y: coordsY });
+    }
 }
 
 // Callback function from SVG World Map JS
@@ -459,8 +585,22 @@ function mapClick(path) {
             detailprovince = false;
         }
         detailcountry = countryid;
-        updateDetailStats();
+        updateDetails();
     }
+}
+
+// Click info button
+function clickInfo() {
+    if (smallscreen != false) {
+        if (document.getElementById('countries').classList.contains("hidden") == false) {
+            document.getElementById('countries').classList.add("hidden");
+        }
+        if (document.getElementById('details').classList.contains("hidden") == false) {
+            document.getElementById('details').classList.add("hidden");
+        }
+    }
+    toggleBox('info');
+    toggleBox('logo');
 }
 
 // Helper function to not zoom out of the SVG
@@ -501,13 +641,13 @@ function countryDblclick(countryid) {
     } else { // Reset = zoom out to center
         mappanzoom.reset();
     }
-    //debug("mappanzoom.getZoom(): " + mappanzoom.getZoom());
+    //console.log("mappanzoom.getZoom(): " + mappanzoom.getZoom());
 }
 
 function worldClick() {
     mapcountries[detailcountry].style.strokeWidth = '1'; // Reset former selected country
     detailcountry = 'World';
-    updateDetailStats();
+    updateDetails();
 }
 
 function worldDblclick(countryid) {
@@ -515,30 +655,56 @@ function worldDblclick(countryid) {
 }
 */
 
-// Chart 
-function initChart() {
-    charttotal = new Chart(canvastotal, {
+// Chart legend padding
+Chart.Legend.prototype.afterFit = function() {
+    this.height = this.height + 10;
+};
+
+// Chart init
+function initCharts() {
+    var chartoptions = { 
+        maintainAspectRatio: false, 
+        legend: { reverse: true, labels: { usePointStyle: true, fontColor: "#CDCDCD" } }, 
+        scales: { 
+            xAxes: [{ ticks: { display: false } }], 
+            yAxes: [{ ticks: { suggestedMin: 0, suggestedMax: 500, fontColor: "#CDCDCD", 
+                callback: function(label, index, labels) {
+                    return label/1000+'k';
+                }  } 
+            }] 
+        }
+    };
+    var chartdatasets = [{
+        label: 'Deaths',
+        data: [ 0 ],
+        borderWidth: 1,
+        backgroundColor: 'rgba(0, 0, 0, .5)'
+    }, {
+        label: 'Recovered',
+        data: [ 0 ],
+        borderWidth: 1,
+        backgroundColor: 'rgba(0, 200, 0, .5)'
+    }, {
+        label: 'Confirmed',
+        data: [ 0 ],
+        borderWidth: 1,
+        backgroundColor: 'rgba(200, 0, 0, .5)'
+    }];
+    chartworld = new Chart(worldcanvas, {
         type: 'line',
         data: {
             labels: [ 0 ],
-            datasets: [{
-                label: 'Deaths',
-                data: [ 0 ],
-                borderWidth: 1,
-                backgroundColor: 'rgba(0, 0, 0, .5)'
-            }, {
-                label: 'Recovered',
-                data: [ 0 ],
-                borderWidth: 1,
-                backgroundColor: 'rgba(0, 200, 0, .5)'
-            }, {
-                label: 'Confirmed',
-                data: [ 0 ],
-                borderWidth: 1,
-                backgroundColor: 'rgba(200, 0, 0, .5)'
-            }]
+            datasets: chartdatasets
         },
-        options: { scales: { yAxes: [{ ticks: { suggestedMin: 0, suggestedMax: 500 } }] }, legend: { reverse: true } }
+        options: chartoptions
+    });
+    chartcountry = new Chart(countrycanvas, {
+        type: 'line',
+        data: {
+            labels: [ 0 ],
+            datasets: chartdatasets
+        },
+        options: chartoptions
     });
 }
 
@@ -561,25 +727,32 @@ function formatInteger(number) {
     return new Intl.NumberFormat('en-GB').format(number);
 }
 
-// Get new object with key-val inverted helper function
-function getObjectKeys(object) {
-    const ret = {};
-    Object.keys(object).forEach(key => {
-        ret[object[key]] = key;
-    });
-    return ret;
-}
-
 // Get day difference between two dates helper function
 function getDayDiff(date1, date2) {
     const difftime = Math.abs(new Date(date2) - new Date(date1));
     return Math.ceil(difftime / (1000 * 60 * 60 * 24)); 
 }
 
-// Helper function for debug
-function debug(addvalue) {
-    debugout += addvalue + '<br>';
-    document.getElementById("debug").innerHTML = debugout;
+// Sort countrylist by confirmed helper function
+function sortCountryList() {
+    var list, i, switching, b, shouldSwitch;
+    list = document.getElementById("countrylist");
+    switching = true;
+    while (switching) {
+        switching = false;
+        b = list.getElementsByTagName("li");
+        for (i = 0; i < (b.length - 1); i++) {
+            shouldSwitch = false;
+            if (Number(b[i].dataset.confirmed) < Number(b[i + 1].dataset.confirmed)) {
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            b[i].parentNode.insertBefore(b[i + 1], b[i]);
+            switching = true;
+        }
+    }
 }
 
 
@@ -606,13 +779,13 @@ function initDayTimer() {
 // 'Tick'-logic for days per speed
 function increaseDayTicks() {
     ticks++;
-    document.getElementById("ticks").innerHTML = ticks;
+    //document.getElementById("ticks").innerHTML = ticks;
     //console.log(ticks%speed);
     if (speed == 1 || (ticks % speed) == 1) {
         if (day < maxdays) {
             day++;
+            updateDetails();
             updateMap(); 
-            updateDetailStats();
         } else {
             paused = true; // Pause if last day of data is reached
             document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
@@ -631,7 +804,7 @@ function initSilder() {
         day = slider.value;
         paused = true;
         document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
-        updateDetailStats();
+        updateDetails();
         updateMap();
     } 
 }
@@ -654,7 +827,19 @@ function initControls() {
             document.getElementById("faster").click();
         } else if (event.keyCode == 173) { // Arrow down
             document.getElementById("slower").click();
+        } else if (event.keyCode == 67) { // C
+            if (keyctrl) toggleBox('countries');
+        } else if (event.keyCode == 68) { // D
+            if (keyctrl) toggleBox('details');
+        } else if (event.keyCode == 73) { // I
+            if (keyctrl) {
+                toggleBox('logo');
+                toggleBox('info');
+            }
+        } else if (event.keyCode == 76) { // L
+            if (keyctrl) coronaWorldMap.labels('all');
         }
+        // TODO: svgPanZoom.zoomIn() and svgPanZoom.zoomOut()
     });
 }
 
@@ -682,7 +867,7 @@ function clickControl() {
     }
     paused = true;
     document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
-    updateDetailStats();
+    updateDetails();
     updateMap();
 }
 
@@ -694,6 +879,6 @@ function clickSpeed() {
     } else if (speedid == 'slower' && speed < 20) {
         speed++;
     }
-    document.getElementById("speed").innerHTML = speed + '00ms';
+    //document.getElementById("speed").innerHTML = speed + '00ms';
 }
 
