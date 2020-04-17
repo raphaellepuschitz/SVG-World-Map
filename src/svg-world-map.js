@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.3
+ * v0.1.4
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -17,37 +17,42 @@ var svgWorldMap = (function(){
     var countryData = {};
     var countryGroups = {};
     var countryLabels = {};
-    // Start library addon module, if it's set in options.mapTimeControls
-    var mapTimeControls = {}; // Set to 'true' to activate controls, but make sure to include 'svg-world-map-time-controls.js' 
     var selectedCountry;
     //var dragMap = false; // TODO: Check, doesn't work smooth 
 
     // Default options
     var options = {
-        showOcean: true, 
+        // Basic options
+        showOcean: true, // Show or hide ocean layer
+        showLabels: true, // Show country labels
+        showMicroLabels: false, // Show microstate labels
+        showMicroStates: true, // Show microstates on map
+        // Color options
         oceanColor: '#D8EBFF', 
         worldColor: '#FFFFFF', 
-        // TODO: Currently this makes no sense for main country groups, until all country borders are existing in the SVG (a lot are missing, e.g. Japan, Greenland, Antarctica)
-        //countryFill: { out: '#B9B9B9',  over: '#CCCCCC',  click: '#666666' }, 
+        labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
+        //countryFill: { out: '#B9B9B9',  over: '#CCCCCC',  click: '#666666' }, // TODO: Currently this makes no sense for main country groups, until all country borders are existing in the SVG (a lot are missing, e.g. Japan, Greenland, Antarctica)
         countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
         countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
         provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
         provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
         provinceStrokeWidth: { out: '0.1',  over: '0.5',  click: '0.5' }, 
-        labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
-        showLabels: true, // Show normal country labels
-        showMicroLabels: false, // Show microstate labels
-        showMicroStates: true, // Show microstates on map
+        // Group options
         groupCountries: true, // Enable or disable country grouping
         groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
-        mapOut: "mapOut", // Callback functions from the map to the outside, can have custom names
+        // Callback functions from the map to the outside, can have custom names
+        mapOut: "mapOut", 
         mapOver: "mapOver", 
         mapClick: "mapClick", 
-        timeControls: false // Set to 'true' to activate controls, but make sure to include 'svg-world-map-time-controls.js' 
+        mapDate: "mapDate", // (Custom) callback function for time control date return
+        // Time control addon module
+        timeControls: false, // Set to 'true' for time controls
+        timePause: true, // Set to 'false' for time animation autostart
+        timeLoop: false //  Set to 'true' for time animation loop
     };
 
     // Main function: SVG map init, options handling, return the map object
-    function svgWorldMap(svg, initOptions, initData) {
+    function svgWorldMap(svg, initOptions, initCountryData, initTimeData) {
         // Get SVG object or embed by id
         if (typeof svg == 'string') {
             svg = document.getElementById(svg);
@@ -58,9 +63,15 @@ var svgWorldMap = (function(){
                 options[option] = initOptions[option];
             }
         }
-        // Overwrite countryData with initData
-        if (initData != undefined) { 
-            countryData = initData;
+        // Overwrite countryData with initCountryData
+        if (initCountryData != undefined && initCountryData != false) { 
+            countryData = initCountryData;
+        }
+        // Async load library addon module, if it's set in options.timeControls
+        if (options.timeControls == true) {
+            import('../src/svg-world-map-time-controls.mjs').then(module => {
+                module.svgWorldMapTimeControls(svgMap, options.timePause, options.timeLoop, initTimeData);
+            });
         }
         // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
         initMapCountries(svg);
@@ -70,14 +81,14 @@ var svgWorldMap = (function(){
             'countryData': countryData, 
             'countryGroups': countryGroups, 
             'countryLabels': countryLabels, 
-            'mapTimeControls': mapTimeControls, 
             // Calling home functions from outside into the map 
             // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
             'out': function(id) { window["countryOut"].call(null, id); }, 
             'over': function(id) { window["countryOver"].call(null, id); }, 
             'click': function(id) { window["countryClick"].call(null, id); }, 
-            'update': function(data) { window["updateData"].call(null, data); }, 
-            'labels': function(data) { window["toggleLabels"].call(null, data); }, 
+            'update': function(data) { window["updateMapData"].call(null, data); }, 
+            'labels': function(data) { window["toggleMapLabels"].call(null, data); }, 
+            'date': function(data) { window["timeControlsDate"].call(null, data); }, 
         };
         return svgMap;
     }
@@ -91,7 +102,7 @@ var svgWorldMap = (function(){
         // Iterate through child nodes and add them to countries object
         baseNode.childNodes.forEach(function(country) {
             // Skip unclear disputed territories and also metadata, defs etc. - we want a clean node list
-            if (country.id != undefined && country.id.substr(0, 1) != '_' && country.tagName != 'metadata' && country.tagName != 'defs' && country.tagName != 'sodipodi:namedview') { 
+            if (country.id != undefined && country.id.substr(0, 1) != '_' && (country.tagName == 'g' || country.tagName == 'path' || country.tagName == 'rect')) { 
                 countries[country.id] = country;
             }
         });
@@ -109,7 +120,7 @@ var svgWorldMap = (function(){
         sortLabels();
         // Show labels on start, if it is set
         if (options.showLabels == true) {
-            toggleLabels('all');
+            toggleMapLabels('all');
         }
         delete countries['labels']; // Delete labels from countries object, not from map
         // Next steps: country detail sort and country groups 
@@ -268,10 +279,6 @@ var svgWorldMap = (function(){
             countries[country].addEventListener("mouseout", function() { provinceOverOut('out'); });
             countries[country].addEventListener("mouseup", function() { provinceClick(); });
         }
-        // Start library addon module, if it's set in options.mapTimeControls
-        /*if (options.timeControls == true) {
-            timeControls = svgWorldMapTimeControls(svgMap);
-        }*/
     }
 
     // Map country hover handling
@@ -292,7 +299,7 @@ var svgWorldMap = (function(){
         } else {
             //console.log('Country not found for ' + province.id);
         }
-        callBack(province, overout);
+        callBack(overout, province);
     }
  
     // Map click handling and internal callback routing
@@ -310,7 +317,7 @@ var svgWorldMap = (function(){
                 pathSetAttributes(selectedCountry, 'click');
             }
             resetOldSelected(selectedOld); // Reset selectedOld
-            callBack(selectedCountry, 'click');
+            callBack('click', selectedCountry);
         /*} else {
             console.log('drag...');
         }*/
@@ -328,7 +335,10 @@ var svgWorldMap = (function(){
             setLabelFill(id, 'over');
         } else {
             province = findProvinceById(id);
-            pathSetAttributes(province, 'over');
+            if (province != undefined) {
+                pathSetAttributes(province, 'over');
+                if (province.provinces != undefined) { province.provinces.forEach(function(subprovince) { pathSetAttributes(subprovince, 'over') }); } 
+            }
         }
     }
 
@@ -343,7 +353,10 @@ var svgWorldMap = (function(){
             setLabelFill(id, 'out');
         } else {
             province = findProvinceById(id);
-            pathSetAttributes(province, 'out');
+            if (province != undefined) {
+                pathSetAttributes(province, 'out');
+                if (province.provinces != undefined) { province.provinces.forEach(function(subprovince) { pathSetAttributes(subprovince, 'out') }); } 
+            }
         }
     }
 
@@ -364,11 +377,11 @@ var svgWorldMap = (function(){
         }
         selectedCountry = country; // New selected
         resetOldSelected(selectedOld); // Reset selectedOld
-        callBack(country, 'click');
+        callBack('click', country);
     }
 
     // Update function for calling home from the outside, defined in 'svgMap.update' 
-    window.updateData = function(updateData) {
+    window.updateMapData = function(updateData) {
         for (var id in updateData) {
             if (countries[id] != undefined) {
                 var country = countries[id]; 
@@ -396,7 +409,7 @@ var svgWorldMap = (function(){
     }
 
     // Update function for calling home from the outside, defined in 'svgMap.labels' 
-    window.toggleLabels = function(updateLabels) {
+    window.toggleMapLabels = function(updateLabels) {
         if (updateLabels == 'all') {
             var labelGroup = baseNode.getElementById('labels');
             if (labelGroup.getAttribute('display') == null || labelGroup.getAttribute('display') == 'block') {
@@ -417,15 +430,22 @@ var svgWorldMap = (function(){
         }
     }
 
-    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut' and 'options.mapClick'
-    function callBack(path, event) {
+    // Caller for time controls to callback out
+    window.timeControlsDate = function(date) {
+        callBack('date', date);
+    }
+
+    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut', 'options.mapClick' and 'options.mapDate'
+    function callBack(event, data) { // 'data' is a path except for time controls date
         if (event == 'over' && window[options.mapOver] && typeof(window[options.mapOver]) === "function") { 
-            window[options.mapOver].apply(window, [path]);
+            window[options.mapOver].apply(window, [data]);
         } else if (event == 'out' && window[options.mapOut] && typeof(window[options.mapOut]) === "function") { 
-            window[options.mapOut].apply(window, [path]);
+            window[options.mapOut].apply(window, [data]);
         } else if (event == 'click' && window[options.mapClick] && typeof(window[options.mapClick]) === "function") { 
-            if (path == undefined) { path = ''; } // If path is undefined (because of selectedCountry), return empty string
-            window[options.mapClick].apply(window, [path]);
+            if (data == undefined) { data = ''; } // If path is undefined (because of selectedCountry), return empty string
+            window[options.mapClick].apply(window, [data]);
+        } else if (event == 'date' && window[options.mapDate] && typeof(window[options.mapDate]) === "function") { 
+            window[options.mapDate].apply(window, [data]);
         } 
     }
 

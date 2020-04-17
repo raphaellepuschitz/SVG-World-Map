@@ -337,107 +337,72 @@ ul li {
 
 /* Controls */
 
-#controlbuttons, #slidecontainer, #date {
-    bottom: 0;
-    height: 40px;
-    padding-bottom: 0;
+#map-controls {
+    background-color: transparent !important;
 }
 
-#controlbuttons {
+#map-control-buttons, #map-slider-container, #map-date {
+    bottom: 0;
+    height: 40px;
+    position: fixed;
+    padding: 10px 10px 0;
+    background-color: rgba(50, 50, 50, .9) !important;
+    transition: opacity .5s;
+    color: #CDCDCD !important;
+}
+
+#map-control-buttons {
     left: 0;
-    width: 180px;
+    width: 180px !important;
     border-top-right-radius: 3px;
 }
 
-#slidecontainer {
+#map-slider-container {
     left: 201px;
     right: 301px;
+    width: auto !important;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
 }
 
-#date {
+#map-date {
     right: 0;
-    width: 280px;
+    width: 280px !important;
     height: 45px;
     float: left;
     border-top-left-radius: 3px;
     padding: 5px 10px 0;
-    text-align: center;
+    text-align: center !important;
+    font-size: 30px;
 }
 
-#speedcontrols {
+#map-controls button {
+    margin-top: 5px !important;
+}
+
+#map-controls button:hover {
+    opacity: 1 !important;
+}
+
+#map-controls button i::before {
+    font-size: 20px;
+    margin: 0 7px !important;
+    color: #CDCDCD;
+}
+
+#map-speed-controls {
     display: none;
     float: left;
     margin-left: 50px;
 }
 
-#controls button {
-    opacity: .5;
-    margin-top: 5px;
-}
-
-#controls #slower, #controls #faster {
+#map-slower, #map-faster {
     margin-top: 6px;
 }
 
-#controls button:hover {
-    opacity: 1 !important;
-}
-
-#controls button i::before {
-    font-size: 20px;
-    margin: 0 6px;
-    color: #CDCDCD;
-}
-
-#controls #slower i::before, #controls #faster i::before {
+#map-slower i::before, #map-faster i::before {
     font-size: 15px;
     font-weight: bold;
-}
-
-/* Slider */
-
-.slider {
-    -webkit-appearance: none;
-    width: 98%;
-    height: 5px;
-    border-radius: 5px;  
-    background: rgb(116, 120, 121);
-    -moz-user-select: none;
-    user-select: none;
-    outline: none;
-    margin: 15px 13px 0;
-}
-
-.slider:focus {
-    outline: none;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%; 
-    background: #CDCDCD;
-    cursor: pointer;
-    opacity: .5;
-}
-
-.slider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #CDCDCD;
-    cursor: pointer;
-    opacity: .5;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-.slider:hover::-webkit-slider-thumb, .slider:hover::-moz-range-thumb {
-    opacity: 1;
 }
 
 /* Responsive breakpoints */
@@ -503,25 +468,22 @@ ul li {
         margin: 0 auto;
     }
 
-    #controlbuttons, #slidecontainer, #date {
-        height: 35px;
-        padding: 5px 0 0;
+    #map-control-buttons, #map-slider-container, #map-date {
+        height: 35px !important;
+        padding: 5px 0 0 !important;
     }
 
-    #controlbuttons {
+    #map-control-buttons {
         border-top-left-radius: 3px;
     }
 
-    #controlbuttons button:first-child {
-        margin-left: 10px;
-    }
-
-    #controls button i::before {
+    #map-controls button i::before {
         font-size: 18px;
         margin: 0 5px;
     }
 
-    #date {
+    #map-date {
+        font-size: 20px;
         border-top-left-radius: 0;
         border-top-right-radius: 3px;
     }
@@ -564,26 +526,32 @@ ul li {
             height: calc(50vh - 102px);
         }
 
-        #slidecontainer {
+        #map-slider-container {
             left: 0;
             right: 0;
             border-radius: 0;
             padding-right: 20px;
         }
 
-        #controlbuttons {
-            left: 1px;
-            bottom: 41px;
-            width: calc(50vw - 1px);
-            border-top-right-radius: 0;
-            border-bottom-left-radius: 3px;
+        #map-slider {
+            width: 93% !important;
+            margin: 14px 12px 0 !important;
         }
 
-        #date {
-            right: 1px;
-            bottom: 41px;
-            width: calc(50vw - 2px);
-            text-align: center;
+        #map-control-buttons {
+            left: 1px !important;
+            bottom: 41px !important;
+            width: calc(50vw - 1px) !important;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 3px;
+            text-align: center !important;
+        }
+
+        #map-date {
+            right: 1px !important;
+            bottom: 41px !important;
+            width: calc(50vw - 2px) !important;
+            text-align: center !important;
             border-bottom-right-radius: 3px;
         }
 
@@ -647,27 +615,31 @@ ul li {
             bottom: 41px;
         }
 
-        #date {
+        #map-date {
             left: 0;
-            width: calc(50vw - 207px);
+            width: calc(50vw - 207px) !important;
             border-top-left-radius: 0;
             border-top-right-radius: 3px;
         }
 
-        #controlbuttons {
+        #map-control-buttons {
             left: calc(50vw - 206px);
-            width: 180px;
+            text-align: center;
         }
 
-        #slidecontainer {
+        #map-controls button {
+            margin-top: 7px !important;
+        }
+
+        #map-slider-container {
             left: unset;
             right: 51px;
-            width: calc(50vw - 26px);
+            width: calc(50vw - 26px) !important;
         }
 
-        .slider {
-            width: 87%;
-            margin: 14px 13px 0 21px
+        #map-slider {
+            width: 87% !important;
+            margin: 14px 13px 0 21px !important;
         }
         
     }

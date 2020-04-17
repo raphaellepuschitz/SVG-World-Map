@@ -2,24 +2,25 @@
 
 // Global Variables
 var mapSVG = document.getElementById('svg-world-map'); 
+var svgLoaded = false;
 var coronaWorldMap; // For svg-world-map.js
 var svgPanZoom; // For svg-pan-zoom.js
-var virusdata; // TODO: Needed globally? 
-var countrydata; // TODO: Needed globally? 
-var daydata = {}; /* Empty object for all days complete data */
+var virusData; 
+var countryData; 
+var daydata = {}; // Empty object for all days complete data 
+var timeData = []; // Empty array for time controls
 var detailcountry = 'World'; // 'World'
 var detailprovince = false; 
-var day = 0;
-var maxdays;
 var smallscreen = false; 
 var ismobile = false; 
-var keyctrl = true; 
+var day = 0;
 
 // Startup async map + data load, init charts 
 checkSize();
 checkMobile();
-loadSVGMap();
+loadCountryData();
 loadVirusData();
+loadSVGMap();
 initStartup();
 initCharts();
 
@@ -42,109 +43,129 @@ function checkMobile() {
     }
 }
 
-// Asynchronous load for SVG map
-function loadSVGMap() {
-    document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
-    mapSVG.addEventListener("load", function() {
-        // Load country data via async request, then startup map init
-        var url = '../src/countrydata.json';
-        loadFile(url, function(response) {
-            countryData = JSON.parse(response); 
-            // Custom options
-            var params = { 
-                showOcean: false,
-                //worldColor: '#232323', // Use in next version
-                worldColor: '#8AB1B4',
-                countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
-                //provinceFill: { out: '#C0C89E',  over: '#CCCCCC',  click: '#999999' },
-                provinceFill: { out: '#F2F2F2',  over: '#CCCCCC',  click: '#999999' },
-                provinceStroke: { out: '#666666',  over: '#666666',  click: '#666666' }, 
-                //provinceStrokeWidth: { out: '0.5',  over: '0.5',  click: '0.5' }, 
-                labelFill: { out: '#666666',  over: '#000000',  click: '#000000' },
-                mapTimeControls: true
-                //mapClick: "mapClick" // Use default callback mapClick()
-            };
-            // Startup SVG World Map
-            coronaWorldMap = svgWorldMap(mapSVG, params, countryData);
-            // Init svgPanZoom library
-            svgPanZoom = svgPanZoom(mapSVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
-            if (smallscreen == false) {
-                svgPanZoom.pan({ x: -90, y: 0 }); // Set map to better start position for big horizontal screens
-            } else if (smallscreen == 'portrait') {
-                svgPanZoom.pan({ x: -5, y: 170 }); // Set map to better start position for small vertical screens
-                svgPanZoom.zoomBy(1.4); // Zoom in for small screens
-            } else if (smallscreen == 'landscape') {
-                svgPanZoom.pan({ x: -5, y: 20 }); // Set map to better start position for small horizontal screens
-                svgPanZoom.zoomBy(1.1); // Zoom in for small screens
-            }
-        });
-
-    }, false);
-}
-
-// Asynchronous load for virus data
-function loadVirusData() {
-    document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-    // Total new dataset: 
-    //var url = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
-    var url = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues
-    loadFile(url, function(response) {
-        virusdata = JSON.parse(response); 
-    });
-}
-
 // Wait untill everything is fully loaded
 function initStartup() {
-    // Hide boxes and map on startup
-    toggleBox('countries');
-    toggleBox('details');
+    // Hide map on startup
     mapSVG.style.visibility = 'hidden';
     mapSVG.style.opacity = '0';
     var waitcounter = 0;
     var startuptimer = window.setInterval(function() {
         waitcounter++
-        //console.log("Waiting... " + waitcounter);
         if (waitcounter > 20) { // Wait 20 * 500ms = 10s for data answer
             window.clearInterval(startuptimer);
-            //console.log("Map or data missing - reload page option");
-            document.getElementById('loading').innerHTML = 'There seems to be a problem...<br><a onclick="javascript:location.reload()">Click here to reload</a>';
-        } else if (virusdata == undefined) {
-            //console.log("Data missing");
+            var url = location.protocol+'//'+location.host+location.pathname;
+            document.getElementById('loading').innerHTML = '~~~ There seems to be a problem ~~~<br><br>Try again with <a href="' + url + '?api=1">API 1</a>, <a href="' + url + '?api=2">API 2</a> or <a href="' + url + '?api=3">fallback</a>';
+        } else if (virusData == undefined) {
             document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-            //loadVirusData(); // No, don't make request again... wait
-        } else if (coronaWorldMap == undefined) {
-            //console.log("Map missing");
+        } else if (svgLoaded == false) {
             document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
-            //loadSVGMap(); // No, don't load map again... wait
-        } else if (coronaWorldMap != undefined && virusdata != undefined) {
+        } else if (countryData != undefined && virusData != undefined && svgLoaded == true && timeData.length > 0) {
             window.clearInterval(startuptimer);
             document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
-            paused = false; // Set to 'false' for auto start
-            initDayData();
-            // Hide loading and show boxes and map after startup
-            toggleBox('loading');
-            if (smallscreen != 'landscape') {
-                toggleBox('details'); 
-            }
-            if (smallscreen == false) {
-                toggleBox('countries');
-            }
-            mapSVG.style.visibility = 'visible';
-            setTimeout(function() {
-                mapSVG.style.opacity = '1';
-            }, 200);
+            initSVGMap();
         }
     }, 500);
+}
+
+// Asynchronous load for SVG map
+function loadSVGMap() {
+    mapSVG.addEventListener("load", function() {
+        svgLoaded = true;
+    }, false);
+}
+
+// SVG map start
+function initSVGMap() {
+    if (svgLoaded == true && timeData.length > 0) {
+        // Custom options
+        var params = { 
+            showOcean: false,
+            //worldColor: '#232323', // Use in next version
+            worldColor: '#8AB1B4',
+            countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
+            //provinceFill: { out: '#C0C89E',  over: '#CCCCCC',  click: '#999999' },
+            provinceFill: { out: '#F2F2F2',  over: '#CCCCCC',  click: '#999999' },
+            provinceStroke: { out: '#666666',  over: '#666666',  click: '#666666' }, 
+            //provinceStrokeWidth: { out: '0.5',  over: '0.5',  click: '0.5' }, 
+            labelFill: { out: '#666666',  over: '#000000',  click: '#000000' },
+            timeControls: true, // Activate time antimation controls
+            timePause: false, // Set pause to false for autostart
+            timeLoop: false // Loop time animation
+            //mapClick: "mapClick" // Use default callback mapClick()
+        };
+        // Startup SVG World Map
+        coronaWorldMap = svgWorldMap(mapSVG, params, countryData, timeData);
+        // Build country list 
+        initCountryList();
+        // Init svgPanZoom library
+        svgPanZoom = svgPanZoom(mapSVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+        if (smallscreen == false) {
+            svgPanZoom.pan({ x: -90, y: 0 }); // Set map to better start position for big horizontal screens
+        } else if (smallscreen == 'portrait') {
+            svgPanZoom.pan({ x: -5, y: 170 }); // Set map to better start position for small vertical screens
+            svgPanZoom.zoomBy(1.4); // Zoom in for small screens
+        } else if (smallscreen == 'landscape') {
+            svgPanZoom.pan({ x: -5, y: 20 }); // Set map to better start position for small horizontal screens
+            svgPanZoom.zoomBy(1.1); // Zoom in for small screens
+        }
+        // Hide loading and show boxes and map after startup
+        toggleBox('loading');
+        toggleBox('settings');
+        if (smallscreen != 'landscape') {
+            toggleBox('details'); 
+        }
+        if (smallscreen == false) {
+            toggleBox('countries');
+        }
+        mapSVG.style.visibility = 'visible';
+        setTimeout(function() {
+            mapSVG.style.opacity = '1';
+        }, 200);
+    }
+}
+
+// Callback function from the time control module, defined in 'options.mapDate'
+function mapDate(date) {
+    day = date;
+    updateDetails();
+    // Update day date info
+    var daydate = new Date(document.getElementById('map-date').innerHTML).toString().split(' ');
+    document.getElementById('map-date').innerHTML = daydate[2] + ' ' + daydate[1] + '. ' + daydate[3];
+}
+
+// Asynchronous load for country data
+function loadCountryData() {
+    // Load country data via async request, then startup map init
+    var url = '../src/countrydata.json';
+    loadFile(url, function(response) {
+        countryData = JSON.parse(response); 
+    });
+}
+
+// Asynchronous load for virus data
+function loadVirusData() {
+    document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
+    // Switch API urls if needed
+    var url1 = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues, should be faster
+    var url2 = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
+    var url3 = '../demo/corona-data-fallback.json'; // Local fallback 
+    var url = url1; // Default URL is API 1
+    if (window.location.search != '') {
+        var query = window.location.search.substr(1).split('=');
+        if (query[0] == 'api' && !isNaN(query[1])) {
+            url = eval('url' + query[1]);
+        }
+    }
+    // Total new dataset: 
+    loadFile(url, function(response) {
+        virusData = JSON.parse(response); 
+        initDayData();
+    });
 }
 
 // Add Virus data to daydata object
 // TODO: Cleanup & refactor
 function initDayData() {
-
-    // TODO: Refactor totaldays logic?
-    var firstday = '2020-01-22'; // New first day of virusdata
-    var today = new Date().toISOString().split('T')[0];
-    var totaldays = getDayDiff(firstday, today); // 2019-12-31 is the earliest date in the dataset, but 2020-01-01 makes more sense
 
     daydata['World'] = { confirmed: [], recovered: [], deaths: [] };
     var inputDates;
@@ -152,8 +173,8 @@ function initDayData() {
 
     // Add virusdata to daydata object
     for (var key in daydata.World) {
-        for (var country in virusdata[key].locations) {
-            var location = virusdata[key].locations[country];
+        for (var country in virusData[key].locations) {
+            var location = virusData[key].locations[country];
             var countrycode = location.country_code;
             var province = location.province;
             var history = location.history;
@@ -233,13 +254,13 @@ function initDayData() {
     }
 
     // Move provinces one level up if they are "countries" on the map, e.g. Greenland, Faroe, etc.
-    for (var country in coronaWorldMap.countries) {
-        var countrycode = coronaWorldMap.countries[country].id;
+    for (var country in countryData) {
+        var countrycode = country;
         if (daydata[countrycode] != undefined) {
             if (daydata[countrycode].provinces != undefined) {
                 for (var province in daydata[countrycode].provinces) {
-                    for (var subcountry in coronaWorldMap.countries) {
-                        if (province == coronaWorldMap.countries[subcountry].name) {
+                    for (var subcountry in countryData) {
+                        if (province == countryData[subcountry].name) {
                             var provinceid = getProvinceId('', province); // Get map id (ISO code) of province by name
                             // Copy province to countries in daydata
                             daydata[provinceid] = daydata[countrycode].provinces[province];
@@ -250,8 +271,8 @@ function initDayData() {
                     }
                 }
             }
-        /*} else {
-            console.log('No data: ' + countrycode + ' / ' + coronaWorldMap.countries[country].name);*/
+        } else {
+            //console.log('No data: ' + countrycode + ' / ' + coronaWorldMap.countries[country].name);
         }
     }
 
@@ -278,80 +299,35 @@ function initDayData() {
         }
     }
 
-    // Start day
-    // TODO: Cleanup
-    maxdays = totaldays - 1; // Set max days for timeline control
-    //day = maxdays; // Set day to yesterday
-    //day = maxdays - 14; // Set day to 14 days ago
-    day = 0; // Set day to start
-
-    // TODO: Put into time controls
-    // Startup map controls
-    //initDayTimer(svg);
-    initDayTimer();
-    initSilder();
-    initControls();
-
-    // Start values for timer controls
-    //document.getElementById("speed").innerHTML = speed + '00ms';
-    //document.getElementById("ticks").innerHTML = ticks;
-
-    // Startup all other interfaces
-    initCountryList();
-    updateDetails();
-    updateMap(); 
-
-    // Init box toggle
-    /*document.getElementById("togglehelp").click();
-    document.getElementById("toggleinfo").click();*/
+    initTimeData();
 }
 
-// Update country colors on map
-function updateMap() {
-    var updateData = {};
-    for (var country in coronaWorldMap.countries) {
-        var countrycode = coronaWorldMap.countries[country].id;
-        if (daydata[countrycode] != undefined) {
-            // Main countries
-            if (daydata[countrycode].provinces == undefined) {
-                if (daydata[countrycode].confirmed[day] > 0 && daydata[countrycode].confirmed[day-1] != undefined) { // Check if last day exists
-                    //console.log(countrycode);
-                    updateData[countrycode] = getCountryColor(daydata[countrycode]);
-                } else {
-                    updateData[countrycode] = '#F2F2F2'; // TODO: Check reset color in lib? // #C0C89E #F2F2F2
-                }
-            // Provinces
-            } else {
-                for (var province in daydata[countrycode].provinces) {
-                    if (daydata[countrycode].provinces[province] != undefined && coronaWorldMap.countryData[countrycode].provinces != undefined) {
-                        var provinceid = getProvinceId(countrycode, province); // Get map id (ISO code) of province by name
-                        if (daydata[countrycode].provinces[province].confirmed[day] > 0 && daydata[countrycode].provinces[province].confirmed[day-1] != undefined) { // Check if last day exists
-                            //console.log(countrycode + ' / ' + province);
-                            updateData[provinceid] = getCountryColor(daydata[countrycode].provinces[province]);
-                        } else {
-                            updateData[provinceid] = '#F2F2F2'; // TODO: Check reset color in lib?  // #C0C89E #F2F2F2
+// Build timeData for SVG map time animation
+// TODO: Cleanup & refactor
+function initTimeData() {
+    for (var d=0; d<daydata['World'].dates.length; d++) {
+        var datekey = daydata['World'].dates[d];
+        timeData[d] = { [datekey]: {} }; // Add new empty sub object for countries to array
+        //console.log(datekey);
+        for (var country in daydata) {
+            if (country != 'World') {
+                if (daydata[country].provinces != undefined) {
+                    for (var province in daydata[country].provinces) {
+                        if (daydata[country].provinces[province] != undefined && countryData[country].provinces != undefined) {
+                            var provinceid = getProvinceId(country, province); // Get map id (ISO code) of province by name
+                            if (provinceid != undefined) {
+                                timeData[d][datekey][provinceid] = getCountryColor(daydata[country].provinces[province].confirmed[d], daydata[country].provinces[province].recovered[d]);
+                            } else {
+                                // console.log(country + ' / ' + province); // Canada recovered and cruise ships
+                            }
                         }
                     }
-                }
-            }
-            // Add confirmed to countrylist
-            if (document.getElementById(countrycode) != null) {
-                var confirmedday = daydata[countrycode].confirmed[day];
-                var countryname = document.getElementById(countrycode).dataset.name;
-                if (confirmedday > 0) { 
-                    document.getElementById(countrycode).dataset.confirmed = confirmedday;
-                    document.getElementById(countrycode).innerHTML = '<span class="small red">' + formatInteger(confirmedday) + '</span>' + countryname;
                 } else {
-                    document.getElementById(countrycode).dataset.confirmed = '';
-                    document.getElementById(countrycode).innerHTML = countryname;
+                    timeData[d][datekey][country] = getCountryColor(daydata[country].confirmed[d], daydata[country].recovered[d]);
                 }
             }
         }
     }
-    // Update data on map
-    coronaWorldMap.update(updateData);
-    // Sort country list with new confirmed
-    sortCountryList();
 }
 
 // Helper function, searches countryData for country or province id
@@ -359,9 +335,9 @@ function updateMap() {
 function getProvinceId(countrycode, province) {
     var returnid;
     if (countrycode == '') {
-        var countryprovinces = coronaWorldMap.countryData;
+        var countryprovinces = countryData;
     } else {
-        var countryprovinces = coronaWorldMap.countryData[countrycode].provinces;
+        var countryprovinces = countryData[countrycode].provinces;
     }
     Object.keys(countryprovinces).map(key => {
         if (countryprovinces[key].name === province) {
@@ -371,27 +347,18 @@ function getProvinceId(countrycode, province) {
     return returnid;
 }
 
-// Get country color for map by virusdata
-function getCountryColor(country) {
-    var confirmednew = (country.confirmed[day] - country.confirmed[day-1]);
-    var confirmedpercent = Math.floor((confirmednew / country.confirmed[day]) * 100);
-    var recoveredpercent = Math.floor((country.recovered[day] / country.confirmed[day]) * 100);
-    // Lower boost for countries with growth rate under 5% or less than 10 total confirmed
-    if (confirmedpercent < 5 || country.confirmed[day] < 10) {
-        var redboost = 40;
-    // Higher boost for othter countries with confirmed
-    } else if (country.confirmed[day] > 0) {
-        var redboost = 80;
+// Get country color for map 
+function getCountryColor(confirmed, recovered) {
+    var factor = (confirmed - recovered) / confirmed;
+    if (isNaN(factor)) { factor = 0; }
+    var color = parseInt(factor * 128);
+    //if (color > 20) {
+        return 'rgb(255,' + (255-color) + ',' + (255-color) + ')';
+    /*} else if (factor > 0) {
+        return 'rgb(' + (128+color) + ',255,' + (128+color) + ')';
     } else {
-        var redboost = 0;
-    }
-    var red = 255 - (recoveredpercent * 1);
-    var green = 255 - redboost - (confirmedpercent * 5);
-    var blue = 255 - redboost - (recoveredpercent * 1) - (confirmedpercent * 5);
-    if (red < 0) { red = 0; }
-    if (green < 0) { green = 0; }
-    if (blue < 0) { blue = 0; }
-    return 'rgb(' + red + ',' + green + ',' + blue + ')';
+        return 'rgb(242,242,242)';
+    }*/
 }
 
 // Update details
@@ -402,10 +369,6 @@ function updateDetails() {
     }
     // Update charts (first?)
     updateCharts();
-    // Update day date
-    var daydate = new Date(daydata['World'].dates[day]).toString().split(' ');
-    //document.getElementById('date').innerHTML = '<span class="big red">' + daydate[2] + ' ' + daydate[1] + '. ' + daydate[3] + '</span> ('  + daydate[0] + ')';
-    document.getElementById('date').innerHTML = '<span class="big">' + daydate[2] + ' ' + daydate[1] + '. ' + daydate[3] + '</span>';
     // Update world stats
     var countrydetails = updateStats('World'); 
     document.getElementById('worldstats').innerHTML = countrydetails;
@@ -426,8 +389,8 @@ function updateDetails() {
         document.getElementById("countrytitle").classList.add("hidden");
         document.getElementById("help").classList.remove("hidden");
     }
-    // TODO: Put slider to time controls
-    slider.value = day;
+    // Update country list
+    updateCountryList();
 }
 
 // Update statistics
@@ -444,9 +407,9 @@ function updateStats(country) {
         var confirmed = location.confirmed[day];
         var recovered = location.recovered[day];
         var deaths = location.deaths[day];
-        if (location.confirmed[day-1] == undefined) { // For first day
-            location.confirmed[day-1] = 0;
-        }
+        if (location.confirmed[day-1] == undefined) { location.confirmed[day-1] = 0; } // For first day
+        if (location.recovered[day-1] == undefined) { location.recovered[day-1] = 0; } 
+        if (location.deaths[day-1] == undefined) { location.deaths[day-1] = 0; } 
         var confirmednew = (confirmed - location.confirmed[day-1]);
         var confirmednewpercent = Math.floor((confirmednew / confirmed) * 100);
         var recoverednew = (recovered - location.recovered[day-1]);
@@ -471,7 +434,6 @@ function updateStats(country) {
 // Update charts for world and selected country
 // Format: confirmed, recovered, deaths, but reverse for chart
 function updateCharts() {
-    //console.log(daydata);
     // World chart
     var lastdayindex = daydata['World'].dates.indexOf(daydata['World'].dates[day]) + 1;
     chartworld.data.labels = daydata['World'].dates;
@@ -528,9 +490,53 @@ function initCountryList() {
     document.getElementById("countrylist").innerHTML = countylist;
 }
 
+// Update country list
+function updateCountryList() {
+    for (var country in coronaWorldMap.countries) {
+        var countrycode = coronaWorldMap.countries[country].id;
+        if (daydata[countrycode] != undefined) {
+            // Add confirmed to countrylist
+            if (document.getElementById(countrycode) != null) {
+                var confirmedday = daydata[countrycode].confirmed[day];
+                var countryname = document.getElementById(countrycode).dataset.name;
+                if (confirmedday > 0) { 
+                    document.getElementById(countrycode).dataset.confirmed = confirmedday;
+                    document.getElementById(countrycode).innerHTML = '<span class="small red">' + formatInteger(confirmedday) + '</span>' + countryname;
+                } else {
+                    document.getElementById(countrycode).dataset.confirmed = '';
+                    document.getElementById(countrycode).innerHTML = countryname;
+                }
+            }
+        }
+    }
+    // Sort country list with new confirmed
+    sortCountryList();
+}
+
+// Sort countrylist by confirmed helper function
+function sortCountryList() {
+    var list, i, switching, b, shouldSwitch;
+    list = document.getElementById("countrylist");
+    switching = true;
+    while (switching) {
+        switching = false;
+        b = list.getElementsByTagName("li");
+        for (i = 0; i < (b.length - 1); i++) {
+            shouldSwitch = false;
+            if (Number(b[i].dataset.confirmed) < Number(b[i + 1].dataset.confirmed)) {
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            b[i].parentNode.insertBefore(b[i + 1], b[i]);
+            switching = true;
+        }
+    }
+}
+
 // Country search
 function searchCountry() {
-    keyctrl = false;
     // Declare variables
     var input = document.getElementById('search');
     var searchval = input.value.toUpperCase();
@@ -603,58 +609,6 @@ function clickInfo() {
     toggleBox('logo');
 }
 
-// Helper function to not zoom out of the SVG
-function beforePan(oldPan, newPan) {
-    var stopHorizontal = false, 
-        stopVertical = false, 
-        //gutterWidth = 100, 
-        //gutterHeight = 100, 
-        gutterWidth = (mappanzoom.getSizes().width), 
-        gutterHeight = (mappanzoom.getSizes().height), 
-        // Computed variables, 
-        sizes = this.getSizes(), 
-        leftLimit = -((sizes.viewBox.x + sizes.viewBox.width) * sizes.realZoom) + gutterWidth, 
-        rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom), 
-        topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight, 
-        bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
-
-    customPan = {};
-    customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
-    customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
-    return customPan;
-}
-
-// Mouseover, mouseout and click functions for map and countrylist
-/*
-function countryDblclick(countryid) {
-    var bbox = mapcountries[detailcountry].getBBox();
-    var center = { x: bbox.x + bbox.width / 2, y: bbox.y  + bbox.height / 2 };
-    if (bbox.height < 10) { // get zoom by size
-        var zoom = 6;
-    } else if (bbox.height < 100) {
-        var zoom = 5;
-    } else {
-        var zoom = 4;
-    }
-    if (mappanzoom.getZoom() != zoom) { // Zoom in
-        mappanzoom.zoomAtPoint(zoom, center);
-    } else { // Reset = zoom out to center
-        mappanzoom.reset();
-    }
-    //console.log("mappanzoom.getZoom(): " + mappanzoom.getZoom());
-}
-
-function worldClick() {
-    mapcountries[detailcountry].style.strokeWidth = '1'; // Reset former selected country
-    detailcountry = 'World';
-    updateDetails();
-}
-
-function worldDblclick(countryid) {
-    mappanzoom.reset(); // Reset pan and zoom
-}
-*/
-
 // Chart legend padding
 Chart.Legend.prototype.afterFit = function() {
     this.height = this.height + 10;
@@ -668,10 +622,17 @@ function initCharts() {
         scales: { 
             xAxes: [{ ticks: { display: false } }], 
             yAxes: [{ ticks: { suggestedMin: 0, suggestedMax: 500, fontColor: "#CDCDCD", 
-                callback: function(label, index, labels) {
-                    return label/1000+'k';
-                }  } 
-            }] 
+                    callback: function(label, index, labels) {
+                        if (label >= 1000000) {
+                            return label/1000000+'m';
+                        } else  if (label >= 1000) {
+                            return label/1000+'k';
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }]
         }
     };
     var chartdatasets = [{
@@ -733,152 +694,54 @@ function getDayDiff(date1, date2) {
     return Math.ceil(difftime / (1000 * 60 * 60 * 24)); 
 }
 
-// Sort countrylist by confirmed helper function
-function sortCountryList() {
-    var list, i, switching, b, shouldSwitch;
-    list = document.getElementById("countrylist");
-    switching = true;
-    while (switching) {
-        switching = false;
-        b = list.getElementsByTagName("li");
-        for (i = 0; i < (b.length - 1); i++) {
-            shouldSwitch = false;
-            if (Number(b[i].dataset.confirmed) < Number(b[i + 1].dataset.confirmed)) {
-                shouldSwitch = true;
-                break;
-            }
-        }
-        if (shouldSwitch) {
-            b[i].parentNode.insertBefore(b[i + 1], b[i]);
-            switching = true;
-        }
-    }
+/*
+// Helper function to not zoom out of the SVG
+function beforePan(oldPan, newPan) {
+    var stopHorizontal = false, 
+        stopVertical = false, 
+        //gutterWidth = 100, 
+        //gutterHeight = 100, 
+        gutterWidth = (mappanzoom.getSizes().width), 
+        gutterHeight = (mappanzoom.getSizes().height), 
+        // Computed variables, 
+        sizes = this.getSizes(), 
+        leftLimit = -((sizes.viewBox.x + sizes.viewBox.width) * sizes.realZoom) + gutterWidth, 
+        rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom), 
+        topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight, 
+        bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
+
+    customPan = {};
+    customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
+    customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
+    return customPan;
 }
 
-
-
-// TODO: Finish library module svg-world-map-time-cotrols.js and get all the following functions from there 
-
-// Map time control variables
-var svgMapTimeControls = {};
-var slider; 
-var timer;
-var ticks = 0;
-var speed = 10;
-var paused = true;
-
-// Interval for day timer
-function initDayTimer() {
-    timer = window.setInterval(function() {
-        if (!paused) {
-            increaseDayTicks();
-        }
-    }, 100);
-}
-
-// 'Tick'-logic for days per speed
-function increaseDayTicks() {
-    ticks++;
-    //document.getElementById("ticks").innerHTML = ticks;
-    //console.log(ticks%speed);
-    if (speed == 1 || (ticks % speed) == 1) {
-        if (day < maxdays) {
-            day++;
-            updateDetails();
-            updateMap(); 
-        } else {
-            paused = true; // Pause if last day of data is reached
-            document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
-        }
-    }
-}
-
-// Slider control
-function initSilder() {
-    slider = document.getElementById("daysilder");
-    slider.value = 0;
-    slider.min = 0;
-    slider.max = maxdays;
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        day = slider.value;
-        paused = true;
-        document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
-        updateDetails();
-        updateMap();
-    } 
-}
-
-// Keyboard controls and start values
-function initControls() {
-    // Keyboard controls
-    document.addEventListener('keyup', function(event) {
-        if (event.keyCode == 32) { // Space
-            document.getElementById("playpause").firstChild.click();
-        } else if (event.keyCode == 37) { // Arrow left
-            document.getElementById("back").firstChild.click();
-        } else if (event.keyCode == 38) { // Arrow up
-            document.getElementById("start").firstChild.click();
-        } else if (event.keyCode == 39) { // Arrow right
-            document.getElementById("forward").firstChild.click();
-        } else if (event.keyCode == 40) { // Arrow down
-            document.getElementById("end").firstChild.click();
-        } else if (event.keyCode == 171) { // Arrow right
-            document.getElementById("faster").click();
-        } else if (event.keyCode == 173) { // Arrow down
-            document.getElementById("slower").click();
-        } else if (event.keyCode == 67) { // C
-            if (keyctrl) toggleBox('countries');
-        } else if (event.keyCode == 68) { // D
-            if (keyctrl) toggleBox('details');
-        } else if (event.keyCode == 73) { // I
-            if (keyctrl) {
-                toggleBox('logo');
-                toggleBox('info');
-            }
-        } else if (event.keyCode == 76) { // L
-            if (keyctrl) coronaWorldMap.labels('all');
-        }
-        // TODO: svgPanZoom.zoomIn() and svgPanZoom.zoomOut()
-    });
-}
-
-// Play and pause controls
-function clickPlayPause() {
-    paused = !paused;
-    if (paused) {
-        document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
+// Mouseover, mouseout and click functions for map and countrylist
+function countryDblclick(countryid) {
+    var bbox = mapcountries[detailcountry].getBBox();
+    var center = { x: bbox.x + bbox.width / 2, y: bbox.y  + bbox.height / 2 };
+    if (bbox.height < 10) { // get zoom by size
+        var zoom = 6;
+    } else if (bbox.height < 100) {
+        var zoom = 5;
     } else {
-        document.getElementById("playpause").innerHTML = '<i class="flaticon-pause"></i>';
+        var zoom = 4;
     }
+    if (mappanzoom.getZoom() != zoom) { // Zoom in
+        mappanzoom.zoomAtPoint(zoom, center);
+    } else { // Reset = zoom out to center
+        mappanzoom.reset();
+    }
+    //console.log("mappanzoom.getZoom(): " + mappanzoom.getZoom());
 }
 
-// Controls for play, pause, forward, back, start, end
-function clickControl() {
-    var controlid = event.srcElement.parentNode.id; 
-    if (controlid == 'start') {
-        day = 0;
-    } else if (controlid == 'end') {
-        day = maxdays;
-    } else if (controlid == 'back' && day > 0) {
-        day--;
-    } else if (controlid == 'forward' && day < maxdays) {
-        day++;
-    }
-    paused = true;
-    document.getElementById("playpause").innerHTML = '<i class="flaticon-play"></i>';
+function worldClick() {
+    mapcountries[detailcountry].style.strokeWidth = '1'; // Reset former selected country
+    detailcountry = 'World';
     updateDetails();
-    updateMap();
 }
 
-// Speed controls
-function clickSpeed() {
-    var speedid = event.srcElement.id;
-    if (speedid == 'faster' && speed > 1) {
-        speed--;
-    } else if (speedid == 'slower' && speed < 20) {
-        speed++;
-    }
-    //document.getElementById("speed").innerHTML = speed + '00ms';
+function worldDblclick(countryid) {
+    mappanzoom.reset(); // Reset pan and zoom
 }
-
+*/

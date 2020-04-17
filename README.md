@@ -8,13 +8,13 @@ Use this map and library as boilerplate for a **Strategy Game**, for **Data Visu
 
 > ***Attention:*** This library is under development and currently in early beta phase. Use it carefully! 
 
-The SVG World Map JS library constists of 3 parts, which can be used separately:
+This package constists of 3 parts (which could also be used separately):
 
-* A detailed **[SVG world map](#part-1-the-map)** with all nations and second-level provinces, ready for editing with your preferred graphics editor
+* A detailed **[SVG world map](#part-1-the-map)** with all **nations** and second-level **provinces**, ready for editing with your preferred graphics editor
 * A **[List of all world countries](#part-2-the-list)** with additional information, ready for use with the SVG map
-* A **[JavaScript SVG library](#part-3-the-library)** developed for the map and optimized for quick SVG path access, customizable with options and a little callback-API
+* A **[JavaScript SVG library](#part-3-the-library)** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a little **callback-API**, including a addon module for **time controls** and **visual data animation**
 
-To unleash the full power of the SVG map you should of course use all 3 combined ;-)
+To unleash the full power of *SVG World Map JS* you should of course use all 3 combined ;-)
 
 
 Demos
@@ -25,7 +25,8 @@ Demos
 * [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)
 * [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)
 * [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) (with [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
-* [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) (with [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom) and [chart.js](https://www.chartjs.org), used dataset from the (Coronavirus Tracker API)[https://github.com/ExpDev07/coronavirus-tracker-api])
+* [Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html) (with the **Time Controls module** and [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom))
+* [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) (with the **Time Controls module**, [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom) and [chart.js](https://www.chartjs.org), data from the [Coronavirus Tracker API](https://github.com/ExpDev07/coronavirus-tracker-api))
 
 <!---
 * Strategy game
@@ -40,9 +41,9 @@ Download current version: [world-states-provinces.svg](./src/world-states-provin
 The map is based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) from [Wikimedia Commons](https://commons.wikimedia.org).  
 It was strongly modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
 The country paths in the SVG are not the work of the library author. See the version history and authorship of the original file [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg).  
+Because of all the detailed subregions the map has a lot of vectors and is rather large for an image (~3,8 MB).  
 
-Because of all the detailed subregions the map has a lot of vectors and is rather large for an image (~3,9 MB).  
-Make sure to use the SVG only, if:
+**Make sure to use the SVG only, if:**
 
 * You really need a fully detailed world map with all nations, provinces and states. If not, there's a ton of smaller SVGs at [Wikimedia Commons: SVG blank maps of the world](https://commons.wikimedia.org/wiki/Category:SVG_blank_maps_of_the_world) and elsewhere. 
 * Your users have a fast internet connection, or:
@@ -81,6 +82,9 @@ Although this project only uses frontend technologies, most browsers nowadays do
 
 ### How to use
 
+| **&raquo; Demo:** [Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html) |
+| --- |
+
 First, add [world-states-provinces.svg](./src/world-states-provinces.svg) and [svg-world-map.js](./src/svg-world-map.js) to your HTML document, then initialize the library:
 
 ```html
@@ -111,27 +115,45 @@ So far for the basic setup.
 
 ### Custom options 
 
-The default options can be overruled by passing an object of custom options. All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input. The value of `mapClick` is a callback function name and can be customized (see the API section for details). The default options are: 
+| **&raquo; Demo:** [Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html) |
+| --- |
+
+The default options can be overruled by passing an object of custom options. All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input. `mapClick`, `mapOver`, `mapOut` and `mapDate` are callback function names and can be customized (see the API section for details).
 
 ```js
+// Default options
 var options = {
-    showOcean: true, 
+
+    // Basic options
+    showOcean: true, // Show or hide ocean layer
+    showLabels: true, // Show country labels
+    showMicroLabels: false, // Show microstate labels
+    showMicroStates: true, // Show microstates on map
+
+    // Color options
     oceanColor: '#D8EBFF', 
     worldColor: '#FFFFFF', 
+    labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
     countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
     countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
     provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#666666' }, 
     provinceStrokeWidth: { out: '0.1',  over: '0.5',  click: '0.5' }, 
-    labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
-    showLabels: true, // Show normal country labels
-    showMicroLabels: false, // Show microstate labels
-    showMicroStates: true, // Show microstates on map
+
+    // Group options
     groupCountries: true, // Enable or disable country grouping
     groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
-    mapOut: "mapOut", // Callback functions from the map to the outside, can have custom names
+
+    // Callback functions from the map to the outside, can have custom names
+    mapOut: "mapOut", 
     mapOver: "mapOver", 
-    mapClick: "mapClick" 
+    mapClick: "mapClick", 
+    mapDate: "mapDate", // (Custom) callback function for time control date return
+
+    // Time control addon module
+    timeControls: false, // Set to 'true' for time controls
+    timePause: true, // Set to 'false' for time animation autostart
+    timeLoop: false //  Set to 'true' for time animation loop
 };
 ```
 
@@ -151,7 +173,7 @@ var myWorldMap = svgWorldMap(mySVG, { showOcean: false, groupCountries: false, m
 ### Map object return values
 
 After initialization, the `svgWorldMap()` function will give you an object in return.  
-If the map is called like this `var myWorldMap = svgWorldMap(mySVG);`, then the return data looks something like this: 
+If the map is called like `var myWorldMap = svgWorldMap(mySVG)`, then the return data of `myWorldMap` looks something like this: 
 
 ```js
 myWorldMap: { 
@@ -163,7 +185,8 @@ myWorldMap: {
     over: function(id) { ... }, 
     click: function(id) { ... }, 
     update: function(data) { ... }, 
-    labels: function(data) { ... } 
+    labels: function(data) { ... }, 
+    date: function(data) { ... } 
 };
 ```
 
@@ -221,6 +244,9 @@ svgWorldMap.countryData['CA']: {
 
 #### Country groups
 
+| **&raquo; Demo:** [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) |
+| --- |
+
 Country groups are an essential feature of the SVG World Map library and can help you access a whole bunch of countries simultaneously. Countries are grouped by the information of the `svgWorldMap.countryData` explained before. By default, the countries are grouped by their respective world region, so `svgWorldMap.countryGroups` contains the data as follows: 
 
 ```js
@@ -273,12 +299,12 @@ svgWorldMap.countryLabels['AD']: <text id="AD-label">: {
 }
 ```
 
-#### Country `over()`, `out()`, `click()`, `update()` and `labels()`
+#### Country `over()`, `out()`, `click()`, `update()`, `labels()` and `date()`
 
 All these functions are part of the **API**, please see below for further information.
 
 
-### Change the basic country data
+### Changing the basic country data
 
 There's two kinds of data for countries: 
 
@@ -289,6 +315,9 @@ There's two kinds of data for countries:
 
 
 #### JSON format
+
+| **&raquo; Demo:** [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html) |
+| --- |
 
 To add or change the country information on startup, you can simply pass your JSON data to the `svgWorldMap()` as third (optional) parameter (the second one is options).  
 
@@ -327,10 +356,25 @@ var countryData = {
 
 ### Callback and home APIs
 
+| **&raquo; Demo:** [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html) |
+| --- |
+
 
 #### Calling back from the map
 
-As seen in the options setup, there are 3 callback functions for over, out and click, which can also have custom names. Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"` and `"myCustomOut()"`, then the code to catch the hovered or clicked country looks something like this: 
+As seen in the options setup, there are 4 callback functions for over, out, click and date, which can also have custom names:
+
+```js
+var options = {
+    // Callback functions from the map to the outside, can have custom names
+    mapOut: "myCustomOut", 
+    mapOver: "myCustomOver", 
+    mapClick: "myCustomClick", 
+    mapDate: "myCustomDate", 
+};
+```
+
+Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"`, `"myCustomOut()"` and `"myCustomDate()"`, then the code to catch the hovered or clicked country or to get the current date of the **Time Control** module (see below) looks something like this: 
 
 ```js
 function myCustomClick(country) {
@@ -347,12 +391,17 @@ function myCustomOut(country) {
     var countryid = country.id; // Id of the hovered out path 
     ...
 }
+
+function myCustomDate(date) {
+    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Control module 
+    ...
+}
 ```
 
 
 #### Calling home to the map
 
-There are currently 5 calling home functions, 3 for country over, out and click and one for country update and label control.  
+There are currently 6 calling home functions, 3 for country over, out and click, and 3 for country update, label control and date (the last one is just a helper function for mapDate above).  
 
 The `over()`, `out()` and `click()` functions will trigger the attribute changes for `fill`, `stroke` and `stroke-width` defined in `options`. They only need the country id parameter:  
 
@@ -368,7 +417,7 @@ Or as inline HTML:
 <li id="AT" onmouseover="myWorldMap.over('AT')" onmouseout="myWorldMap.out('AT')" onclick="myWorldMap.click('AT')">Austria</li>
 ```
 
-The `update()` function changes the fill color of one or more countries at once. The input object uses the same format as `svgWorldMap.countries`. Each country can have an individual color, which it will also keep on mouseover. The data is passed via country id and a color value:  
+The `update()` function changes the fill color of one or more countries at once. The input object uses the same format as `svgWorldMap.countries`. Each country can have an individual color, which will stay the same on mouseover. The data is passed via country id and a color value:  
 
 ```js
 myWorldMap.update({ DE: '#00FF00', AT: '#00FF00', CH: '#00FF00' });
@@ -387,35 +436,151 @@ Or as inline HTML:
 ```
 
 
-TODOs & Further Development
----------------------------
+### Time Control addon module
 
-* ~~Add basic demos~~ (V 0.0.9)
-* ~~Fix path bugs~~ (V 0.0.9)
-* ~~Add further options~~ (V 0.0.9)
-* ~~Improve the callback API~~ (V 0.0.9)
-* ~~Cleanup SVG~~ (V 0.1.0)
-* ~~Add population to country data~~ (V 0.1.0)
-* ~~Improve country over, out, click~~ (V 0.1.1)
-* ~~Add country labels (names) to the map~~ (V 0.1.1)
-* ~~Add microstate handling~~ (V 0.1.1)
-* ~~Improve provinces handling~~ (V 0.1.2)
-* ~~Add Corona virus data visualization demo~~ (V 0.1.2)
-* ~~Basic mobile support tested with Corona map demo~~ (V 0.1.3)
+| **&raquo; Demo:** [Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html) |
+| --- |
+
+The SVG World Map library includes a nice addon for **animated data visualization**: A [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) for an easy integration of time series data on the map with changing colors for each country or province. 
+
+Before activating the Time Control module, make sure to have [svg-world-map-time-controls.mjs](./src/svg-world-map-time-controls.mjs) and the webfont folder `/src/font/...` included in your project.  
+
+* Set the options parameter `timeControls` to `true` to load and acivate the module
+* Use `timePause` and `timeLoop` for further adjustments
+* `mapDate` is the custom callback function (see above)
+
+```js
+var myTimeOptions = {
+    timeControls: true, // Set to 'true' for time controls
+    timePause: true, // Set to 'false' for time animation autostart
+    timeLoop: false //  Set to 'true' for time animation loop
+    mapDate: "myCustomDate", // (Custom) callback function for time control date return
+};
+
+var myWorldMap = svgWorldMap(mySVG, myTimeOptions); 
+```
+
+This will asynchronously load `/src/svg-world-map-time-controls.mjs`, **inject the calling document** and:  
+
+* Load the **flaticon webfont** for the control icons
+* Add (prepend) some **CSS** before the closing `</head>` tag 
+* Add **HTML** inside a new `<div id="map-controls">` element before the closing `</body>` 
+
+Please override the CSS as you like and change or hide the added HTML elements.  
+
+```html
+<html>
+    <head>
+        ...
+        <link rel="stylesheet" href="../src/font/flaticon.css">
+        <style>
+            #map-controls { position: absolute; bottom: 0; left: 0; right: 0; width: auto; height: 40px; padding: 0 10px; background-color: rgba(0, 0, 0, .75); }
+            #map-control-buttons, #map-slider-container, #map-speed-controls, #map-date { float: left; }
+            #map-control-buttons { width: 20%; }
+            ...
+        </style>
+    </head>
+    <body>
+        ...
+        <div id="map-controls">
+            <div id="map-control-buttons">
+                <button id="map-control-start" onclick="clickControl()"><i class="flaticon-previous"></i></button>
+                <button id="map-control-back" onclick="clickControl()"><i class="flaticon-rewind"></i></button>
+                <button id="map-control-play-pause" onclick="clickPlayPause()"><i class="flaticon-play"></i></button>
+                <button id="map-control-forward" onclick="clickControl()"><i class="flaticon-fast-forward"></i></button>
+                <button id="map-control-end" onclick="clickControl()"><i class="flaticon-skip"></i></button>
+            </div>
+            <div id="map-slider-container">
+                <input id="map-slider" type="range" min="0" max="10">
+            </div>
+            <div id="map-speed-controls">
+                <button id="map-control-slower" onclick="clickSpeed()"><i class="flaticon-minus"></i></button>
+                <button id="map-control-faster" onclick="clickSpeed()"><i class="flaticon-plus"></i></button>
+            </div>
+            <div id="map-date"></div>
+        </div>
+    </body>
+</html>
+```
+
+The activated module without a *time series dataset* (see below) will load the controls (play, pause, forward, faster, ...) and add the ticks per day (or month, year, ...) logic to the map. The control buttons and the current date will be shown, but the time slider will not be visible (as there is *no* end date).  
+
+To catch the callback when the map goes to the next date, just use the callback function mentioned before:
+
+```js
+function myCustomDate(date) {
+    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Control module 
+    ... // Do something with the new date
+}
+```
+
+
+#### Country data time animation 
+
+To animate the color of countries from one date to the next, you have to pass an array with the **dates** and the **country colors** (as sub objects) to the `svgWorldMap()` main function as fourth parameter (after SVG, options and country data). 
+
+The inner data for each date is similar to the data passed to the `update()` function or as the `svgWorldMap.countries` return object.  
+
+Let's say you want to highlight the Baltic states *Estonia*, *Latvia* und *Lithuania* after each other, then the code would look something like this: 
+
+```js
+var myTimeData = [
+    { 'Date 1': { EE: '#1E37EE', LV: '#FFFFFF', LT: '#FFFFFF' } },
+    { 'Date 2': { EE: '#FFFFFF', LV: '#9C1733', LT: '#FFFFFF' } },
+    { 'Date 3': { EE: '#FFFFFF', LV: '#FFFFFF', LT: '#FBB934' } }
+];
+
+var myWorldMap = svgWorldMap(mySVG, myTimeOptions, false, myTimeData); // countryData can be false, but not empty
+```
+
+
+Further Development & Version Log
+---------------------------------
+
+
+### TODOs
+
 * Add strategy game demo
-* Add time controls
 * Add game controls
 * Add capitals to countrydata
 * Add info boxes to the map
 * Add bubbles / circles to the map
 * Optimize drag and click
+* Optimize zoom integration
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
 * Name all provinces in the SVG correctly (This may take a while... Help appreciated!)
 * Name all provinces in the JSON and CSV correctly (This may take a while... Help appreciated!)
 
 
+### Done
+
+* 0.0.9
+  * Fixed path bugs
+  * Added basic demos
+  * Added further options
+  * Improved callback API
+* 0.1.0
+  * Cleanup SVG
+  * Added population to country data
+* 0.1.1
+  * Improved country over, out, click
+  * Added country labels (names) to the map
+  * Added microstate handling
+* 0.1.2
+  * Added Corona virus data visualization demo
+  * Improved provinces handling
+* 0.1.3
+  * Improved Corona virus map demo
+  * Tested basic mobile support
+* 0.1.4
+  * Added library addon module for time controls and animation
+  * Added time data visualization demo
+  * Tested node live server support
+
+
 Pitfalls, Known Issues & Bugs
 -----------------------------
+
 
 ### Pitfalls
 
@@ -427,6 +592,5 @@ Pitfalls, Known Issues & Bugs
 ### Known Issues & Bugs
 
 * Currently several small bugs, mainly SVG path related
-* It seem's that there is a problem running this with node live server
 * Slow or old computers or bad internet conncetion will show nothing but the map
 * If you find a bug, be nice to it (and also let me know of it) ;-) 

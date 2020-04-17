@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <title>Corona Virus World Map</title>
         <link rel="stylesheet" type="text/css" href="corona-world-map.css">
-        <link rel="stylesheet" type="text/css" href="font/flaticon.css"> 
 	</head>
 	<body>
         <!-- Map -->
@@ -13,7 +12,7 @@
 		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
         </div>
         <!-- Countries -->
-        <div id="countries">
+        <div id="countries" class="hidden">
             <div id="countrysearch" class="box">
                 <div id="searchcontainer">
                     <i class="flaticon-search"></i>
@@ -23,7 +22,7 @@
             <div id="countrylist" class="box"></div>
         </div>
         <!-- Settings -->
-        <div id="settings" class="box">
+        <div id="settings" class="box hidden">
             <button onclick="svgPanZoom.zoomIn()"><i class="flaticon-zoom-in"></i></button>
             <button onclick="svgPanZoom.zoomOut()"><i class="flaticon-zoom-out"></i></button>
             <button onclick="coronaWorldMap.labels('all')"><i class="flaticon-globe"></i></button>
@@ -32,7 +31,7 @@
             <button onclick="toggleBox('details')"><i class="flaticon-chart"></i></button>
         </div>
         <!-- Details -->
-        <div id="details" class="box">
+        <div id="details" class="box hidden">
             <span id="countrytitle" class="big top hidden"></span>
             <div id="countrydetails" class="bgbox hidden">
                 <div id="countrystats"></div>
@@ -99,26 +98,7 @@
         </div>
         <!-- Loading -->
         <div id="loading" class="box">~~~ Loading ~~~</div>
-        <!-- Controls -->
-        <div id="controls">
-            <div id="controlbuttons" class="box">
-                <button id="start" onclick="clickControl()"><i class="flaticon-previous"></i></button>
-                <button id="back" onclick="clickControl()"><i class="flaticon-rewind"></i></button>
-                <button id="playpause" onclick="clickPlayPause()"><i class="flaticon-play"></i></button>
-                <button id="forward" onclick="clickControl()"><i class="flaticon-fast-forward"></i></button>
-                <button id="end" onclick="clickControl()"><i class="flaticon-skip"></i></button>
-            </div>
-            <div id="slidecontainer" class="box">
-                <input type="range" min="1" max="100" value="1" class="slider" id="daysilder">
-            </div>
-            <div id="speedcontrols">
-                <button id="slower" onclick="clickSpeed()"><i class="flaticon-minus"></i></button> 
-                <button id="faster" onclick="clickSpeed()"><i class="flaticon-plus"></i></button>
-            </div>
-            <div id="date" class="box"></div>
-        </div>
         <!-- Scripts -->
-        <!--<script src="../src/svg-world-map-controls.js"></script>-->
         <script src="../src/svg-world-map.js"></script>
         <script src="svg-pan-zoom.min.js"></script>
         <script src="chart.min.js"></script>
