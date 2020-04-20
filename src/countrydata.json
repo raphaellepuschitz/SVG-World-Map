@@ -307,6 +307,7 @@
 	"CD": {
 		"name": "Congo (Dem. Rep.)",
 		"longname": "The Democratic Republic of the Congo",
+		"altnames": "Democratic Republic of the Congo",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 89561404
@@ -321,6 +322,7 @@
 	"CG": {
 		"name": "Congo",
 		"longname": "The Republic of the Congo",
+		"altnames": "Republic of the Congo",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 5518092
@@ -335,6 +337,7 @@
 	"CI": {
 		"name": "Côte d'Ivoire",
 		"longname": "The Republic of Côte d'Ivoire",
+		"altnames": "Ivory Coast",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 25823071
@@ -367,39 +370,39 @@
 		"region": "AS",
 		"population": 1401768800,
 		"provinces": {
-			"CN-AH": { "name": "Anhui", "capital": "Hefei", "population": "59500510" },
-			"CN-BJ": { "name": "Beijing", "capital": "Beijing", "population": "19612368" },
-			"CN-CQ": { "name": "Chongqing", "capital": "Chongqing", "population": "28846170" },
-			"CN-FJ": { "name": "Fujian", "capital": "Fuzhou", "population": "36894216" },
-			"CN-GD": { "name": "Guangdong", "capital": "Guangzhou", "population": "104303132" },
-			"CN-GS": { "name": "Gansu", "capital": "Lanzhou", "population": "25575254" },
-			"CN-GX": { "name": "Guangxi", "capital": "Nanning", "population": "46026629" },
-			"CN-GZ": { "name": "Guizhou", "capital": "Guiyang", "population": "34746468" },
-			"CN-HA": { "name": "Henan", "capital": "Zhengzhou", "population": "94023567" },
-			"CN-HB": { "name": "Hubei", "capital": "Wuhan", "population": "57237740" },
-			"CN-HE": { "name": "Hebei", "capital": "Shijiazhuang", "population": "71854202" },
-			"CN-HI": { "name": "Hainan", "capital": "Haikou", "population": "9171300" },
-			"CN-HK": { "name": "Hong Kong", "capital": "Hong Kong", "population": "7061200" },
-			"CN-HL": { "name": "Heilongjiang", "capital": "Harbin", "population": "38312224" },
-			"CN-HN": { "name": "Hunan", "capital": "Changsha", "population": "65683722" },
-			"CN-JL": { "name": "Jilin", "capital": "Changchun", "population": "27462297" },
-			"CN-JS": { "name": "Jiangsu", "capital": "Nanjing", "population": "78659903" },
-			"CN-JX": { "name": "Jiangxi", "capital": "Nanchang", "population": "44567475" },
-			"CN-LN": { "name": "Liaoning", "capital": "Shenyang", "population": "43746323" },
-			"CN-MO": { "name": "Macau", "capital": "Macau", "population": "5523" },
-			"CN-NM": { "name": "Inner Mongolia", "capital": "Hohhot", "population": "24706321" },
-			"CN-NX": { "name": "Ningxia", "capital": "Yinchuan", "population": "6301350" },
-			"CN-QH": { "name": "Qinghai", "capital": "Xining", "population": "5626722" },
-			"CN-SC": { "name": "Sichuan", "capital": "Chengdu", "population": "80418200" },
-			"CN-SD": { "name": "Shandong", "capital": "Jinan", "population": "95793065" },
-			"CN-SH": { "name": "Shanghai", "capital": "Shanghai", "population": "23019148" },
-			"CN-SN": { "name": "Shaanxi", "capital": "Xi'an", "population": "37327378" },
-			"CN-SX": { "name": "Shanxi", "capital": "Taiyuan", "population": "35712111" },
-			"CN-TJ": { "name": "Tianjin", "capital": "Tianjin", "population": "12938224" },
-			"CN-XJ": { "name": "Xinjiang", "capital": "Ürümqi", "population": "21813334" },
-			"CN-XZ": { "name": "Tibet", "capital": "Lhasa", "population": "3002166" },
-			"CN-YN": { "name": "Yunnan", "capital": "Kunming", "population": "45966239" },
-			"CN-ZJ": { "name": "Zhejiang", "capital": "Hangzhou", "population": "54426891" }
+			"CN-AH": { "name": "Anhui", "capital": "Hefei", "population": 59500510 },
+			"CN-BJ": { "name": "Beijing", "capital": "Beijing", "population": 19612368 },
+			"CN-CQ": { "name": "Chongqing", "capital": "Chongqing", "population": 28846170 },
+			"CN-FJ": { "name": "Fujian", "capital": "Fuzhou", "population": 36894216 },
+			"CN-GD": { "name": "Guangdong", "capital": "Guangzhou", "population": 104303132 },
+			"CN-GS": { "name": "Gansu", "capital": "Lanzhou", "population": 25575254 },
+			"CN-GX": { "name": "Guangxi", "capital": "Nanning", "population": 46026629 },
+			"CN-GZ": { "name": "Guizhou", "capital": "Guiyang", "population": 34746468 },
+			"CN-HA": { "name": "Henan", "capital": "Zhengzhou", "population": 94023567 },
+			"CN-HB": { "name": "Hubei", "capital": "Wuhan", "population": 57237740 },
+			"CN-HE": { "name": "Hebei", "capital": "Shijiazhuang", "population": 71854202 },
+			"CN-HI": { "name": "Hainan", "capital": "Haikou", "population": 9171300 },
+			"CN-HK": { "name": "Hong Kong", "capital": "Hong Kong", "population": 7061200 },
+			"CN-HL": { "name": "Heilongjiang", "capital": "Harbin", "population": 38312224 },
+			"CN-HN": { "name": "Hunan", "capital": "Changsha", "population": 65683722 },
+			"CN-JL": { "name": "Jilin", "capital": "Changchun", "population": 27462297 },
+			"CN-JS": { "name": "Jiangsu", "capital": "Nanjing", "population": 78659903 },
+			"CN-JX": { "name": "Jiangxi", "capital": "Nanchang", "population": 44567475 },
+			"CN-LN": { "name": "Liaoning", "capital": "Shenyang", "population": 43746323 },
+			"CN-MO": { "name": "Macau", "capital": "Macau", "population": 552300 },
+			"CN-NM": { "name": "Inner Mongolia", "capital": "Hohhot", "population": 24706321 },
+			"CN-NX": { "name": "Ningxia", "capital": "Yinchuan", "population": 6301350 },
+			"CN-QH": { "name": "Qinghai", "capital": "Xining", "population": 5626722 },
+			"CN-SC": { "name": "Sichuan", "capital": "Chengdu", "population": 80418200 },
+			"CN-SD": { "name": "Shandong", "capital": "Jinan", "population": 95793065 },
+			"CN-SH": { "name": "Shanghai", "capital": "Shanghai", "population": 23019148 },
+			"CN-SN": { "name": "Shaanxi", "capital": "Xi'an", "population": 37327378 },
+			"CN-SX": { "name": "Shanxi", "capital": "Taiyuan", "population": 35712111 },
+			"CN-TJ": { "name": "Tianjin", "capital": "Tianjin", "population": 12938224 },
+			"CN-XJ": { "name": "Xinjiang", "capital": "Ürümqi", "population": 21813334 },
+			"CN-XZ": { "name": "Tibet", "capital": "Lhasa", "population": 3002166 },
+			"CN-YN": { "name": "Yunnan", "capital": "Kunming", "population": 45966239 },
+			"CN-ZJ": { "name": "Zhejiang", "capital": "Hangzhou", "population": 54426891 }
 		}
 	},
 	"CO": {
@@ -426,6 +429,7 @@
 	"CV": {
 		"name": "Cabo Verde",
 		"longname": "The Republic of Cabo Verde",
+		"altnames": "Cape Verde",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 550483
@@ -454,6 +458,7 @@
 	"CZ": {
 		"name": "Czechia",
 		"longname": "The Czech Republic",
+		"altnames": "Czech Republic",
 		"sovereignty": "UN",
 		"region": "EU",
 		"population": 10681161
@@ -524,6 +529,7 @@
 	"EH": {
 		"name": "Western Sahara",
 		"longname": "The Sahrawi Arab Democratic Republic",
+		"altnames": "Sahrawi Arab Democratic Republic",
 		"sovereignty": "disputed",
 		"region": "AF",
 		"population": 582463
@@ -1343,6 +1349,7 @@
 	"PS": {
 		"name": "Palestine",
 		"longname": "The State of Palestine",
+		"altnames": "State of Palestine",
 		"sovereignty": "UN observer",
 		"region": "AS",
 		"population": 4976684
@@ -1523,8 +1530,9 @@
 		"population": 12778250
 	},
 	"ST": {
-		"name": "São Tomé and Principe",
+		"name": "Sao Tome and Principe",
 		"longname": "The Democratic Republic of São Tomé and Príncipe",
+		"altnames": "São Tomé and Príncipe",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 201784
@@ -1546,13 +1554,15 @@
 	"SY": {
 		"name": "Syria",
 		"longname": "The Syrian Arab Republic",
+		"altnames": "Syrian Arab Republic",
 		"sovereignty": "UN",
 		"region": "AS",
 		"population": 17500657
 	},
 	"SZ": {
-		"name": "Eswatini (Swaziland)",
+		"name": "Eswatini",
 		"longname": "The Kingdom of Eswatini",
+		"altnames": "Swaziland",
 		"sovereignty": "UN",
 		"region": "AF",
 		"population": 1093238

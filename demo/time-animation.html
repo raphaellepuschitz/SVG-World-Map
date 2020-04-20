@@ -34,14 +34,15 @@
             var myWorldMap;
             mySVG.addEventListener("load", function() {
                 // Custom options
-                var params = { 
+                var options = { 
                     showLabels: false, // Hide country labels
+                    showInfoBox: true, // Show info box
                     timeControls: true, // Time data to activate time antimation controls
                     timePause: false, // Set pause to false for autostart
                     timeLoop: true // Loop time animation
                 };
                 // Startup SVG World Map
-                myWorldMap = svgWorldMap(mySVG, params, false, timeData);
+                myWorldMap = svgWorldMap(mySVG, options, false, timeData);
                 // Test svgPanZoom 
                 svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false }); // controlIconsEnabled: true, beforePan: beforePan
                 // Fadein with opacity

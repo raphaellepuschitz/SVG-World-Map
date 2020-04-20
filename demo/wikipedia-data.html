@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SVG World Map Demo</title>
+        <style>
+            html { width: 100%; height: 100%; overflow: hidden; }
+            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+            button, input { width: 100%; padding: 5px 0; font-size: 13px; border: none;  border-radius: 5px; color: #FFFFFF; background-color: #444444; }
+            button { cursor: pointer; text-align: center; }
+            button:hover, input:hover { background-color: #999999; }
+            button:first-child { margin-bottom: 10px; }
+            input { padding: 5px; }
+            ul { list-style: none; padding: 0; margin: 0 0 10px; }
+            ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
+            ul li:hover { background-color: #444444; }
+            .box { position: fixed; top: 10px; right: 10px; width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; font-size: 14px; border-radius: 5px; overflow-y: scroll; }
+            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 185px; margin-top: -5px; }
+            .hidden { display: none; }
+            #container, #svg-world-map { width: 100%; height: 100%; }
+            #container { opacity: 0; transition: opacity 1s; }
+            #countries { top: 222px; height: calc(100vh - 252px); }
+            #labels { top: 10px; width: 150px; }
+            #overout { top: 102px; }
+            #out { margin-left: 8px; }
+            #wikidata { right: unset; left: 10px; width: 350px; }
+            #wikidata button { margin-top: 10px; width: auto; padding: 5px; }
+            #wikidata button:nth-child(4) { margin-bottom: 10px; }
+            #wikidata button:nth-child(5) { float: right; }
+            #pageurl { width: 340px; margin-top: 10px; }
+            #tabledata { right: unset; left: 10px; top: 230px; width: 350px; max-height: calc(100vh - 260px); font-family: monospace; white-space: pre; }
+            #tabledata .hide { margin-left: 335px; }
+        </style>
+	</head>
+	<body>
+		<div id="container">
+		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        </div>
+        <div id="wikidata" class="box">
+            Wikipedia page URL<br>
+            <input type="text" id="pageurl" value="https://en.wikipedia.org/wiki/Member_states_of_the_Commonwealth_of_Nations"><br>
+            <button id="loaddata" onclick="myWorldMap.reset();loadWikipediaData();">Load data</button>
+            <button id="reset" onclick="myWorldMap.reset();document.getElementById('tabledata').classList.add('hidden');">Reset map</button><br>
+            Load example page<br>
+            <button onclick="setWikiURL(0)">Commonwealth</button>
+            <button onclick="setWikiURL(1)">South America</button>
+            <button onclick="setWikiURL(2)">Provinces of China</button>
+            <button onclick="setWikiURL(3)">Council of Eur.</button>
+            <button onclick="setWikiURL(4)">African Union</button>
+            <button onclick="setWikiURL(5)">OPEC</button>
+            <button onclick="setWikiURL(6)">NATO</button>
+            <button onclick="setWikiURL(7)">BRICS</button>
+        </div>
+        <div id="tabledata" class="box hidden">
+        </div>
+        <div id="labels" class="box">
+            <button onclick="myWorldMap.labels('all')">Country labels</button>
+            <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+        </div>
+        <div id="overout" class="box">
+            Path over: <span id="over"></span><br><br>
+            Path out: <span id="out"></span><br><br>
+            Path click: <span id="click"></span>
+        </div>
+        <div id="countries" class="box"></div>
+        <script src="../src/svg-world-map.js"></script>
+        <script src="svg-pan-zoom.min.js"></script>
+        <script>
+
+            var myWorldMap;
+            var mySVG = document.getElementById('svg-world-map'); 
+
+            // Wait for asynchronous SVG load
+            loadSVGMap(mySVG);
+            function loadSVGMap(mySVG) {
+                mySVG.addEventListener("load", function() {
+                    // Startup SVG World Map
+                    myWorldMap = svgWorldMap(mySVG, { showLabels: false, showInfoBox: true });
+                    // Build controls 
+                    buildCountryControls();
+                    // SvgPanZoom 
+                    svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false }); 
+                    // Fadein with opacity 
+                    document.getElementById('container').style.opacity = 1;
+                }, false);
+            }
+
+            // Wait for asynchronous Wikipedia JSON load and pass data to library 
+            async function loadWikipediaData() {
+                var pageUrl = document.getElementById('pageurl').value.split('/');
+                var pageTitle = pageUrl[pageUrl.length-1];
+                document.getElementById('tabledata').innerHTML = 'Loading Wikipedia data...';
+                document.getElementById('tabledata').classList.remove('hidden');
+                const url = "https://en.wikipedia.org/w/api.php?" +
+                    new URLSearchParams({
+                        origin: "*",
+                        action: "parse",
+                        format: "json",
+                        prop: "text",
+                        page: pageTitle
+                    });
+                try {
+                    const req = await fetch(url);
+                    const json = await req.json();
+                    var htmlData = json.parse.text["*"];
+                    myWorldMap.table(htmlData);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // Callback function for HTML table parsing, defined in 'options.mapTable'
+            function mapTable(tableData) {
+                if (tableData != '') {
+                    var tableOutput = JSON.stringify(tableData, null, 2);
+                    var close = '<a class="hide" onclick="document.getElementById(\'tabledata\').classList.add(\'hidden\')">×</a>';
+                    document.getElementById('tabledata').innerHTML = close + tableOutput;
+                    // Update country colors 
+                    var updateData = {};
+                    var updateColor = getHighlightColor(tableOutput.substr(33, 10)); // Get random highlight color
+                    for (var countryid in tableData) {
+                        updateData[countryid] = updateColor;
+                    }
+                    myWorldMap.update(updateData);
+                }
+            }
+
+            // Default callback functions, custom names can be defined in 'options.mapOver', 'options.mapOut' and 'options.mapClick'
+            function mapOver(country) {
+                document.getElementById("over").innerHTML = country.id;
+            }
+
+            function mapOut(country) {
+                document.getElementById("out").innerHTML = country.id;
+            }
+
+            function mapClick(country) {
+                if (country != '') {
+                    document.getElementById("click").innerHTML = country.id;
+                }
+            }
+
+            // Load Wikipedia demo page
+            function setWikiURL(urlNumber) {
+                var wikiPages = [
+                    'https://en.wikipedia.org/wiki/Member_states_of_the_Commonwealth_of_Nations',
+                    'https://en.wikipedia.org/wiki/List_of_South_American_countries_by_population',
+                    'https://en.wikipedia.org/wiki/Provinces_of_China',
+                    'https://en.wikipedia.org/wiki/Member_states_of_the_Council_of_Europe',
+                    'https://en.wikipedia.org/wiki/Member_states_of_the_African_Union',
+                    'https://en.wikipedia.org/wiki/OPEC',
+                    'https://en.wikipedia.org/wiki/Member_states_of_NATO',
+                    'https://en.wikipedia.org/wiki/BRICS',
+                ];
+                document.getElementById("pageurl").value = wikiPages[urlNumber];
+                document.getElementById("loaddata").click();
+            }
+
+            // Demo country list
+            function buildCountryControls() {
+                var out = '<ul>';
+                for (var countryid in myWorldMap.countries) {
+                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="myWorldMap.over(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                }
+                out += '</ul>';
+                document.getElementById("countries").innerHTML = out;
+            }
+
+            // Get some random color from the element name
+            function getHighlightColor(id) {
+                // Get the numbers for the id letters, add them, square them and take the last 6 digits
+                var number = parseInt(id.substr(0, 1).charCodeAt(0) + '' + id.substr(1, 2).charCodeAt(0));
+                var hex = '#' + parseInt(number * number).toString().substr(-6, 6);
+                return hex;
+            }
+
+        </script>
+    </body>
+</html>
