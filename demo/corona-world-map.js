@@ -1,7 +1,7 @@
 // SVG World Map JS Demo
 
 // Global Variables
-var mapSVG = document.getElementById('svg-world-map'); 
+var mapSVG; 
 var svgLoaded = false;
 var coronaWorldMap; // For svg-world-map.js
 var svgPanZoom; // For svg-pan-zoom.js
@@ -11,8 +11,8 @@ var daydata = {}; // Empty object for all days complete data
 var timeData = []; // Empty array for time controls
 var detailcountry = 'World'; // 'World'
 var detailprovince = false; 
-var smallscreen = false; 
-var ismobile = false; 
+var smallScreen = false; 
+var isMobile = false; 
 var day = 0;
 
 // Startup async map + data load, init charts 
@@ -20,34 +20,11 @@ checkSize();
 checkMobile();
 loadCountryData();
 loadVirusData();
-loadSVGMap();
 initStartup();
 initCharts();
 
-// Check screen size
-function checkSize() {
-    if (screen.width < 999) {
-        if (screen.width < screen.height) {
-            smallscreen = 'portrait';
-        } else {
-            smallscreen = 'landscape';
-        }
-    }
-}
-
-// Mobile device detection
-function checkMobile() {
-    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
-        || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
-        ismobile = true;
-    }
-}
-
 // Wait untill everything is fully loaded
 function initStartup() {
-    // Hide map on startup
-    mapSVG.style.visibility = 'hidden';
-    mapSVG.style.opacity = '0';
     var waitcounter = 0;
     var startuptimer = window.setInterval(function() {
         waitcounter++
@@ -57,9 +34,10 @@ function initStartup() {
             document.getElementById('loading').innerHTML = '~~~ There seems to be a problem ~~~<br><br>Try again with <a href="' + url + '?api=1">API 1</a>, <a href="' + url + '?api=2">API 2</a> or <a href="' + url + '?api=3">fallback</a>';
         } else if (virusData == undefined) {
             document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-        } else if (svgLoaded == false) {
+        } else if (svgLoaded == false && countryData != undefined && virusData != undefined && timeData.length > 0) {
             document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
-        } else if (countryData != undefined && virusData != undefined && svgLoaded == true && timeData.length > 0) {
+            loadSVGMap();
+        } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 0) {
             window.clearInterval(startuptimer);
             document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
             initSVGMap();
@@ -68,58 +46,64 @@ function initStartup() {
 }
 
 // Asynchronous load for SVG map
-function loadSVGMap() {
-    mapSVG.addEventListener("load", function() {
-        svgLoaded = true;
-    }, false);
+async function loadSVGMap() {
+    // Custom options
+    var params = { 
+        showOcean: false,
+        //worldColor: '#232323', // Use in next version
+        worldColor: '#8AB1B4',
+        countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
+        //provinceFill: { out: '#C0C89E',  over: '#CCCCCC',  click: '#999999' },
+        provinceFill: { out: '#F2F2F2',  over: '#CCCCCC',  click: '#999999' },
+        provinceStroke: { out: '#666666',  over: '#666666',  click: '#666666' }, 
+        //provinceStrokeWidth: { out: '0.5',  over: '0.5',  click: '0.5' }, 
+        labelFill: { out: '#666666',  over: '#000000',  click: '#000000' },
+        timeControls: true, // Activate time antimation controls
+        timePause: false, // Set pause to false for autostart
+        timeLoop: false // Loop time animation
+        //mapClick: "mapClick" // Use default callback mapClick()
+    };
+    // Startup SVG World Map
+    coronaWorldMap = await svgWorldMap(params, countryData, timeData);
+    mapSVG = coronaWorldMap.worldMap;
+    svgLoaded = true;
 }
 
 // SVG map start
 function initSVGMap() {
     if (svgLoaded == true && timeData.length > 0) {
-        // Custom options
-        var params = { 
-            showOcean: false,
-            //worldColor: '#232323', // Use in next version
-            worldColor: '#8AB1B4',
-            countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
-            //provinceFill: { out: '#C0C89E',  over: '#CCCCCC',  click: '#999999' },
-            provinceFill: { out: '#F2F2F2',  over: '#CCCCCC',  click: '#999999' },
-            provinceStroke: { out: '#666666',  over: '#666666',  click: '#666666' }, 
-            //provinceStrokeWidth: { out: '0.5',  over: '0.5',  click: '0.5' }, 
-            labelFill: { out: '#666666',  over: '#000000',  click: '#000000' },
-            timeControls: true, // Activate time antimation controls
-            timePause: false, // Set pause to false for autostart
-            timeLoop: false // Loop time animation
-            //mapClick: "mapClick" // Use default callback mapClick()
-        };
-        // Startup SVG World Map
-        coronaWorldMap = svgWorldMap(mapSVG, params, countryData, timeData);
         // Build country list 
         initCountryList();
         // Init svgPanZoom library
         svgPanZoom = svgPanZoom(mapSVG, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
-        if (smallscreen == false) {
+        if (smallScreen == false) {
             svgPanZoom.pan({ x: -90, y: 0 }); // Set map to better start position for big horizontal screens
-        } else if (smallscreen == 'portrait') {
+        } else if (smallScreen == 'portrait') {
             svgPanZoom.pan({ x: -5, y: 170 }); // Set map to better start position for small vertical screens
             svgPanZoom.zoomBy(1.4); // Zoom in for small screens
-        } else if (smallscreen == 'landscape') {
+        } else if (smallScreen == 'landscape') {
             svgPanZoom.pan({ x: -5, y: 20 }); // Set map to better start position for small horizontal screens
             svgPanZoom.zoomBy(1.1); // Zoom in for small screens
         }
         // Hide loading and show boxes and map after startup
         toggleBox('loading');
         toggleBox('settings');
-        if (smallscreen != 'landscape') {
+        if (smallScreen != 'landscape') {
             toggleBox('details'); 
         }
-        if (smallscreen == false) {
+        if (smallScreen == false) {
             toggleBox('countries');
         }
-        mapSVG.style.visibility = 'visible';
+        // Fadein with opacity 
+        document.getElementById('details').style.visibility = 'visible';
+        document.getElementById('settings').style.visibility = 'visible';
+        document.getElementById('countries').style.visibility = 'visible';
+        document.getElementById('svg-world-map-container').style.visibility = 'visible';
         setTimeout(function() {
-            mapSVG.style.opacity = '1';
+            document.getElementById('details').style.opacity = 1;
+            document.getElementById('settings').style.opacity = 1;
+            document.getElementById('countries').style.opacity = 1;
+            document.getElementById('svg-world-map-container').style.opacity = 1;
         }, 200);
     }
 }
@@ -311,7 +295,8 @@ function initTimeData() {
         //console.log(datekey);
         for (var country in daydata) {
             if (country != 'World') {
-                if (daydata[country].provinces != undefined) {
+                // Show province details only on bigMap
+                if (daydata[country].provinces != undefined && isMobile == false) {
                     for (var province in daydata[country].provinces) {
                         if (daydata[country].provinces[province] != undefined && countryData[country].provinces != undefined) {
                             var provinceid = getProvinceId(country, province); // Get map id (ISO code) of province by name
@@ -557,7 +542,7 @@ function countryListClick(countrycode) {
     detailcountry = countrycode;
     updateDetails();
     // Pan map to country (label)
-    if (smallscreen == false) {
+    if (smallScreen == false) {
         var coordsX = 500 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("x")); // 500 = SVG width / 2
         var coordsY = 253 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("y")); // 253 = SVG height / 2
         svgPanZoom.reset();
@@ -597,7 +582,7 @@ function mapClick(path) {
 
 // Click info button
 function clickInfo() {
-    if (smallscreen != false) {
+    if (smallScreen != false) {
         if (document.getElementById('countries').classList.contains("hidden") == false) {
             document.getElementById('countries').classList.add("hidden");
         }
@@ -692,6 +677,25 @@ function formatInteger(number) {
 function getDayDiff(date1, date2) {
     const difftime = Math.abs(new Date(date2) - new Date(date1));
     return Math.ceil(difftime / (1000 * 60 * 60 * 24)); 
+}
+
+// Mobile device detection
+function checkMobile() {
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+        || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+        isMobile = true;
+    }
+}
+
+// Check screen size
+function checkSize() {
+    if (screen.width < 999) {
+        if (screen.width < screen.height) {
+            smallScreen = 'portrait';
+        } else {
+            smallScreen = 'landscape';
+        }
+    }
 }
 
 /*

@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.5
+ * v0.1.6
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -8,23 +8,28 @@
  * Copyleft: GNU General Public License version 3
  **/
 
-var svgWorldMap = (function(){ 
+var svgWorldMap = (function() { 
 
     // Global variables
+    var svg;
     var baseNode;
+    var infoBox;
+    var isMobile = false;
+    var smallScreen = false;
     var svgMap = {};
     var countries = {};
     var countryData = {};
     var countryGroups = {};
     var countryLabels = {};
     var selectedCountry;
-    var infoBox;
     //var dragMap = false; // TODO: Check, doesn't work smooth 
 
     // Default options
     var options = {
         // Basic options
+        bigMap: true, // Set to 'false' to load small map without provinces
         showOcean: true, // Show or hide ocean layer
+        showAntarctica: true, // Show or hide antarctic layer
         showLabels: true, // Show country labels
         showMicroLabels: false, // Show microstate labels
         showMicroStates: true, // Show microstates on map
@@ -54,57 +59,99 @@ var svgWorldMap = (function(){
         timeLoop: false //  Set to 'true' for time animation loop
     };
 
-    // Main function: SVG map init, options handling, return the map object
-    function svgWorldMap(svg, initOptions, initCountryData, initTimeData) {
-        // Get SVG object or embed by id
-        if (typeof svg == 'string') {
-            svg = document.getElementById(svg);
-        }
-        // Set SVG base node
-        baseNode = svg.getSVGDocument().children[0]; 
-        // Add drag listener // TODO: Check, doesn't work smooth
-        //baseNode.addEventListener("mousemove", function() { dragMap = true; });
-        //baseNode.addEventListener("mousedown", function() { dragMap = false; });
-        // Overwrite default options with initOptions
-        for (var option in initOptions) {
-            if (initOptions.hasOwnProperty(option)) { 
-                options[option] = initOptions[option];
+    // Main function: SVG map init call, options handling, return the map object
+    async function svgWorldMap(initOptions, initCountryData, initTimeData) {
+        let promise1 = new Promise(resolve1 => {
+            // Check size, viewport and mobile
+            checkSize();
+            checkMobile();
+            // Overwrite default options with initOptions
+            for (var option in initOptions) {
+                if (initOptions.hasOwnProperty(option)) { 
+                    options[option] = initOptions[option];
+                }
             }
-        }
-        // Overwrite countryData with initCountryData
-        if (initCountryData != undefined && initCountryData != false) { 
-            countryData = initCountryData;
-        }
-        // Async load library addon module, if it's set in options.timeControls
-        if (options.timeControls == true) {
-            import('../src/svg-world-map-time-controls.mjs').then(module => {
-                module.svgWorldMapTimeControls(svgMap, options.timePause, options.timeLoop, initTimeData);
-            });
-        }
-        // Add info box
-        if (options.showInfoBox == true) {
-            initInfoBox();
-        }
-        // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
-        initMapCountries();
-        // Return svgMap object after everything is ready and bind calling home functions
-        svgMap = { 
-            'countries': countries, 
-            'countryData': countryData, 
-            'countryGroups': countryGroups, 
-            'countryLabels': countryLabels, 
-            // Calling home functions from outside into the map 
-            // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
-            'out': function(id) { window["countryOut"].call(null, id); }, 
-            'over': function(id) { window["countryOver"].call(null, id); }, 
-            'click': function(id) { window["countryClick"].call(null, id); }, 
-            'update': function(data) { window["updateMapData"].call(null, data); }, 
-            'reset': function(data) { window["resetMap"].call(null, data); }, 
-            'labels': function(data) { window["toggleMapLabels"].call(null, data); }, 
-            'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
-            'date': function(data) { window["timeControlsDate"].call(null, data); }, 
-        };
+            // Overwrite countryData with initCountryData
+            if (initCountryData != undefined && initCountryData != false) { 
+                countryData = initCountryData;
+            }
+            // Asynchronous SVG map load
+            // Inject HTML with SVG map
+            initMap();
+            // Wait for asynchronous svg load
+            svg.addEventListener("load", async () => {
+                let promise2 = new Promise(resolve2 => {
+                    // Return svgMap object after everything is ready and bind calling home functions
+                    svgMap = { 
+                        'worldMap': svg, 
+                        'countries': countries, 
+                        'countryData': countryData, 
+                        'countryGroups': countryGroups, 
+                        'countryLabels': countryLabels, 
+                        // Calling home functions from outside into the map 
+                        // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
+                        'out': function(id) { window["countryOut"].call(null, id); }, 
+                        'over': function(id) { window["countryOver"].call(null, id); }, 
+                        'click': function(id) { window["countryClick"].call(null, id); }, 
+                        'update': function(data) { window["updateMapData"].call(null, data); }, 
+                        'reset': function(data) { window["resetMap"].call(null, data); }, 
+                        'labels': function(data) { window["toggleMapLabels"].call(null, data); }, 
+                        'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
+                        'date': function(data) { window["timeControlsDate"].call(null, data); }, 
+                    };
+                    // Set SVG base node
+                    baseNode = svg.getSVGDocument().children[0]; 
+                    // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
+                    initMapCountries();
+                    // Asynchronous load library addon module, if it's set in options.timeControls
+                    if (options.timeControls == true) {
+                        import('../src/svg-world-map-time-controls.mjs').then(module => {
+                            module.svgWorldMapTimeControls(svgMap, options.timePause, options.timeLoop, initTimeData);
+                        });
+                    }
+                    // Add info box
+                    if (options.showInfoBox == true) {
+                        initInfoBox();
+                    }
+                    resolve2(svgMap);
+                });
+                let result2 = await promise2;
+                resolve1(result2);
+            }, false);
+        });
+        // Wait for loaded map
+        let result1 = await promise1;
+        svgMap = result1;
+        // Return SVG World Map object
         return svgMap;
+    }
+
+    // Init SVG map
+    function initMap() {
+        // Avoid double loading
+        if (document.getElementById('svg-world-map-container') == null) {
+            // Add SVG container HTML
+            var container = document.createElement("div");
+            container.setAttribute("id", "svg-world-map-container");
+            document.body.prepend(container);
+            // Add SVG HTML, 'svg' is global
+            svg = document.createElement("object");
+            svg.setAttribute("id", "svg-world-map");
+            svg.setAttribute("type", "image/svg+xml");
+            // Load small map with states only
+            if (isMobile == true || options.bigMap == false) {
+                svg.setAttribute("data", "../src/world-states.svg");
+            // Load big map with provinces
+            } else {
+                svg.setAttribute("data", "../src/world-states-provinces.svg");
+            }
+            container.appendChild(svg);
+            // Add container and SVG CSS
+            // TODO: Make optional? Not needed for SVG World Map, but for SVG pan zoom etc.
+            var style = document.createElement('style');
+            style.innerHTML = `#svg-world-map-container, #svg-world-map { width: 100%; height: 100%; }`;
+            document.head.appendChild(style);
+        }
     }
 
     // Init countries on SVG map
@@ -124,6 +171,11 @@ var svgWorldMap = (function(){
             countries['Ocean'].style.stroke = 'none'; 
         }
         //delete countries['Ocean']; // (Delete ocean from countries object) Keep it currently
+        // Delete Antarctica from countries, if set in options
+        if (options.showAntarctica == false) {
+            baseNode.removeChild(baseNode.getElementById("AQ"));
+            delete countries['AQ']; 
+        }
         // Sort countries alphabetically
         countries = sortObject(countries);
         // Get microstates from labels and remove from countries
@@ -277,17 +329,17 @@ var svgWorldMap = (function(){
             // Set color to path directly, also to selected country
             } else if ((event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb')) { // && path != selectedCountry && path.country != selectedCountry
                 path.setAttribute('fill', event);
-                path.setAttribute('stroke', event);
+                //path.setAttribute('stroke', event);
             }
         }
     }
     
     // Init info box
     function initInfoBox() {
-        // Add info box HTML
+        // Add info box HTML to SVG map container
         infoBox = document.createElement("div");
         infoBox.setAttribute("id", "map-infobox");
-        document.body.appendChild(infoBox);
+        document.getElementById('svg-world-map-container').appendChild(infoBox);
         // Add info box CSS
         var style = document.createElement('style');
         style.innerHTML = `
@@ -309,7 +361,8 @@ var svgWorldMap = (function(){
         // Info box is set in options.showInfoBox, otherwise undefined
         if (infoBox != undefined) {
             if (event == 'over' && path.id != 'World' && path.id != 'Ocean') {
-                if (path.id.substr(0, 4) != 'path') {
+                // Don't show unnamed paths and borders
+                if (path.id.substr(0, 4) != 'path' && path.id.substr(0, 2) != path.country.id.toLowerCase() && path.id.length != 2) {
                     var text = path.country.name + '<br><small>' + path.id + '</small>';
                 } else {
                     var text = path.country.name;
@@ -559,9 +612,13 @@ var svgWorldMap = (function(){
                 for (c=0; c<columns.length; c++) {
                     var columnText = stripHTML(columns[c].innerHTML);
                     if (columnText != '') {
-                        // Add <td> value to row data
-                        rowData[columnKeys[c]] = columnText;
-                        //console.log(columnText);
+                        // Check if <td> has background color and add and value and color
+                        if (columns[c].style.backgroundColor != undefined && columns[c].style.backgroundColor != '') {
+                            rowData[columnKeys[c]] = { data: columnText, color: columns[c].style.backgroundColor };
+                        // Or just add <td> value to row data
+                        } else {
+                            rowData[columnKeys[c]] = columnText;
+                        }
                     }
                 }
                 // Add row data to table data
@@ -700,6 +757,25 @@ var svgWorldMap = (function(){
             }
         }
     }
+    
+    // Mobile device detection
+    function checkMobile() {
+        if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+            || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+            isMobile = true;
+        }
+    }
+
+    // Check screen size
+    function checkSize() {
+        if (screen.width < 999) {
+            if (screen.width < screen.height) {
+                smallScreen = 'portrait';
+            } else {
+                smallScreen = 'landscape';
+            }
+        }
+    }
 
     // Helper function for all countries and provinces
     function countCountries() {
@@ -722,7 +798,7 @@ var svgWorldMap = (function(){
     var countryData = { 
         "AD": { "name": "Andorra", "region": "EU" }, "AE": { "name": "United Arab Emirates", "region": "AS" }, "AF": { "name": "Afghanistan", "region": "AS" }, "AG": { "name": "Antigua and Barbuda", "region": "NA" }, "AI": { "name": "Anguilla", "region": "NA" }, "AL": { "name": "Albania", "region": "EU" }, "AM": { "name": "Armenia", "region": "AS" }, "AO": { "name": "Angola", "region": "AF" }, "AQ": { "name": "Antarctica", "region": "AN" }, "AR": { "name": "Argentina", "region": "SA" }, "AS": { "name": "American Samoa", "region": "OC" }, "AT": { "name": "Austria", "region": "EU" }, "AU": { "name": "Australia", "region": "OC" }, "AW": { "name": "Aruba", "region": "SA" }, "AX": { "name": "Åland Islands", "region": "EU" }, "AZ": { "name": "Azerbaijan", "region": "AS" }, 
         "BA": { "name": "Bosnia and Herzegovina", "region": "EU" }, "BB": { "name": "Barbados", "region": "SA" }, "BD": { "name": "Bangladesh", "region": "AS" }, "BE": { "name": "Belgium", "region": "EU" }, "BF": { "name": "Burkina Faso", "region": "AF" }, "BG": { "name": "Bulgaria", "region": "EU" }, "BH": { "name": "Bahrain", "region": "AS" }, "BI": { "name": "Burundi", "region": "AF" }, "BJ": { "name": "Benin", "region": "AF" }, "BL": { "name": "Saint Barthélemy", "region": "NA" }, "BM": { "name": "Bermuda", "region": "NA" }, "BN": { "name": "Brunei", "region": "AS" }, "BO": { "name": "Bolivia", "region": "SA" }, "BQ": { "name": "Bonaire, Sint Eustatius and Saba", "region": "SA" }, "BR": { "name": "Brazil", "region": "SA" }, "BS": { "name": "Bahamas", "region": "NA" }, "BT": { "name": "Bhutan", "region": "AS" }, "BV": { "name": "Bouvet Island", "region": "AN" }, "BW": { "name": "Botswana", "region": "AF" }, "BY": { "name": "Belarus", "region": "EU" }, "BZ": { "name": "Belize", "region": "NA" }, 
-        "CA": { "name": "Canada", "region": "NA" }, "CC": { "name": "Cocos (Keeling) Islands", "region": "AS" }, "CD": { "name": "Congo (Demo. Rep.)", "altnames": "Democratic Republic of the Congo", "region": "AF" }, "CF": { "name": "Central African Republic", "region": "AF" }, "CG": { "name": "Congo", "altnames": "Republic of the Congo", "region": "AF" }, "CH": { "name": "Switzerland", "region": "EU" }, "CI": { "name": "Côte d'Ivoire", "altnames": "Ivory Coast", "region": "AF" }, "CK": { "name": "Cook Islands", "region": "OC" }, "CL": { "name": "Chile", "region": "SA" }, "CM": { "name": "Cameroon", "region": "AF" }, "CN": { "name": "China", "region": "AS" }, "CO": { "name": "Colombia", "region": "SA" }, "CR": { "name": "Costa Rica", "region": "NA" }, "CU": { "name": "Cuba", "region": "NA" }, "CV": { "name": "Cabo Verde", "altnames": "Cape Verde", "region": "AF" }, "CW": { "name": "Curaçao", "region": "SA" }, "CX": { "name": "Christmas Island", "region": "AS" }, "CY": { "name": "Cyprus", "region": "EU" }, "CZ": { "name": "Czechia", "altnames": "Czech Republic", "region": "EU" }, 
+        "CA": { "name": "Canada", "region": "NA" }, "CC": { "name": "Cocos (Keeling) Islands", "region": "AS" }, "CD": { "name": "Congo (Dem. Rep.)", "altnames": "Democratic Republic of the Congo,DR Congo", "region": "AF" }, "CF": { "name": "Central African Republic", "region": "AF" }, "CG": { "name": "Congo", "altnames": "Republic of the Congo", "region": "AF" }, "CH": { "name": "Switzerland", "region": "EU" }, "CI": { "name": "Côte d'Ivoire", "altnames": "Ivory Coast", "region": "AF" }, "CK": { "name": "Cook Islands", "region": "OC" }, "CL": { "name": "Chile", "region": "SA" }, "CM": { "name": "Cameroon", "region": "AF" }, "CN": { "name": "China", "region": "AS" }, "CO": { "name": "Colombia", "region": "SA" }, "CR": { "name": "Costa Rica", "region": "NA" }, "CU": { "name": "Cuba", "region": "NA" }, "CV": { "name": "Cabo Verde", "altnames": "Cape Verde", "region": "AF" }, "CW": { "name": "Curaçao", "region": "SA" }, "CX": { "name": "Christmas Island", "region": "AS" }, "CY": { "name": "Cyprus", "region": "EU" }, "CZ": { "name": "Czechia", "altnames": "Czech Republic", "region": "EU" }, 
         "DE": { "name": "Germany", "region": "EU" }, "DJ": { "name": "Djibouti", "region": "AF" }, "DK": { "name": "Denmark", "region": "EU" }, "DM": { "name": "Dominica", "region": "NA" }, "DO": { "name": "Dominican Republic", "region": "NA" }, "DZ": { "name": "Algeria", "region": "AF" }, 
         "EC": { "name": "Ecuador", "region": "SA" }, "EE": { "name": "Estonia", "region": "EU" }, "EG": { "name": "Egypt", "region": "AF" }, "EH": { "name": "Western Sahara", "altnames": "Sahrawi Arab Democratic Republic", "region": "AF" }, "ER": { "name": "Eritrea", "region": "AF" }, "ES": { "name": "Spain", "region": "EU" }, "ET": { "name": "Ethiopia", "region": "AF" }, 
         "FI": { "name": "Finland", "region": "EU" }, "FJ": { "name": "Fiji", "region": "OC" }, "FK": { "name": "Falkland Islands", "region": "SA" }, "FM": { "name": "Micronesia", "region": "OC" }, "FO": { "name": "Faroe Islands", "region": "EU" }, "FR": { "name": "France", "region": "EU" }, 
@@ -741,7 +817,7 @@ var svgWorldMap = (function(){
         "SA": { "name": "Saudi Arabia", "region": "AS" }, "SB": { "name": "Solomon Islands", "region": "OC" }, "SC": { "name": "Seychelles", "region": "AF" }, "SD": { "name": "Sudan", "region": "AF" }, "SE": { "name": "Sweden", "region": "EU" }, "SG": { "name": "Singapore", "region": "AS" }, "SH": { "name": "Saint Helena, Ascension and Tristan da Cunha", "region": "AF" }, "SI": { "name": "Slovenia", "region": "EU" }, "SJ": { "name": "Svalbard and Jan Mayen", "region": "EU" }, "SK": { "name": "Slovakia", "region": "EU" }, "SL": { "name": "Sierra Leone", "region": "AF" }, "SM": { "name": "San Marino", "region": "EU" }, "SN": { "name": "Senegal", "region": "AF" }, "SO": { "name": "Somalia", "region": "AF" }, "SR": { "name": "Suriname", "region": "SA" }, "SS": { "name": "South Sudan", "region": "AF" }, "ST": { "name": "Sao Tome and Principe", "altnames": "São Tomé and Príncipe", "region": "AF" }, "SV": { "name": "El Salvador", "region": "NA" }, "SX": { "name": "Sint Maarten (Dutch part)", "region": "NA" }, "SY": { "name": "Syria", "altnames": "Syrian Arab Republic", "region": "AS" }, "SZ": { "name": "Eswatini", "altnames": "Swaziland", "region": "AF" }, 
         "TC": { "name": "Turks and Caicos Islands", "region": "NA" }, "TD": { "name": "Chad", "region": "AF" }, "TF": { "name": "French Southern Territories", "region": "AF" }, "TG": { "name": "Togo", "region": "AF" }, "TH": { "name": "Thailand", "region": "AS" }, "TJ": { "name": "Tajikistan", "region": "AS" }, "TK": { "name": "Tokelau", "region": "OC" }, "TL": { "name": "Timor-Leste (East Timor)", "region": "AS" }, "TM": { "name": "Turkmenistan", "region": "AS" }, "TN": { "name": "Tunisia", "region": "AF" }, "TO": { "name": "Tonga", "region": "AF" }, "TR": { "name": "Turkey", "region": "AS" }, "TT": { "name": "Trinidad and Tobago", "region": "NA" }, "TV": { "name": "Tuvalu", "region": "OC" }, "TW": { "name": "Taiwan", "region": "AS" }, "TZ": { "name": "Tanzania", "region": "AF" }, 
         "UA": { "name": "Ukraine", "region": "EU" }, "UG": { "name": "Uganda", "region": "AF" }, "UM": { "name": "United States Minor Outlying Islands", "region": "OC" }, "US": { "name": "United States", "region": "NA" }, "UY": { "name": "Uruguay", "region": "SA" }, "UZ": { "name": "Uzbekistan", "region": "AS" }, 
-        "VA": { "name": "Holy See", "region": "EU" }, "VC": { "name": "Saint Vincent and the Grenadines", "region": "NA" }, "VE": { "name": "Venezuela", "region": "SA" }, "VG": { "name": "Virgin Islands (British)", "region": "NA" }, "VI": { "name": "Virgin Islands (U.S.)", "region": "NA" }, "VN": { "name": "Viet Nam", "region": "AS" }, "VU": { "name": "Vanuatu", "region": "OC" }, 
+        "VA": { "name": "Holy See", "region": "EU" }, "VC": { "name": "Saint Vincent and the Grenadines", "region": "NA" }, "VE": { "name": "Venezuela", "region": "SA" }, "VG": { "name": "Virgin Islands (British)", "region": "NA" }, "VI": { "name": "Virgin Islands (U.S.)", "region": "NA" }, "VN": { "name": "Viet Nam", "altnames": "Vietnam", "region": "AS" }, "VU": { "name": "Vanuatu", "region": "OC" }, 
         "WF": { "name": "Wallis and Futuna", "region": "OC" }, "WS": { "name": "Samoa", "region": "OC" }, 
         "XK": { "name": "Kosovo", "region": "EU" }, 
         "YE": { "name": "Yemen", "region": "AS" }, "YT": { "name": "Mayotte", "region": "AF" }, 

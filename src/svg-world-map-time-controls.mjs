@@ -40,13 +40,8 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     // Dynamically load webfont
     document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="../src/font/flaticon.css" />');
 
-    // Startup
-    initControlsCSS();
+    // Start HTML injection
     initControls();
-    initDayTimer();
-    initSilder();
-    initKeyControls();
-    updateControls();
 
     // Interval for day timer
     function initDayTimer() {
@@ -93,6 +88,7 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     function initKeyControls() {
         // Keyboard controls
         document.addEventListener('keyup', function(event) {
+            event.preventDefault(); // Don't remove this or the universe will break! Und dann klatscht es, Junge!
             if (event.keyCode == 32) { // Space
                 document.getElementById("map-control-play-pause").firstChild.click();
             } else if (event.keyCode == 37) { // Arrow left
@@ -163,39 +159,46 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
 
     // HTML for controls
     function initControls() {
-        var controlElements = { 'map-controls': { tag: 'div', append: 'body' }, 
-                                'map-control-buttons': { tag: 'div', append: 'map-controls' }, 
-                                'map-control-start': { tag: 'button', append: 'map-control-buttons', icon: 'previous', click: 'clickControl()' }, 
-                                'map-control-back': { tag: 'button', append: 'map-control-buttons', icon: 'rewind', click: 'clickControl()' }, 
-                                'map-control-play-pause': { tag: 'button', append: 'map-control-buttons', icon: 'play', click: 'clickPlayPause()' }, 
-                                'map-control-forward': { tag: 'button', append: 'map-control-buttons', icon: 'fast-forward', click: 'clickControl()' }, 
-                                'map-control-end': { tag: 'button', append: 'map-control-buttons', icon: 'skip', click: 'clickControl()' }, 
-                                'map-slider-container': { tag: 'div', append: 'map-controls' }, 
-                                'map-slider': { tag: 'input', append: 'map-slider-container' }, 
-                                'map-speed-controls': { tag: 'div', append: 'map-controls' }, 
-                                'map-control-slower': { tag: 'button', append: 'map-speed-controls', icon: 'minus', click: 'clickSpeed()' }, 
-                                'map-control-faster': { tag: 'button', append: 'map-speed-controls', icon: 'plus', click: 'clickSpeed()' }, 
-                                'map-date': { tag: 'div', append: 'map-controls' } };
-        // Create all elements dynamically
-        for (var element in controlElements) {
-            window[element] = document.createElement(controlElements[element].tag);
-            window[element].setAttribute("id", element);
-            if (controlElements[element].append == 'body') {
-                document.body.appendChild(window[element]);
-            } else {
+        // Avoid double loading
+        if (document.getElementById('map-controls') == null) {
+            // Init CSS
+            initControlsCSS();
+            // Control elements
+            var controlElements = { 'map-controls': { tag: 'div', append: 'svg-world-map-container' }, 
+                                    'map-control-buttons': { tag: 'div', append: 'map-controls' }, 
+                                    'map-control-start': { tag: 'button', append: 'map-control-buttons', icon: 'previous', click: 'clickControl()' }, 
+                                    'map-control-back': { tag: 'button', append: 'map-control-buttons', icon: 'rewind', click: 'clickControl()' }, 
+                                    'map-control-play-pause': { tag: 'button', append: 'map-control-buttons', icon: 'play', click: 'clickPlayPause()' }, 
+                                    'map-control-forward': { tag: 'button', append: 'map-control-buttons', icon: 'fast-forward', click: 'clickControl()' }, 
+                                    'map-control-end': { tag: 'button', append: 'map-control-buttons', icon: 'skip', click: 'clickControl()' }, 
+                                    'map-slider-container': { tag: 'div', append: 'map-controls' }, 
+                                    'map-slider': { tag: 'input', append: 'map-slider-container' }, 
+                                    'map-speed-controls': { tag: 'div', append: 'map-controls' }, 
+                                    'map-control-slower': { tag: 'button', append: 'map-speed-controls', icon: 'minus', click: 'clickSpeed()' }, 
+                                    'map-control-faster': { tag: 'button', append: 'map-speed-controls', icon: 'plus', click: 'clickSpeed()' }, 
+                                    'map-date': { tag: 'div', append: 'map-controls' } };
+            // Create all elements dynamically
+            for (var element in controlElements) {
+                window[element] = document.createElement(controlElements[element].tag);
+                window[element].setAttribute("id", element);
                 window[controlElements[element].append].appendChild(window[element]);
+                if (controlElements[element].tag == 'button') {
+                    var i = document.createElement('i');
+                    i.setAttribute("class", "flaticon-" + controlElements[element].icon);
+                    window[element].appendChild(i);
+                    window[element].setAttribute("onclick", controlElements[element].click);
+                }
             }
-            if (controlElements[element].tag == 'button') {
-                var i = document.createElement('i');
-                i.setAttribute("class", "flaticon-" + controlElements[element].icon);
-                window[element].appendChild(i);
-                window[element].setAttribute("onclick", controlElements[element].click);
-            }
+            // Add missing attributes to slider
+            document.getElementById("map-slider").setAttribute("type", "range");
+            document.getElementById("map-slider").setAttribute("min", "0");
+            document.getElementById("map-slider").setAttribute("max", maxDates);
+            // Startup time control functions
+            initDayTimer();
+            initSilder();
+            initKeyControls();
+            updateControls();
         }
-        // Add missing attributes to slider
-        document.getElementById("map-slider").setAttribute("type", "range");
-        document.getElementById("map-slider").setAttribute("min", "0");
-        document.getElementById("map-slider").setAttribute("max", maxDates);
     }
 
     // CSS for controls

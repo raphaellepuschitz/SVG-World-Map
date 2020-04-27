@@ -14,7 +14,7 @@ This is just a small library (with a big world map) for fast and simple data pro
 
 This package constists of 3 parts (which could also be used separately):
 
-* A detailed **[SVG world map](#part-1-the-map)** with **239 nations and countries** and **3000 second-level provinces**, ready for editing with your preferred graphics editor
+* A detailed **[SVG world map](#part-1-the-map)** with **239 nations and countries** and over **3000 second-level provinces and islands**, ready for editing with your preferred graphics editor
 * A **[List of all world countries](#part-2-the-list)** with additional information, ready for use with the SVG map
 * A **[JavaScript SVG library](#part-3-the-library)** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a **callback-API**, including a addon module for **time controls** and **visual data animation**
 
@@ -43,20 +43,23 @@ Demos
 Part 1: The Map
 ---------------
 
-Download current version: [world-states-provinces.svg](./src/world-states-provinces.svg)  
+Download big map: [world-states-provinces.svg](./src/world-states-provinces.svg)  
+Download small map: [world-states.svg](./src/world-states.svg)  
 
-The map is based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) from [Wikimedia Commons](https://commons.wikimedia.org).  
-It was strongly modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
-The country paths in the SVG are not the work of the library author. See the version history and authorship of the original file [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg).  
-Because of all the detailed subregions the map has a lot of vectors and is rather large for an image (~3,8 MB).  
+The maps are based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) and [Blank Map World.svg](https://commons.wikimedia.org/wiki/File:BlankMap-World.svg)  from [Wikimedia Commons](https://commons.wikimedia.org). 
 
-**Make sure to use the SVG only, if:**
+Both - the big and the small map - were strongly modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
+The country paths in the SVGs are not the work of the library author. See the version history and authorship of the original files [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) and [here](https://commons.wikimedia.org/wiki/File:BlankMap-World.svg).  
+Because of all the detailed subregions the big map has a lot of vectors and is rather large for an image (~3,8 MB).  
 
-* You really need a fully detailed world map with all nations, provinces and states. If not, there's a ton of smaller SVGs at [Wikimedia Commons: SVG blank maps of the world](https://commons.wikimedia.org/wiki/Category:SVG_blank_maps_of_the_world) and elsewhere. 
-* Your users have a fast internet connection, or:
-* You add a preloader or caching layer for faster delivery (a simple loading bar will also work in some cases). 
+**Make sure to use the big map only, if:**
 
-> The political subdivisions (countries, provinces, states) are mostly not named correctly, like `<path id="path12345" ...>`. This issue will be addressed in future versions. 
+* You really need a fully detailed world map with all nations, provinces and states
+* Your users have a fast internet connection
+
+**Otherwise** please set the `bigMap` paramenter in options to `false`. This will make the library load the **small map without provinces** (~1,3 MB), which is much faster.  
+
+> The political subdivisions (countries, provinces, states) of the big map are mostly not named correctly, like `<path id="path12345" ...>`. This issue will be addressed in future versions. 
 
 
 Part 2: The List
@@ -74,6 +77,7 @@ The list includes 250 countries and microstates from Andorra to Zimbabwe with th
 * The official **longname**, e.g. "The Republic of Austria"
 * The countries **sovereignty**, e.g. "UN"
 * The world **region**, e.g. "EU"
+* The countries **population** (as per 2020)
 * (For some countries also the **provinces**, e.g. "Vienna")
 
 > Note: Most political subdivisions (countries, provinces, states) are currently not included in the country list. They will be added in future versions. 
@@ -92,33 +96,26 @@ Although this project only uses frontend technologies, most browsers nowadays do
 | **&raquo; Demo:** [Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html) |
 | --- |
 
-First, add [world-states-provinces.svg](./src/world-states-provinces.svg) and [svg-world-map.js](./src/svg-world-map.js) to your HTML document, then initialize the library:
+Add the `/src/` folder to your project, include [svg-world-map.js](./src/svg-world-map.js) in your HTML document, then call the library:
 
 ```html
-<object id="svg-world-map" data="world-states-provinces.svg" type="image/svg+xml"></object>
+<script src="../src/svg-world-map.js"></script>
+<script>svgWorldMap()</script>
 ```
 
-```html
-<script src="svg-world-map.js"></script>
-```
-
-```js
-window.onload = function() { svgWorldMap('svg-world-map'); }; // Quick and dirty basic implementation
-```
-
-The better way of calling the library is of course to load the SVG via `addEventListener()` and bind the world map to a variable: 
-
-```js
-var mySVG = document.getElementById('svg-world-map'); 
-mySVG.addEventListener("load", function() {
-    var myWorldMap = svgWorldMap(mySVG); 
-})
-```
-
+This will load the SVG map via HTML injection to the top of your document body and initialize the library.   
 So far for the basic setup.
 
-> Note that the HTML, the SVG and the JS must all be loaded before the library is initialized. There's multiple ways of doing this, like `window.onload()`, `mySVG.addEventListener("load", ...)`, `$(document).ready()` (in JQuery), etc. 
+If you want to use the libraries callback API (see below), you need to load it with an **async function**:
 
+```js
+var myWorldMap;
+loadSVGWorldMap();
+async function loadSVGWorldMap() {
+    myWorldMap = await svgWorldMap(myCustomOptions);
+    // Do something with the map...
+}
+```
 
 ### Custom options 
 
@@ -126,7 +123,9 @@ So far for the basic setup.
 | --- |
 
 * All default options can be overruled by passing an object of custom options
+* `bigMap` controls whether the map is loaded **with all countries and provinces** (~3,8 MB) or **with nations only** (~1,3 MB)
 * All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input
+* Use `showOcean` and `showAntarctica` to hide these layers on the map
 * If `showInfoBox` is set to `true`, the library will add a `<div id="map-infobox"></div>` plus basic CSS to your page
 * `mapClick`, `mapOver`, `mapOut`, `mapTable` and `mapDate` are callback function names, see the API section for details
 * `timeControls` will activate the **Time Controls** addon module, see below for more information
@@ -136,7 +135,9 @@ So far for the basic setup.
 var options = {
 
     // Basic options
+    bigMap: true, // Set to 'false' to load small map without provinces
     showOcean: true, // Show or hide ocean layer
+    showAntarctica: true, // Show or hide antarctic layer
     showLabels: true, // Show country labels
     showMicroLabels: false, // Show microstate labels
     showMicroStates: true, // Show microstates on map
@@ -170,26 +171,27 @@ var options = {
 };
 ```
 
-The custom options are passed as second (optional) parameter to the map at startup. You can either hand them over as an object similar to the one above (with `myCustomOptions` instead of `options`): 
+The custom options are passed as first (optional) parameter to the map at startup. You can either hand them over as an object similar to the one above (with `myCustomOptions` instead of `options`): 
 
 ```js
-var myWorldMap = svgWorldMap(mySVG, myCustomOptions); 
+myWorldMap = svgWorldMap(myCustomOptions); 
 ```
 
-Or as inline paramater: 
+Or as inline parameter: 
 
 ```js
-var myWorldMap = svgWorldMap(mySVG, { showOcean: false, groupCountries: false, mapClick: "customMapClick" }); 
+myWorldMap = svgWorldMap({ showOcean: false, groupCountries: false, mapClick: "customMapClick" }); 
 ```
 
 
 ### Map object return values
 
 After initialization, the `svgWorldMap()` function will give you an object in return.  
-If the map is called like `var myWorldMap = svgWorldMap(mySVG)`, then the return data of `myWorldMap` looks something like this: 
+If the map is called like `myWorldMap = svgWorldMap()`, then the return data of `myWorldMap` looks something like this: 
 
 ```js
 myWorldMap: { 
+    worldMap: '<object id="svg-world-map" type="image/svg+xml" data="../src/world-states-provinces.svg">', 
     countries: { AD: '<g id="AD">', AE: '<g id="AE">', ... }, 
     countryData: { AD: { name: "Andorra", longname: ... }, ... }, 
     countryGroups: { region: { AF: {...}, AN: {...}, ... }, ... }, 
@@ -206,6 +208,11 @@ myWorldMap: {
 ```
 
 Let's break this down in detail, as each return object can be very useful:
+
+
+#### The Map SVG
+
+The `svgWorldMap.worldMap` is either the big SVG world map **with all countries and provinces** or the small map **without provinces, only nations**. If the library detects a small mobile device, it will automatically load the small map. You can force the small map by setting `options.bigMap` to `false`.  
 
 
 #### Country list
@@ -287,18 +294,18 @@ svgWorldMap.countryGroups.region: {
 Groups can be deactivated by setting the `options.groupCountries` value to `false` (default is `true`):
 
 ```js
-var myWorldMap = svgWorldMap(mySVG, { groupCountries: false }); 
+myWorldMap = svgWorldMap({ groupCountries: false }); 
 ```
 
 If you want to add a country group, you have to add the category key from country data to the `options.groupBy`. Let's say we also want a `sovereignty` group, then the options would have to look like: 
 
 ```js
-var myCustomOptions = {
+myCustomOptions = {
     ...
     groupCountries: true, 
     groupBy: [ "region", "sovereignty" ], // Sort countryData by this value(s) and return to countryGroups
 };
-var myWorldMap = svgWorldMap(mySVG, myCustomOptions); 
+myWorldMap = svgWorldMap(myCustomOptions); 
 ```
 
 
@@ -334,10 +341,10 @@ There's two kinds of data for countries:
 | **&raquo; Demo:** [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html) |
 | --- |
 
-To add or change the country information on startup, you can simply pass your JSON data to the `svgWorldMap()` as third (optional) parameter (the second one is options).  
+To add or change the country information on startup, you can simply pass your JSON data to the `svgWorldMap()` as second (optional) parameter (the first one is options).  
 
 ```js
-var myWorldMap = svgWorldMap(mySVG, {}, countryData); 
+myWorldMap = svgWorldMap({}, countryData); 
 ```
 
 The library will then do the logic: For example, you could upload your own list with the country population in the year 1000 or change all the countries names with planet names from *Star Trek*. In that case, you would have to change the country data from this...
@@ -366,7 +373,7 @@ var countryData = {
 }
 ```
 
-> **Note:** You can change all country information ***except*** the country code, which is the identifier for the corresponding map path.  
+> **Note:** You can change all country information ***except*** the ISO country code, which is the identifier for the corresponding map path.  
 
 
 ### Callback and home APIs
@@ -446,13 +453,13 @@ There are 8 calling home functions, 3 for country `over()`, `out()` and `click()
     myWorldMap.update({ DE: '#00FF00', AT: '#00FF00', CH: '#00FF00' });
     ```
 
-* **`reset()`** is the reverse function for `update()` and will reset all country colors to their inital state: 
+* **`reset()`** will revert all country attributes like `fill`, `stroke` and `stroke-width` to their inital `out` state: 
 
     ```html
     <button onclick="myWorldMap.reset()">Reset map</button>
     ```
 
-* **`label()`** toggles the visibility of the country labels on and off. The input parameter can be `"all"` or `"micro"` (for microstates): 
+* **`labels()`** toggles the visibility of the country labels on and off. The input parameter can be `"all"` or `"micro"` (for microstates): 
 
     ```html
     <button onclick="myWorldMap.labels('all')">Show labels</button>
@@ -496,21 +503,21 @@ Before activating the Time Control module, make sure to have [svg-world-map-time
 * `mapDate` is the custom callback function (see above)
 
 ```js
-var myTimeOptions = {
+myTimeOptions = {
     timeControls: true, // Set to 'true' for time controls
     timePause: true, // Set to 'false' for time animation autostart
     timeLoop: false //  Set to 'true' for time animation loop
     mapDate: "myCustomDate", // (Custom) callback function for time control date return
 };
 
-var myWorldMap = svgWorldMap(mySVG, myTimeOptions); 
+myWorldMap = svgWorldMap(myTimeOptions); 
 ```
 
 This will asynchronously load `/src/svg-world-map-time-controls.mjs`, **inject the calling document** and:  
 
 * Load the **flaticon webfont** for the control icons
 * Add (prepend) some **CSS** before the closing `</head>` tag 
-* Add **HTML** inside a new `<div id="map-controls">` element before the closing `</body>` 
+* Add **HTML** to a new `<div id="map-controls">` element inside the `<div id="svg-world-map-container">` 
 
 Please override the CSS as you like and change or hide the added HTML elements.  
 
@@ -527,24 +534,31 @@ Please override the CSS as you like and change or hide the added HTML elements.
         </style>
     </head>
     <body>
-        ...
-        <div id="map-controls">
-            <div id="map-control-buttons">
-                <button id="map-control-start" onclick="clickControl()"><i class="flaticon-previous"></i></button>
-                <button id="map-control-back" onclick="clickControl()"><i class="flaticon-rewind"></i></button>
-                <button id="map-control-play-pause" onclick="clickPlayPause()"><i class="flaticon-play"></i></button>
-                <button id="map-control-forward" onclick="clickControl()"><i class="flaticon-fast-forward"></i></button>
-                <button id="map-control-end" onclick="clickControl()"><i class="flaticon-skip"></i></button>
+        <div id="svg-world-map-container">
+            <!-- SVG map -->
+            <object id="svg-world-map" type="image/svg+xml" data="../src/world-states-provinces.svg"></object>
+            <!-- Info box -->
+            <div id="map-infobox"></div>
+            <!-- Map time controls -->
+            <div id="map-controls">
+                <div id="map-control-buttons">
+                    <button id="map-control-start" onclick="clickControl()"><i class="flaticon-previous"></i></button>
+                    <button id="map-control-back" onclick="clickControl()"><i class="flaticon-rewind"></i></button>
+                    <button id="map-control-play-pause" onclick="clickPlayPause()"><i class="flaticon-pause"></i></button>
+                    <button id="map-control-forward" onclick="clickControl()"><i class="flaticon-fast-forward"></i></button>
+                    <button id="map-control-end" onclick="clickControl()"><i class="flaticon-skip"></i></button>
+                </div>
+                <div id="map-slider-container">
+                    <input id="map-slider" type="range" min="0" max="10">
+                </div>
+                <div id="map-speed-controls">
+                    <button id="map-control-slower" onclick="clickSpeed()"><i class="flaticon-minus"></i></button>
+                    <button id="map-control-faster" onclick="clickSpeed()"><i class="flaticon-plus"></i></button>
+                </div>
+                <div id="map-date"></div>
             </div>
-            <div id="map-slider-container">
-                <input id="map-slider" type="range" min="0" max="10">
-            </div>
-            <div id="map-speed-controls">
-                <button id="map-control-slower" onclick="clickSpeed()"><i class="flaticon-minus"></i></button>
-                <button id="map-control-faster" onclick="clickSpeed()"><i class="flaticon-plus"></i></button>
-            </div>
-            <div id="map-date"></div>
         </div>
+        ...
     </body>
 </html>
 ```
@@ -563,20 +577,20 @@ function myCustomDate(date) {
 
 #### Country data time animation 
 
-To animate the color of countries from one date to the next, you have to pass an array with the **dates** and the **country colors** (as sub objects) to the `svgWorldMap()` main function as fourth parameter (after SVG, options and country data). 
+To animate the color of countries from one date to the next, you have to pass an array with the **dates** and the **country colors** (as sub objects) to the `svgWorldMap()` main function as third parameter (after options and country data). 
 
 The inner data for each date is similar to the data passed to the `update()` function or as the `svgWorldMap.countries` return object.  
 
 Let's say you want to highlight the Baltic states *Estonia*, *Latvia* und *Lithuania* after each other, then the code would look something like this: 
 
 ```js
-var myTimeData = [
+myTimeData = [
     { 'Date 1': { EE: '#1E37EE', LV: '#FFFFFF', LT: '#FFFFFF' } },
     { 'Date 2': { EE: '#FFFFFF', LV: '#9C1733', LT: '#FFFFFF' } },
     { 'Date 3': { EE: '#FFFFFF', LV: '#FFFFFF', LT: '#FBB934' } }
 ];
 
-var myWorldMap = svgWorldMap(mySVG, myTimeOptions, false, myTimeData); // countryData can be false, but not empty
+myWorldMap = svgWorldMap(myTimeOptions, false, myTimeData); // countryData can be false, but not empty
 ```
 
 
@@ -591,6 +605,7 @@ Further Development & Changelog
 * Add capitals to countrydata
 * Add bubbles / circles to the map
 * Add minified JS and CSS files
+* Add time animation for Wikipedia tables
 * Optimize drag and click
 * Optimize zoom integration
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
@@ -600,6 +615,10 @@ Further Development & Changelog
 
 ### Done
 
+* 0.1.6
+  * Moved map initialization to library
+  * Added small SVG map for mobile devices and to options
+  * Added mobile detection
 * 0.1.5
   * Added Wikipedia (and other) HTML table import
   * Added Wikipedia table import demo

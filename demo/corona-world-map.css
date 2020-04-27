@@ -113,11 +113,11 @@ ul li {
     height: 160px;
 }
 
-/* Map */
+/* Fade-In elements */
 
-#container, #svg-world-map {
-    width: 100%; 
-    height: 100%; 
+#svg-world-map-container, #details, #settings, #countries {
+    visibility: hidden;
+    opacity: 0;
     transition: opacity 1s ease-out;
 }
 

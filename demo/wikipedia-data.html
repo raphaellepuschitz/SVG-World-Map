@@ -4,39 +4,9 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <style>
-            html { width: 100%; height: 100%; overflow: hidden; }
-            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
-            button, input { width: 100%; padding: 5px 0; font-size: 13px; border: none;  border-radius: 5px; color: #FFFFFF; background-color: #444444; }
-            button { cursor: pointer; text-align: center; }
-            button:hover, input:hover { background-color: #999999; }
-            button:first-child { margin-bottom: 10px; }
-            input { padding: 5px; }
-            ul { list-style: none; padding: 0; margin: 0 0 10px; }
-            ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
-            ul li:hover { background-color: #444444; }
-            .box { position: fixed; top: 10px; right: 10px; width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; font-size: 14px; border-radius: 5px; overflow-y: scroll; }
-            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 185px; margin-top: -5px; }
-            .hidden { display: none; }
-            #container, #svg-world-map { width: 100%; height: 100%; }
-            #container { opacity: 0; transition: opacity 1s; }
-            #countries { top: 222px; height: calc(100vh - 252px); }
-            #labels { top: 10px; width: 150px; }
-            #overout { top: 102px; }
-            #out { margin-left: 8px; }
-            #wikidata { right: unset; left: 10px; width: 350px; }
-            #wikidata button { margin-top: 10px; width: auto; padding: 5px; }
-            #wikidata button:nth-child(4) { margin-bottom: 10px; }
-            #wikidata button:nth-child(5) { float: right; }
-            #pageurl { width: 340px; margin-top: 10px; }
-            #tabledata { right: unset; left: 10px; top: 230px; width: 350px; max-height: calc(100vh - 260px); font-family: monospace; white-space: pre; }
-            #tabledata .hide { margin-left: 335px; }
-        </style>
+        <link rel="stylesheet" type="text/css" href="demo.css">
 	</head>
 	<body>
-		<div id="container">
-		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
-        </div>
         <div id="wikidata" class="box">
             Wikipedia page URL<br>
             <input type="text" id="pageurl" value="https://en.wikipedia.org/wiki/Member_states_of_the_Commonwealth_of_Nations"><br>
@@ -67,23 +37,21 @@
         <script src="../src/svg-world-map.js"></script>
         <script src="svg-pan-zoom.min.js"></script>
         <script>
-
+            // Global variables
             var myWorldMap;
-            var mySVG = document.getElementById('svg-world-map'); 
 
-            // Wait for asynchronous SVG load
-            loadSVGMap(mySVG);
-            function loadSVGMap(mySVG) {
-                mySVG.addEventListener("load", function() {
-                    // Startup SVG World Map
-                    myWorldMap = svgWorldMap(mySVG, { showLabels: false, showInfoBox: true });
-                    // Build controls 
-                    buildCountryControls();
-                    // SvgPanZoom 
-                    svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false }); 
-                    // Fadein with opacity 
-                    document.getElementById('container').style.opacity = 1;
-                }, false);
+            // Load SVG World Map
+            loadSVGWorldMap();
+            async function loadSVGWorldMap() {
+                // Startup SVG World Map
+                myWorldMap = await svgWorldMap({ bigMap: true, /* set to false for smaller, faster map */ showOcean: false, showAntarctica: false, showLabels: false, showInfoBox: true, provinceStroke: { out: '#666666',  over: '#666666',  click: '#333333' } });
+                // Build controls 
+                buildCountryControls();
+                // SvgPanZoom 
+                svgPanZoom = svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
+                svgPanZoom.pan({ x: 0, y: 50 }); // Set map to better start position without antarctica
+                // Fadein with opacity 
+                document.getElementById('svg-world-map-container').style.opacity = 1;
             }
 
             // Wait for asynchronous Wikipedia JSON load and pass data to library 
@@ -120,7 +88,17 @@
                     var updateData = {};
                     var updateColor = getHighlightColor(tableOutput.substr(33, 10)); // Get random highlight color
                     for (var countryid in tableData) {
-                        updateData[countryid] = updateColor;
+                        // Use (background) color from original data table, if there was some
+                        var keys = Object.keys(tableData[countryid]);
+                        var lastElem = tableData[countryid][keys[keys.length-2]];
+                        //console.log(lastElem);
+                        //console.log(lastElem.color);
+                        if (lastElem.color != undefined) {
+                            updateData[countryid] = lastElem.color;
+                        // Or just the generated random color 
+                        } else {
+                            updateData[countryid] = updateColor;
+                        }
                     }
                     myWorldMap.update(updateData);
                 }
@@ -174,7 +152,6 @@
                 var hex = '#' + parseInt(number * number).toString().substr(-6, 6);
                 return hex;
             }
-
         </script>
     </body>
 </html>

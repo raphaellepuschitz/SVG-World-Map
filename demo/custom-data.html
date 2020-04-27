@@ -4,22 +4,13 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <style>
-            html { width: 100%; height: 100%; overflow: hidden; }
-            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
-            ul { list-style: none; padding: 0; }
-            ul li { cursor: pointer; padding: 5px; border-radius: 5px; }
-            ul li:hover { background-color: #444444; }
-            .box { position: fixed; top: 10px; left: 10px; min-width: 200px; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
-            .hide { cursor: pointer; font-size: 25px; position: fixed; margin-left: 585px; margin-top: -5px; }
-            .hidden { display: none; }
-            #countries { max-height: calc(100vh - 40px); }
-            #overout { right: 10px; left: unset; }
-            #out { margin-left: 8px; }
-        </style>
+        <link rel="stylesheet" type="text/css" href="demo.css">
 	</head>
 	<body>
-		<object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
+        <div id="labels" class="box">
+            <button onclick="myWorldMap.labels('all')">Country labels</button>
+            <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+        </div>
         <div id="countries" class="box"></div>
         <div id="overout" class="box">
             Path over: <span id="over"></span><br><br>
@@ -28,22 +19,18 @@
         </div>
         <script src="../src/svg-world-map.js"></script>
         <script>
-
+            // Global variables
             var myWorldMap;
-            var mySVG = document.getElementById('svg-world-map'); 
 
-            // Wait for asynchronous svg load
-            loadSVGMap(mySVG);
-            function loadSVGMap(mySVG) {
-                mySVG.addEventListener("load", function() {
+            // Wait for JSON data first, then init SVG World Map
+            loadCountryData().then(function(countryData) {
+                loadSVGWorldMap(countryData);
+            });
 
-                    // Load country data via async request, then startup map init
-                    loadCountryData().then(function(countryData) {
-                        myWorldMap = svgWorldMap(mySVG, {}, countryData);
-                        buildCountryControls();
-                    });
-
-                }, false);
+            // Load SVG World Map
+            async function loadSVGWorldMap(countryData) {
+                myWorldMap = await svgWorldMap({}, countryData);
+                buildCountryControls();
             }
 
             // Asynchronous JSON load
@@ -92,7 +79,6 @@
                     document.getElementById("click").innerHTML = country.id;
                 }
             }
-
         </script>
     </body>
 </html>

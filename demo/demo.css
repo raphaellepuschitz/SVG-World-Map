@@ -1,0 +1,177 @@
+
+html, body { 
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    overflow: hidden; 
+    font-size: 14px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
+}
+
+body.black { 
+    background-color: #000000; 
+}
+
+a { 
+    color: #CCCCCC; 
+    text-decoration: dotted underline; 
+    cursor: pointer; 
+}
+
+ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0 0 10px; 
+}
+
+ul li { 
+    cursor: pointer; 
+    padding: 5px; 
+    border-radius: 5px; 
+}
+
+ul li:hover { 
+    background-color: #444444; 
+}
+
+.box { 
+    position: fixed; 
+    top: 10px; 
+    right: 10px; 
+    width: 200px; 
+    padding: 10px; 
+    background-color: rgba(100, 100, 100, .95); 
+    color: #FFFFFF; 
+    border-radius: 5px; 
+    overflow-y: scroll; 
+}
+
+.box button, .box input { 
+    cursor: pointer; 
+    width: 100%; 
+    padding: 5px 0; 
+    font-size: 13px; 
+    text-align: center; 
+    border: none;  
+    border-radius: 5px; 
+    color: #FFFFFF; 
+    background-color: #444444; 
+}
+
+.box button:hover, .box input:hover { 
+    background-color: #999999; 
+}
+
+.box button:first-child { 
+    margin-bottom: 10px; 
+}
+
+.box input { 
+    padding: 5px; 
+    text-align: left; 
+}
+
+.hide { 
+    position: fixed; 
+    margin-top: -5px; 
+    right: 20px; 
+    cursor: pointer; 
+    font-size: 25px; 
+    text-decoration: none; 
+    color: #FFFFFF;
+}
+
+.hidden { 
+    display: none; 
+}
+
+#options, #groups { 
+    left: 10px; 
+    right: unset; 
+}
+
+#code { 
+    border: 1px solid #FFFFFF; 
+    padding: 10px; 
+    background-color: #000000; 
+    color: #00FF00; 
+    font-size: 12px; 
+    font-family: 'Courier New', Courier, monospace; 
+    white-space: pre; 
+}
+
+#labels { 
+    top: 10px; 
+    width: 150px; 
+}
+
+#details, #countries { 
+    top: 222px; 
+    height: calc(100vh - 252px);
+}
+
+#overout { 
+    top: 102px;
+    right: 10px; 
+    left: unset; 
+}
+
+#out { 
+    margin-left: 8px; 
+}
+
+#info { 
+    top: unset; 
+    bottom: 10px; 
+    left: calc(50vw - 300px); 
+    width: 600px; 
+    height: 200px; 
+}
+
+#info .hide { 
+    right: unset;
+    margin-left: 585px;
+}
+
+#info.time {
+    bottom: 50px; 
+}
+
+#wikidata { 
+    right: unset; 
+    left: 10px; 
+    width: 350px; 
+}
+
+#wikidata button { 
+    margin-top: 10px; 
+    width: auto; 
+    padding: 5px; 
+}
+
+#wikidata button:nth-child(4) { 
+    margin-bottom: 10px;
+}
+
+#wikidata button:nth-child(5) { 
+    float: right; 
+}
+
+#pageurl { 
+    width: 340px; 
+    margin-top: 10px; 
+}
+
+#tabledata { 
+    right: unset; 
+    left: 10px; 
+    top: 230px; 
+    width: 350px; 
+    max-height: calc(100vh - 260px); 
+    font-family: monospace; 
+    white-space: pre; 
+}
+
+#tabledata .hide { 
+    margin-left: 335px; 
+}

@@ -4,51 +4,13 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <style>
-            html { width: 100%; height: 100%; overflow: hidden; }
-            body { width: 100%; height: 100%; margin: 0; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
-            a { color: #CCCCCC; text-decoration: dotted underline; cursor: pointer; }
-            .box { position: fixed; padding: 10px; background-color: rgba(100, 100, 100, .95); color: #FFFFFF; border-radius: 5px; overflow-y: scroll; }
-            .hide { font-size: 25px; position: fixed; margin-left: 285px; margin-top: -5px; text-decoration: none; color: #FFFFFF; }
-            .hidden { display: none; }
-            #container, #svg-world-map { width: 100%; height: 100%; }
-            #container { opacity: 0; transition: opacity 1s; }
-            #info { top: 10px; right: 10px; width: 300px; max-height: 600px; }
-        </style>
+        <link rel="stylesheet" type="text/css" href="demo.css">
 	</head>
 	<body>
-		<div id="container">
-		    <object id="svg-world-map" data="../src/world-states-provinces.svg" type="image/svg+xml"></object>
-        </div>
-        <div id="countries" class="box"></div>
-        <div id="groups" class="box"></div>
-        <div id="info" class="box hidden"></div>
+        <div id="info" class="box hidden time"></div>
         <script src="../src/svg-world-map.js"></script>
-        <!-- Let's test SVG pan zoom integration: --> 
-        <!-- CDN: <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script> -->
         <script src="svg-pan-zoom.min.js"></script>
         <script>
-
-            // Wait for asynchronous svg load
-            var mySVG = document.getElementById('svg-world-map'); 
-            var myWorldMap;
-            mySVG.addEventListener("load", function() {
-                // Custom options
-                var options = { 
-                    showLabels: false, // Hide country labels
-                    showInfoBox: true, // Show info box
-                    timeControls: true, // Time data to activate time antimation controls
-                    timePause: false, // Set pause to false for autostart
-                    timeLoop: true // Loop time animation
-                };
-                // Startup SVG World Map
-                myWorldMap = svgWorldMap(mySVG, options, false, timeData);
-                // Test svgPanZoom 
-                svgPanZoom(mySVG, { minZoom: 1, dblClickZoomEnabled: false }); // controlIconsEnabled: true, beforePan: beforePan
-                // Fadein with opacity
-                document.getElementById('container').style.opacity = 1;
-            }, false);
-
             // Demo dataset: Enlargement of the European Union
             var baseColor = '#B9B9B9';
             var highColor = '#0000FF';
@@ -66,13 +28,35 @@
                 { '2020': { 'DE-SH': highColor, 'DE-HH': highColor, 'DE-BY': highColor, 'DE-HE': highColor, 'DE-NI': highColor, 'DE-BW': highColor, 'DE-RP': highColor, 'DE-NW': highColor, 'DE-SL': highColor, 'DE-HB': highColor, 'DE-BE': highColor, 'DE-MV': highColor, 'DE-BB': highColor, 'DE-TH': highColor, 'DE-SN': highColor, 'DE-ST': highColor, 'BE': highColor, 'FR': highColor, 'IT': highColor, 'LU': highColor, 'NL': highColor, 'DK': highColor, 'IE': highColor, 'GB': baseColor, 'GR': highColor, 'PT': highColor, 'ES': highColor, 'FI': highColor, 'AT': highColor, 'SE': highColor, 'EE': highColor, 'LV': highColor, 'LT': highColor, 'MT': highColor, 'PL': highColor, 'SK': highColor, 'SI': highColor, 'CZ': highColor, 'HU': highColor, 'CY': highColor, 'BG': highColor, 'RO': highColor, 'HR': highColor } },
             ];
 
+            // Global variables
+            var myWorldMap;
+
+            // Load SVG World Map
+            loadSVGWorldMap();
+            async function loadSVGWorldMap() {
+                // Custom options
+                var options = { 
+                    showLabels: false, // Hide country labels
+                    showInfoBox: true, // Show info box
+                    timeControls: true, // Time data to activate time antimation controls
+                    timePause: false, // Set pause to false for autostart
+                    timeLoop: true // Loop time animation
+                };
+                // Startup SVG World Map
+                myWorldMap = svgWorldMap(options, false, timeData);
+                // SvgPanZoom 
+                //svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
+                // Fadein with opacity 
+                document.getElementById('svg-world-map-container').style.opacity = 1;
+            }
+
             // Custom callback function for map click, defined in 'options.mapClick'
             function mapClick(country) {
                 var nation = country.country; // Get parent nation
                 if (nation != undefined && country.id != 'Ocean') {
                     var out = '<a class="hide" onclick="document.getElementById(\'info\').classList.add(\'hidden\')">×</a>';
-                    out += 'Country: ' + country.id + '<br>';
-                    out += '<a onmouseover="myWorldMap.over(\'' + nation.id + '\')" onmouseout="myWorldMap.out(\'' + nation.id + '\')" onclick="myWorldMap.click(\'' + nation.id + '\')">Nation: ' + nation.name + '</a>';
+                    out += 'Country: ' + country.id;
+                    out += '<br><br><a onmouseover="myWorldMap.over(\'' + nation.id + '\')" onmouseout="myWorldMap.out(\'' + nation.id + '\')" onclick="myWorldMap.click(\'' + nation.id + '\')">Nation: ' + nation.name + '</a>';
                     out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
                     nation.provinces.forEach(function(province) { 
                         out += '<a onmouseover="myWorldMap.over(\'' + province.id + '\')" onmouseout="myWorldMap.out(\'' + province.id + '\')" onclick="myWorldMap.click(\'' + province.id + '\')">' + province.id + '</a>, '; 
@@ -83,14 +67,6 @@
                     document.getElementById("info").classList.add("hidden");
                 }
             }
-
-            // Asynchronous JSON load
-            async function loadCountryData() {
-                let response = await fetch('../src/countrydata.json');
-                let data = await response.json();
-                return data;
-            }
-
         </script>
     </body>
 </html>
