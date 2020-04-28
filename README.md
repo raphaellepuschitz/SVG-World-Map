@@ -4,7 +4,7 @@ SVG World Map JS
 
 🗺 A JavaScript library to easily integrate one or more SVG world maps with all nations (countries) and second-level political subdivisions (countries, provinces, states).  
 
-![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/svg-world-map.png)  
+![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/svg-world-map.png)  
 
 Use this map and library as boilerplate for a **Strategy Game**, for **Data Visualization** of scientific research and other data, or as **Interactive Map** for your article, paper, website or app. 
 
@@ -67,8 +67,8 @@ Part 2: The List
 
 There are 2 versions of the country list: 
 
-* A [CSV file](./src/countrydata.csv) for easy editing with any office software
-* A [JSON file](./src/countrydata.json) for easy integration with frontend or backend systems
+* A [CSV file](./src/country-data.csv) for easy editing with any office software
+* A [JSON file](./src/country-data.json) for easy integration with frontend or backend systems
 
 The list includes 250 countries and microstates from Andorra to Zimbabwe with this additional information:  
 
@@ -247,7 +247,7 @@ svgWorldMap.countryData['CA']: {
 }
 ```
 
-If you load the basic cutom data from [countrydata.json](./src/countrydata.json) (see below), the data provides a little more (and is also added to each country in `svgWorldMap.countries`): 
+If you load the basic cutom data from [country-data.json](./src/country-data.json) (see below), the data provides a little more (and is also added to each country in `svgWorldMap.countries`): 
 
 ```js
 svgWorldMap.countryData['CA']: {
@@ -330,7 +330,7 @@ All these functions are part of the **API**, please see below for further inform
 
 There's two kinds of data for countries: 
 
-* The **initial country data** is passed as a JSON object in the same format as the [countrydata.json](./src/countrydata.json) 
+* The **initial country data** is passed as a JSON object in the same format as the [country-data.json](./src/country-data.json) 
 * There's an **update map API-call**. For further information about manipulating the country color at runtime, see the sections below. 
 
 > If you want to add custom data from a modified country list in CSV format, please covert it to a **keyed JSON file**. A good CSV to JSON converter can be found [here](https://www.convertcsv.com/csv-to-json.htm) (make sure to select "CSV to keyed JSON"). CSV import will be added in future versions. 
@@ -521,6 +521,8 @@ This will asynchronously load `/src/svg-world-map-time-controls.mjs`, **inject t
 
 Please override the CSS as you like and change or hide the added HTML elements.  
 
+<!-- Github markdown shows "./src" in red in HTML code blocks (not CSS), so the <object> below has "../src/" not ".. /src/" -->
+
 ```html
 <html>
     <head>
@@ -536,7 +538,7 @@ Please override the CSS as you like and change or hide the added HTML elements.
     <body>
         <div id="svg-world-map-container">
             <!-- SVG map -->
-            <object id="svg-world-map" type="image/svg+xml" data="../src/world-states-provinces.svg"></object>
+            <object id="svg-world-map" type="image/svg+xml" data=".. /src/world-states-provinces.svg"></object>
             <!-- Info box -->
             <div id="map-infobox"></div>
             <!-- Map time controls -->
@@ -615,6 +617,9 @@ Further Development & Changelog
 
 ### Done
 
+* 0.1.7
+  * Moved JS, CSS and images for demos to subfolders
+  * Fixed play/pause bug in time controls
 * 0.1.6
   * Moved map initialization to library
   * Added small SVG map for mobile devices and to options

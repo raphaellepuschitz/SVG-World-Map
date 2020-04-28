@@ -13,28 +13,25 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     var date = 0; // date = current day, month, year etc.
     var ticks = 0; // For speed
     var speed = 10; // For ticks per date
+    var timeData = false;
+    var maxDates = false;
+    var loop = false;
+    window.paused = true; // paused has to be attached to window because of window.setInterval, otherwise controls are broken! // TODO: Check other variables too?
 
     // Check time dataset
     if (initTimeData != undefined) {
-        var timeData = initTimeData;
-        var maxDates = initTimeData.length-1;
-    } else {
-        var timeData = false;
-        var maxDates = false;
+        timeData = initTimeData;
+        maxDates = initTimeData.length-1;
     }
 
     // Set pause at start (= autoplay)
-    if (timePause == true) {
-        var paused = true;
-    } else {
-        var paused = false;
+    if (timePause == false) {
+        paused = false;
     }
 
     // Set loop
     if (timeLoop == true) {
-        var loop = true;
-    } else {
-        var loop = false;
+        loop = true;
     }
 
     // Dynamically load webfont
@@ -88,7 +85,6 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     function initKeyControls() {
         // Keyboard controls
         document.addEventListener('keyup', function(event) {
-            event.preventDefault(); // Don't remove this or the universe will break! Und dann klatscht es, Junge!
             if (event.keyCode == 32) { // Space
                 document.getElementById("map-control-play-pause").firstChild.click();
             } else if (event.keyCode == 37) { // Arrow left

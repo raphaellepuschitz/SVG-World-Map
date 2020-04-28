@@ -120,7 +120,7 @@ function mapDate(date) {
 // Asynchronous load for country data
 function loadCountryData() {
     // Load country data via async request, then startup map init
-    var url = '../src/countrydata.json';
+    var url = '../src/country-data.json';
     loadFile(url, function(response) {
         countryData = JSON.parse(response); 
     });

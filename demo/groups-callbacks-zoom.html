@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <link rel="stylesheet" type="text/css" href="demo.css">
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
 	</head>
 	<body>
         <div id="labels" class="box">
@@ -20,9 +20,7 @@
         <div id="groups" class="box"></div>
         <div id="info" class="box hidden"></div>
         <script src="../src/svg-world-map.js"></script>
-        <!-- Let's test SVG pan zoom integration: --> 
-        <!-- CDN: <script src="//cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script> -->
-        <script src="svg-pan-zoom.min.js"></script>
+        <script src="js/svg-pan-zoom.min.js"></script>
         <script>
             // Global variables
             var myWorldMap;
@@ -140,7 +138,7 @@
 
             // Asynchronous JSON load
             async function loadCountryData() {
-                let response = await fetch('../src/countrydata.json');
+                let response = await fetch('../src/country-data.json');
                 let data = await response.json();
                 return data;
             }

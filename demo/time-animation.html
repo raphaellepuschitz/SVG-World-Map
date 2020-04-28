@@ -4,12 +4,12 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <link rel="stylesheet" type="text/css" href="demo.css">
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
 	</head>
 	<body>
         <div id="info" class="box hidden time"></div>
         <script src="../src/svg-world-map.js"></script>
-        <script src="svg-pan-zoom.min.js"></script>
+        <script src="js/svg-pan-zoom.min.js"></script>
         <script>
             // Demo dataset: Enlargement of the European Union
             var baseColor = '#B9B9B9';
@@ -43,9 +43,9 @@
                     timeLoop: true // Loop time animation
                 };
                 // Startup SVG World Map
-                myWorldMap = svgWorldMap(options, false, timeData);
+                myWorldMap = await svgWorldMap(options, false, timeData);
                 // SvgPanZoom 
-                //svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
+                svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
                 // Fadein with opacity 
                 document.getElementById('svg-world-map-container').style.opacity = 1;
             }

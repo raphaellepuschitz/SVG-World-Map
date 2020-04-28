@@ -90,16 +90,6 @@ ul li:hover {
     right: unset; 
 }
 
-#code { 
-    border: 1px solid #FFFFFF; 
-    padding: 10px; 
-    background-color: #000000; 
-    color: #00FF00; 
-    font-size: 12px; 
-    font-family: 'Courier New', Courier, monospace; 
-    white-space: pre; 
-}
-
 #labels { 
     top: 10px; 
     width: 150px; 
@@ -114,6 +104,10 @@ ul li:hover {
     top: 102px;
     right: 10px; 
     left: unset; 
+}
+
+body.black #overout {
+    top: 10px; 
 }
 
 #out { 
@@ -162,16 +156,54 @@ ul li:hover {
     margin-top: 10px; 
 }
 
-#tabledata { 
+#code { 
     right: unset; 
     left: 10px; 
-    top: 230px; 
+    top: 230px;
     width: 350px; 
     max-height: calc(100vh - 260px); 
     font-family: monospace; 
     white-space: pre; 
+    background-color: rgba(10, 10, 10, .85);
 }
 
-#tabledata .hide { 
+#code .hide { 
+    right: unset; 
     margin-left: 335px; 
+}
+
+body.black #code {
+    top: 10px; 
+}
+
+
+/* Taken from: https://gist.github.com/faffyman/6183311 */
+
+pre {
+    margin: 5px;
+}
+
+.function {
+    color: #BDBB16;
+}
+
+.string {
+    color: #008000;
+}
+
+.number {
+    color: #8585F2;
+}
+
+.boolean {
+    color: #B22222;
+}
+
+.null, 
+.comment {
+    color: #808080;
+}
+
+.key {
+    color: #CCCCCC;
 }

@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.6
+ * v0.1.7
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -612,6 +612,10 @@ var svgWorldMap = (function() {
                 for (c=0; c<columns.length; c++) {
                     var columnText = stripHTML(columns[c].innerHTML);
                     if (columnText != '') {
+                        // Check if text is a number and convert it
+                        if (/^[0-9,.]*$/.test(columnText) == true) {
+                            columnText = Number(columnText.replace(/,/g, ""));
+                        }
                         // Check if <td> has background color and add and value and color
                         if (columns[c].style.backgroundColor != undefined && columns[c].style.backgroundColor != '') {
                             rowData[columnKeys[c]] = { data: columnText, color: columns[c].style.backgroundColor };

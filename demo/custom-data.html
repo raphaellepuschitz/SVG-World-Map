@@ -2,9 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <link rel="stylesheet" type="text/css" href="demo.css">
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
 	</head>
 	<body>
         <div id="labels" class="box">
@@ -35,7 +34,7 @@
 
             // Asynchronous JSON load
             async function loadCountryData() {
-                let response = await fetch('countrydata_startrek.json');
+                let response = await fetch('js/country-data-startrek.json');
                 let data = await response.json();
                 return data;
             }
@@ -44,7 +43,9 @@
             function buildCountryControls() {
                 var out = '<u>Star Trek planets as countries:</u><br><ul>';
                 for (var countryid in myWorldMap.countries) {
-                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                    if (myWorldMap.countries[countryid].name != undefined) {
+                        out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                    }
                 }
                 out += '</ul>';
                 document.getElementById("countries").innerHTML = out;

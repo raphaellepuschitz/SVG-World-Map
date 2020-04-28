@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SVG World Map Demo</title>
-        <link rel="stylesheet" type="text/css" href="demo.css">
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
 	</head>
 	<body>
         <div id="wikidata" class="box">
@@ -22,7 +22,7 @@
             <button onclick="setWikiURL(6)">NATO</button>
             <button onclick="setWikiURL(7)">BRICS</button>
         </div>
-        <div id="tabledata" class="box hidden">
+        <div id="code" class="box hidden">
         </div>
         <div id="labels" class="box">
             <button onclick="myWorldMap.labels('all')">Country labels</button>
@@ -35,7 +35,8 @@
         </div>
         <div id="countries" class="box"></div>
         <script src="../src/svg-world-map.js"></script>
-        <script src="svg-pan-zoom.min.js"></script>
+        <script src="js/svg-pan-zoom.min.js"></script>
+        <script src="js/pretty-json.js"></script>
         <script>
             // Global variables
             var myWorldMap;
@@ -58,8 +59,8 @@
             async function loadWikipediaData() {
                 var pageUrl = document.getElementById('pageurl').value.split('/');
                 var pageTitle = pageUrl[pageUrl.length-1];
-                document.getElementById('tabledata').innerHTML = 'Loading Wikipedia data...';
-                document.getElementById('tabledata').classList.remove('hidden');
+                document.getElementById('code').innerHTML = 'Loading Wikipedia data...';
+                document.getElementById('code').classList.remove('hidden');
                 const url = "https://en.wikipedia.org/w/api.php?" +
                     new URLSearchParams({
                         origin: "*",
@@ -74,16 +75,19 @@
                     var htmlData = json.parse.text["*"];
                     myWorldMap.table(htmlData);
                 } catch (e) {
-                    console.error(e);
+                    //console.error(e);
                 }
             }
 
             // Callback function for HTML table parsing, defined in 'options.mapTable'
             function mapTable(tableData) {
                 if (tableData != '') {
+                    // JSON output syntax highlighting 
                     var tableOutput = JSON.stringify(tableData, null, 2);
                     var close = '<a class="hide" onclick="document.getElementById(\'tabledata\').classList.add(\'hidden\')">×</a>';
-                    document.getElementById('tabledata').innerHTML = close + tableOutput;
+                    document.getElementById('code').innerHTML = "";
+                    jsonDisplay.outputPretty(tableOutput);
+                    document.getElementById('code').innerHTML = close + document.getElementById('code').innerHTML;
                     // Update country colors 
                     var updateData = {};
                     var updateColor = getHighlightColor(tableOutput.substr(33, 10)); // Get random highlight color

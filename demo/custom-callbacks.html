@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
         <title>SVG World Map Demo</title>
-        <link rel="stylesheet" type="text/css" href="demo.css">
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
 	</head>
 	<body>
         <div id="labels" class="box">
@@ -47,10 +47,8 @@
                 var out = '<a class="hide" onclick="document.getElementById(\'click\').classList.add(\'hidden\')">×</a>';
                 if (country.country.name != undefined && country.id != 'Ocean') {
                     var nation = country.country; // Get parent nation
-                    out += '<a onmouseover="myWorldMap.over(\'' + nation.id + '\')" onmouseout="myWorldMap.out(\'' + nation.id + '\')" onclick="myWorldMap.click(\'' + nation.id + '\')">Nation: ' + nation.name + '</a><br>';
-                    out += '<br>Official name: ' + nation.longname + '<br>Code: ' + nation.id + '<br>';
-                    out += 'Population: ' + formatInteger(nation.population);
-                    out += '<br><br>All countries / provinces / states in ' + nation.name + ':<br>';
+                    out += '<a onmouseover="myWorldMap.over(\'' + nation.id + '\')" onmouseout="myWorldMap.out(\'' + nation.id + '\')" onclick="myWorldMap.click(\'' + nation.id + '\')">Nation: ' + nation.name + '</a><br><br>';
+                    out += 'Code: ' + nation.id + '<br><br>All countries / provinces / states in ' + nation.name + ':<br><br>';
                     nation.provinces.forEach(function(province) { 
                         out += '<a onmouseover="myWorldMap.over(\'' + province.id + '\')" onmouseout="myWorldMap.out(\'' + province.id + '\')" onclick="myWorldMap.click(\'' + province.id + '\')">' + province.id + '</a>, '; 
                     }); 
