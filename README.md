@@ -21,16 +21,25 @@ This package constists of 3 parts (which could also be used separately):
 To unleash the full power of *SVG World Map JS* you should of course use all 3 combined ;-)
 
 
-Demos
------
+Showcase
+--------
+
+| [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) | [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) | [Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html) |
+|:---:|:---:|:---:|
+| ![](./demo/img/corona-world-map.png) | ![](./demo/img/wikipedia-data.png) | ![](./demo/img/wikipedia-data-animation.png) |
+
+
+All Demos
+---------
 
 * **[Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html)**
 * **[Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html)**
 * **[Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)**
 * **[Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)**
 * **[Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html)** <sup>ᴢ</sup>
-* **[Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html)** <sup>ᴢ</sup>
 * **[Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html)** <sup>ᴛ ᴢ</sup>
+* **[Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html)** <sup>ᴢ</sup>
+* **[Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html)** <sup>ᴛ ᴢ</sup>
 * **[COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html)** <sup>ᴛ ᴢ ᴄ ᴀ</sup> 
 <!-- * Strategy game -->
 
@@ -46,7 +55,7 @@ Part 1: The Map
 Download big map: [world-states-provinces.svg](./src/world-states-provinces.svg)  
 Download small map: [world-states.svg](./src/world-states.svg)  
 
-The maps are based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) and [Blank Map World.svg](https://commons.wikimedia.org/wiki/File:BlankMap-World.svg)  from [Wikimedia Commons](https://commons.wikimedia.org). 
+The maps are based on the creative commons [Blank Map World Secondary Political Divisions.svg](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) and [Blank Map World.svg](https://commons.wikimedia.org/wiki/File:BlankMap-World.svg) from [Wikimedia Commons](https://commons.wikimedia.org). 
 
 Both - the big and the small map - were strongly modified to serve the purpose of this JavaScript library, so all world nations are **grouped**, **sorted** and **named** by their official [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.  
 The country paths in the SVGs are not the work of the library author. See the version history and authorship of the original files [here](https://commons.wikimedia.org/wiki/File:Blank_Map_World_Secondary_Political_Divisions.svg) and [here](https://commons.wikimedia.org/wiki/File:BlankMap-World.svg).  
@@ -579,19 +588,28 @@ function myCustomDate(date) {
 
 #### Country data time animation 
 
-To animate the color of countries from one date to the next, you have to pass an array with the **dates** and the **country colors** (as sub objects) to the `svgWorldMap()` main function as third parameter (after options and country data). 
+To animate the color of countries from one date to the next, you have to pass an array or object with the **dates** and the **country colors** (as sub objects) to the `svgWorldMap()` main function as third parameter (after options and country data). 
 
 The inner data for each date is similar to the data passed to the `update()` function or as the `svgWorldMap.countries` return object.  
 
 Let's say you want to highlight the Baltic states *Estonia*, *Latvia* und *Lithuania* after each other, then the code would look something like this: 
 
 ```js
+// Pass time series data as array...
 myTimeData = [
     { 'Date 1': { EE: '#1E37EE', LV: '#FFFFFF', LT: '#FFFFFF' } },
     { 'Date 2': { EE: '#FFFFFF', LV: '#9C1733', LT: '#FFFFFF' } },
     { 'Date 3': { EE: '#FFFFFF', LV: '#FFFFFF', LT: '#FBB934' } }
 ];
 
+// ...or as object
+myTimeData = {
+    'Date 1': { EE: '#1E37EE', LV: '#FFFFFF', LT: '#FFFFFF' },
+    'Date 2': { EE: '#FFFFFF', LV: '#9C1733', LT: '#FFFFFF' },
+    'Date 3': { EE: '#FFFFFF', LV: '#FFFFFF', LT: '#FBB934' }
+};
+
+// Init map
 myWorldMap = svgWorldMap(myTimeOptions, false, myTimeData); // countryData can be false, but not empty
 ```
 
@@ -602,14 +620,15 @@ Further Development & Changelog
 
 ### TODOs
 
+* Add map download 
 * Add game controls
 * Add strategy game demo
 * Add capitals to countrydata
 * Add bubbles / circles to the map
 * Add minified JS and CSS files
-* Add time animation for Wikipedia tables
 * Optimize drag and click
 * Optimize zoom integration
+* Integrate [Web Animations](https://www.w3.org/TR/web-animations-1/) (currently working draft)
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
 * Name all provinces in the SVG correctly (This may take a while... Help appreciated!)
 * Name all provinces in the JSON and CSV correctly (This may take a while... Help appreciated!)
@@ -617,9 +636,13 @@ Further Development & Changelog
 
 ### Done
 
+* 0.1.8
+  * Added Wikipedia (and other) HTML time data import
+  * Added Wikipedia time animation demo
+  * Added Showcase to README
 * 0.1.7
   * Moved JS, CSS and images for demos to subfolders
-  * Fixed play/pause bug in time controls
+  * Fixed play / pause bug in time controls
 * 0.1.6
   * Moved map initialization to library
   * Added small SVG map for mobile devices and to options

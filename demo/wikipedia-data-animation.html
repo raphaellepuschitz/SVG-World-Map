@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SVG World Map Demo</title>
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
+	</head>
+	<body class="wikianim">
+        <div id="wikidata" class="box">
+            Wikipedia page URL<br>
+            https://en.wikipedia.org/wiki/Press_Freedom_Index
+        </div>
+        <div id="labels" class="box">
+            <button onclick="myWorldMap.labels('all')">Country labels</button>
+            <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+        </div>
+        <script src="../src/svg-world-map.js"></script>
+        <script src="js/svg-pan-zoom.min.js"></script>
+        <script>
+            // Wait for asynchronous Wikipedia JSON load and pass data to library 
+            loadWikipediaData();
+            async function loadWikipediaData() {
+                // Load data from: https://en.wikipedia.org/wiki/Press_Freedom_Index
+                const url = "https://en.wikipedia.org/w/api.php?" +
+                    new URLSearchParams({
+                        origin: "*",
+                        action: "parse",
+                        format: "json",
+                        prop: "text",
+                        page: "Press_Freedom_Index"
+                    });
+                try {
+                    const req = await fetch(url);
+                    const json = await req.json();
+                    var htmlData = json.parse.text["*"];
+                    // Call the window attached function from the SVG World Map library directly
+                    parseHTMLTable(htmlData);
+                } catch (e) {
+                    //console.error(e);
+                }
+            }
+
+            // Callback function for HTML table parsing, defined in 'options.mapTable'
+            function mapTable(tableData) {
+                if (tableData != '') {
+                    // Startup SVG map
+                    loadSVGWorldMap(tableData);
+                }
+            }
+
+            // Global variables
+            var myWorldMap;
+
+            // Load SVG World Map
+            async function loadSVGWorldMap(tableData) {
+                // Custom options
+                var options = { 
+                    bigMap: false, // Use small map
+                    showLabels: true, // Show country labels
+                    showInfoBox: true, // Show info box
+                    timeControls: true, // Time data to activate time antimation controls
+                    timePause: false, // Set pause to false for autostart
+                    timeLoop: true // Loop time animation
+                };
+                // Startup SVG World Map
+                myWorldMap = await svgWorldMap(options, false, tableData);
+                // SvgPanZoom 
+                svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
+                // Fadein with opacity 
+                document.getElementById('svg-world-map-container').style.opacity = 1;
+            }
+        </script>
+    </body>
+</html>

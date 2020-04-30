@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.7
+ * v0.1.8
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -565,7 +565,7 @@ var svgWorldMap = (function() {
     // Parse HTML for <table> data, defined in 'svgMap.table' 
     window.parseHTMLTable = function(html) {
         var tableData = {};
-        var tableKeys = ['iso', 'country', 'state', 'name', 'nation', 'member state'];
+        var tableKeys = ['iso', 'name', 'country', 'countries', 'state', 'states', 'nation', 'nations', 'member state', 'member states'];
         var dom = new DOMParser().parseFromString(html, "text/html");
         var tables = dom.getElementsByTagName('table');
         // Search for table to use
@@ -582,17 +582,15 @@ var svgWorldMap = (function() {
                 }
             }
         }
-        // No table found
-        if (tableNumber == undefined) {
-            tableData = 'No valid data found in ' + t + ' tables';
-        // Scrape table
-        } else {
+        // Scrape table if found
+        if (tableNumber != undefined) {
             var table = dom.getElementsByTagName('table')[tableNumber];
             var headers = table.getElementsByTagName('th');
             var rows = table.getElementsByTagName('tr');
             var searchKey = new RegExp('(' + tableKey + ')', 'gi');
             var headerKey = '';
             var columnKeys = [];
+            var timeTable = false;
             // Get header data
             for (h=0; h<headers.length; h++) {
                 var headerText = stripHTML(headers[h].innerHTML);
@@ -605,11 +603,25 @@ var svgWorldMap = (function() {
                     columnKeys.push(headerText);
                 }
             }
+            // Check if table has time data = following numbers in a row
+            if ( (!isNaN(columnKeys[1]) && !isNaN(columnKeys[2]) && !isNaN(columnKeys[3])) && // 3 numbers in a row
+                 ( (parseInt(columnKeys[1])+1 == parseInt(columnKeys[2]) && parseInt(columnKeys[2])+1 == parseInt(columnKeys[3])) ||
+                   (parseInt(columnKeys[1])-1 == parseInt(columnKeys[2]) && parseInt(columnKeys[2])-1 == parseInt(columnKeys[3])) ) ) {
+                    timeTable = true;
+                    /*if (isNaN(columnKeys[0])) {
+                        columnKeys.splice(0, 1);
+                    }*/
+            }
             // Get rows data
             for (r=0; r<rows.length; r++) {
                 var rowData = {};
                 var columns = rows[r].getElementsByTagName('td');
-                for (c=0; c<columns.length; c++) {
+                if (timeTable == true) {
+                    var startColumn = 0;
+                } else {
+                    var startColumn = 0;
+                }
+                for (c=startColumn; c<columns.length; c++) {
                     var columnText = stripHTML(columns[c].innerHTML);
                     if (columnText != '') {
                         // Check if text is a number and convert it
@@ -618,9 +630,23 @@ var svgWorldMap = (function() {
                         }
                         // Check if <td> has background color and add and value and color
                         if (columns[c].style.backgroundColor != undefined && columns[c].style.backgroundColor != '') {
-                            rowData[columnKeys[c]] = { data: columnText, color: columns[c].style.backgroundColor };
+                            // Add data for time animation
+                            if (timeTable == true && parseHTMLTable.caller == null) { // Attention: function.caller in NOT supported in strict JavaScript! 
+                                var countryKey = findIdByName(stripHTML(columns[0].innerHTML));
+                                if (tableData[columnKeys[c]] == undefined) {
+                                    tableData[columnKeys[c]] = {};
+                                }
+                                // Push country color to tableData directly if time animation is true
+                                if (countryKey != undefined) {
+                                    tableData[columnKeys[c]][countryKey] = columns[c].style.backgroundColor;
+                                }
+                                rowData[countryKey] = columns[c].style.backgroundColor;
+                            // Or push other color for none animated but colored
+                            } else {
+                                rowData[columnKeys[c]] = { data: columnText, color: columns[c].style.backgroundColor };
+                            }
                         // Or just add <td> value to row data
-                        } else {
+                        } else if (parseHTMLTable.caller != null) { // Attention: function.caller in NOT supported in strict JavaScript! 
                             rowData[columnKeys[c]] = columnText;
                         }
                     }
@@ -630,9 +656,6 @@ var svgWorldMap = (function() {
                     // Check if country has full name instead of ISO code and replace
                     if (rowData[headerKey].length > 2 && tableKey != 'iso') {
                         var countryKey = findIdByName(rowData[headerKey]);
-                        /*if (countryKey == undefined) {
-                            console.log('Not found: ' + rowData[headerKey]);
-                        }*/
                     } else {
                         var countryKey = rowData[headerKey];
                     }
@@ -640,8 +663,14 @@ var svgWorldMap = (function() {
                 }
             }
         }
-        // Sort countries alphabetically and return data via callback
-        tableData = sortObject(tableData);
+        // No table found or data not valid
+        if (tableNumber == undefined || Object.keys(tableData)[0] == 'undefined') {
+            tableData = { error: 'No valid data found in ' + tables.length + ' tables' };
+        // Sort countries alphabetically 
+        } else {
+            tableData = sortObject(tableData);
+        }
+        // Return data
         callBack('table', tableData);
     }
 
@@ -753,10 +782,10 @@ var svgWorldMap = (function() {
         // Remove everything in brackets, e.g. "(France)" from "French Guiana (France)" and trim()
         name = name.replace(/(\(.*\))/ig, "").trim();
         // Search countries for name
-        for (var country in countries) {
-            if (countries[country].name == name) {
+        for (var country in countryData) {
+            if (countryData[country].name == name) {
                 return country; // No break needed if returned
-            } else if (countries[country].altnames != undefined && countries[country].altnames.split(',').indexOf(name) != -1) {
+            } else if (countryData[country].altnames != undefined && countryData[country].altnames.split(',').indexOf(name) != -1) {
                 return country; 
             }
         }

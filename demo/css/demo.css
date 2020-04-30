@@ -176,6 +176,10 @@ body.black #code {
     top: 10px; 
 }
 
+body.wikianim #code {
+    top: 94px; 
+}
+
 
 /* Taken from: https://gist.github.com/faffyman/6183311 */
 

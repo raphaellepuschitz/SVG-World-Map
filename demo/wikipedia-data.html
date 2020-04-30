@@ -53,12 +53,14 @@
                 svgPanZoom.pan({ x: 0, y: 50 }); // Set map to better start position without antarctica
                 // Fadein with opacity 
                 document.getElementById('svg-world-map-container').style.opacity = 1;
+                // Load first demo dataset
+                loadWikipediaData();
             }
 
             // Wait for asynchronous Wikipedia JSON load and pass data to library 
             async function loadWikipediaData() {
                 var pageUrl = document.getElementById('pageurl').value.split('/');
-                var pageTitle = pageUrl[pageUrl.length-1];
+                var pageTitle = decodeURIComponent(pageUrl[pageUrl.length-1]);
                 document.getElementById('code').innerHTML = 'Loading Wikipedia data...';
                 document.getElementById('code').classList.remove('hidden');
                 const url = "https://en.wikipedia.org/w/api.php?" +
@@ -84,7 +86,7 @@
                 if (tableData != '') {
                     // JSON output syntax highlighting 
                     var tableOutput = JSON.stringify(tableData, null, 2);
-                    var close = '<a class="hide" onclick="document.getElementById(\'tabledata\').classList.add(\'hidden\')">×</a>';
+                    var close = '<a class="hide" onclick="document.getElementById(\'code\').classList.add(\'hidden\')">×</a>';
                     document.getElementById('code').innerHTML = "";
                     jsonDisplay.outputPretty(tableOutput);
                     document.getElementById('code').innerHTML = close + document.getElementById('code').innerHTML;
@@ -143,7 +145,9 @@
             function buildCountryControls() {
                 var out = '<ul>';
                 for (var countryid in myWorldMap.countries) {
-                    out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="myWorldMap.over(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                    if (myWorldMap.countries[countryid].name != undefined) {
+                        out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="myWorldMap.over(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                    }
                 }
                 out += '</ul>';
                 document.getElementById("countries").innerHTML = out;

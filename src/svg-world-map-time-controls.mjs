@@ -21,7 +21,16 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     // Check time dataset
     if (initTimeData != undefined) {
         timeData = initTimeData;
-        maxDates = initTimeData.length-1;
+        // Convert time date from object to array
+        if (typeof(timeData) == 'object' && Array.isArray(timeData) == false) {
+            var timeHelper = [];
+            var keys = Object.keys(timeData);
+            for (var k=0; k<keys.length; k++) {
+                timeHelper.push({ [keys[k]]: timeData[keys[k]] });
+            }
+            timeData = timeHelper;
+        }
+        maxDates = timeData.length-1;
     }
 
     // Set pause at start (= autoplay)
