@@ -7,7 +7,7 @@ var coronaWorldMap; // For svg-world-map.js
 var svgPanZoom; // For svg-pan-zoom.js
 var virusData; 
 var countryData; 
-var daydata = {}; // Empty object for all days complete data 
+var dayData = {}; // Empty object for all days complete data 
 var timeData = []; // Empty array for time controls
 var detailcountry = 'World'; // 'World'
 var detailprovince = false; 
@@ -50,6 +50,7 @@ async function loadSVGMap() {
     // Custom options
     var params = { 
         showOcean: false,
+        showInfoBox: true, 
         //worldColor: '#232323', // Use in next version
         worldColor: '#8AB1B4',
         countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
@@ -147,16 +148,16 @@ function loadVirusData() {
     });
 }
 
-// Add Virus data to daydata object
+// Add Virus data to dayData object
 // TODO: Cleanup & refactor
 function initDayData() {
 
-    daydata['World'] = { confirmed: [], recovered: [], deaths: [] };
+    dayData['World'] = { confirmed: [], recovered: [], deaths: [] };
     var inputDates;
     var inputValues;
 
-    // Add virusdata to daydata object
-    for (var key in daydata.World) {
+    // Add virusdata to dayData object
+    for (var key in dayData.World) {
         for (var country in virusData[key].locations) {
             var location = virusData[key].locations[country];
             var countrycode = location.country_code;
@@ -166,36 +167,36 @@ function initDayData() {
             if (countrycode == 'XX') {
                 countrycode = location.country;
             }
-            // Check if country exists in daydata
-            if (daydata[countrycode] == undefined) {
-                daydata[countrycode] = { 'dates': [] };
-                inputDates = daydata[countrycode].dates;
+            // Check if country exists in dayData
+            if (dayData[countrycode] == undefined) {
+                dayData[countrycode] = { 'dates': [] };
+                inputDates = dayData[countrycode].dates;
             } else {
                 inputDates = false;
             }
-            // Check if key exists in country daydata
-            if (daydata[countrycode][key] == undefined) {
-                daydata[countrycode][key] = [];
+            // Check if key exists in country dayData
+            if (dayData[countrycode][key] == undefined) {
+                dayData[countrycode][key] = [];
             }
-            // Check if provinces subobject exists in country daydata
+            // Check if provinces subobject exists in country dayData
             if (province == '') {
-                inputValues = daydata[countrycode][key];
+                inputValues = dayData[countrycode][key];
             } else {
-                if (daydata[countrycode].provinces == undefined) {
-                    daydata[countrycode].provinces = {};
+                if (dayData[countrycode].provinces == undefined) {
+                    dayData[countrycode].provinces = {};
                 }
-                // Check if province exists in province daydata
-                if (daydata[countrycode].provinces[province] == undefined) {
-                    daydata[countrycode].provinces[province] = { 'dates': [] };
-                    inputDates = daydata[countrycode].provinces[province].dates;
+                // Check if province exists in province dayData
+                if (dayData[countrycode].provinces[province] == undefined) {
+                    dayData[countrycode].provinces[province] = { 'dates': [] };
+                    inputDates = dayData[countrycode].provinces[province].dates;
                 } else {
                     inputDates = false;
                 }
-                // Check if key exists in province daydata
-                if (daydata[countrycode].provinces[province][key] == undefined) {
-                    daydata[countrycode].provinces[province][key] = [];
+                // Check if key exists in province dayData
+                if (dayData[countrycode].provinces[province][key] == undefined) {
+                    dayData[countrycode].provinces[province][key] = [];
                 }
-                inputValues = daydata[countrycode].provinces[province][key];
+                inputValues = dayData[countrycode].provinces[province][key];
             }
             // Add data
             for (var h in history) {
@@ -208,29 +209,29 @@ function initDayData() {
     }
 
     // Check countries with provinces and other teritorries
-    for (var country in daydata) {
+    for (var country in dayData) {
         // Add data for countries with provinces - currently Australia, Canada, China
-        if (daydata[country].provinces != undefined && daydata[country].confirmed.length == 0) {
-            for (var province in daydata[country].provinces) {
-                var provincedata = daydata[country].provinces[province];
+        if (dayData[country].provinces != undefined && dayData[country].confirmed.length == 0) {
+            for (var province in dayData[country].provinces) {
+                var provincedata = dayData[country].provinces[province];
                 for (var d=0; d<provincedata.dates.length; d++) {
-                    if (daydata[country].dates[d] == undefined) {
+                    if (dayData[country].dates[d] == undefined) {
                         // Oh Canada... TODO: Check recovered data for CA
                         if (provincedata.recovered == undefined) {  provincedata.recovered = []; }
                         if (provincedata.recovered[d] == undefined) {  provincedata.recovered[d] = 0; }
                         // Add data
-                        daydata[country].dates[d] = provincedata.dates[d];
-                        daydata[country].confirmed[d] = provincedata.confirmed[d];
-                        daydata[country].recovered[d] = provincedata.recovered[d];
-                        daydata[country].deaths[d] = provincedata.deaths[d];
+                        dayData[country].dates[d] = provincedata.dates[d];
+                        dayData[country].confirmed[d] = provincedata.confirmed[d];
+                        dayData[country].recovered[d] = provincedata.recovered[d];
+                        dayData[country].deaths[d] = provincedata.deaths[d];
                     } else {
                         // Oh Canada... TODO: Check recovered data for CA
                         if (provincedata.recovered == undefined) {  provincedata.recovered = []; }
                         if (provincedata.recovered[d] == undefined) {  provincedata.recovered[d] = 0; }
                         // Add data
-                        daydata[country].confirmed[d] += provincedata.confirmed[d];
-                        daydata[country].recovered[d] += provincedata.recovered[d];
-                        daydata[country].deaths[d] += provincedata.deaths[d];
+                        dayData[country].confirmed[d] += provincedata.confirmed[d];
+                        dayData[country].recovered[d] += provincedata.recovered[d];
+                        dayData[country].deaths[d] += provincedata.deaths[d];
                     }
                 }
             }
@@ -240,16 +241,16 @@ function initDayData() {
     // Move provinces one level up if they are "countries" on the map, e.g. Greenland, Faroe, etc.
     for (var country in countryData) {
         var countrycode = country;
-        if (daydata[countrycode] != undefined) {
-            if (daydata[countrycode].provinces != undefined) {
-                for (var province in daydata[countrycode].provinces) {
+        if (dayData[countrycode] != undefined) {
+            if (dayData[countrycode].provinces != undefined) {
+                for (var province in dayData[countrycode].provinces) {
                     for (var subcountry in countryData) {
                         if (province == countryData[subcountry].name) {
                             var provinceid = getProvinceId('', province); // Get map id (ISO code) of province by name
-                            // Copy province to countries in daydata
-                            daydata[provinceid] = daydata[countrycode].provinces[province];
+                            // Copy province to countries in dayData
+                            dayData[provinceid] = dayData[countrycode].provinces[province];
                             // Remove province from country
-                            delete daydata[countrycode].provinces[province];
+                            delete dayData[countrycode].provinces[province];
 
                         }
                     }
@@ -261,25 +262,25 @@ function initDayData() {
     }
 
     // Add world data and missing dates
-    daydata['World'].dates = [];
-    for (var country in daydata) {
+    dayData['World'].dates = [];
+    for (var country in dayData) {
         // Add world data
-        for (var d=0; d<daydata[country].dates.length; d++) {
-            if (daydata['World'].dates[d] == undefined) {
-                daydata['World'].dates[d] = daydata[country].dates[d];
-                daydata['World'].confirmed[d] = daydata[country].confirmed[d];
-                daydata['World'].recovered[d] = daydata[country].recovered[d];
-                daydata['World'].deaths[d] = daydata[country].deaths[d];
+        for (var d=0; d<dayData[country].dates.length; d++) {
+            if (dayData['World'].dates[d] == undefined) {
+                dayData['World'].dates[d] = dayData[country].dates[d];
+                dayData['World'].confirmed[d] = dayData[country].confirmed[d];
+                dayData['World'].recovered[d] = dayData[country].recovered[d];
+                dayData['World'].deaths[d] = dayData[country].deaths[d];
             } else {
-                daydata['World'].confirmed[d] += daydata[country].confirmed[d];
-                daydata['World'].recovered[d] += daydata[country].recovered[d];
-                daydata['World'].deaths[d] += daydata[country].deaths[d];
+                dayData['World'].confirmed[d] += dayData[country].confirmed[d];
+                dayData['World'].recovered[d] += dayData[country].recovered[d];
+                dayData['World'].deaths[d] += dayData[country].deaths[d];
             }
         }
         // Add missing dates to DK, FR, GB, NL (they are empty because of the sub province sort and the original data)
-        if (country != 'World' && daydata[country].dates != undefined && daydata[country].dates.length == 0) {
-            daydata[country].dates = daydata['CN'].dates; // Copy data from China, it should be filled by now / TODO: Use other method?
-            delete daydata[country].provinces; // Delete left provinces, most were moved or sorted before
+        if (country != 'World' && dayData[country].dates != undefined && dayData[country].dates.length == 0) {
+            dayData[country].dates = dayData['CN'].dates; // Copy data from China, it should be filled by now / TODO: Use other method?
+            delete dayData[country].provinces; // Delete left provinces, most were moved or sorted before
         }
     }
 
@@ -289,26 +290,26 @@ function initDayData() {
 // Build timeData for SVG map time animation
 // TODO: Cleanup & refactor
 function initTimeData() {
-    for (var d=0; d<daydata['World'].dates.length; d++) {
-        var datekey = daydata['World'].dates[d];
+    for (var d=0; d<dayData['World'].dates.length; d++) {
+        var datekey = dayData['World'].dates[d];
         timeData[d] = { [datekey]: {} }; // Add new empty sub object for countries to array
         //console.log(datekey);
-        for (var country in daydata) {
+        for (var country in dayData) {
             if (country != 'World') {
                 // Show province details only on bigMap
-                if (daydata[country].provinces != undefined && isMobile == false) {
-                    for (var province in daydata[country].provinces) {
-                        if (daydata[country].provinces[province] != undefined && countryData[country].provinces != undefined) {
+                if (dayData[country].provinces != undefined && isMobile == false) {
+                    for (var province in dayData[country].provinces) {
+                        if (dayData[country].provinces[province] != undefined && countryData[country].provinces != undefined) {
                             var provinceid = getProvinceId(country, province); // Get map id (ISO code) of province by name
                             if (provinceid != undefined) {
-                                timeData[d][datekey][provinceid] = getCountryColor(daydata[country].provinces[province].confirmed[d], daydata[country].provinces[province].recovered[d]);
+                                timeData[d][datekey][provinceid] = getCountryColor(dayData[country].provinces[province].confirmed[d], dayData[country].provinces[province].recovered[d]);
                             } else {
                                 // console.log(country + ' / ' + province); // Canada recovered and cruise ships
                             }
                         }
                     }
                 } else {
-                    timeData[d][datekey][country] = getCountryColor(daydata[country].confirmed[d], daydata[country].recovered[d]);
+                    timeData[d][datekey][country] = getCountryColor(dayData[country].confirmed[d], dayData[country].recovered[d]);
                 }
             }
         }
@@ -349,7 +350,7 @@ function getCountryColor(confirmed, recovered) {
 // Update details
 function updateDetails() {
     // Avoid 'undefined Date' at midnight
-    if (daydata['World'].confirmed[day] == undefined) { 
+    if (dayData['World'].confirmed[day] == undefined) { 
         day--; 
     }
     // Update charts (first?)
@@ -358,7 +359,7 @@ function updateDetails() {
     var countrydetails = updateStats('World'); 
     document.getElementById('worldstats').innerHTML = countrydetails;
     // Update detail stats
-    if (daydata[detailcountry] != undefined && detailcountry != 'World') {
+    if (dayData[detailcountry] != undefined && detailcountry != 'World') {
         var countrydetails = updateStats(detailcountry);
         document.getElementById('countrystats').innerHTML = countrydetails;
         if (detailprovince != false) {
@@ -380,13 +381,13 @@ function updateDetails() {
 
 // Update statistics
 function updateStats(country) {
-    if (daydata[country] != undefined) {
+    if (dayData[country] != undefined) {
         // Province
-        if (detailprovince != false && daydata[country].provinces != undefined && daydata[country].provinces[detailprovince] != undefined) { 
-            var location = daydata[country].provinces[detailprovince];
+        if (detailprovince != false && dayData[country].provinces != undefined && dayData[country].provinces[detailprovince] != undefined) { 
+            var location = dayData[country].provinces[detailprovince];
         // Country
         } else { 
-            var location = daydata[country];
+            var location = dayData[country];
         }
         // Set output data
         var confirmed = location.confirmed[day];
@@ -420,18 +421,18 @@ function updateStats(country) {
 // Format: confirmed, recovered, deaths, but reverse for chart
 function updateCharts() {
     // World chart
-    var lastdayindex = daydata['World'].dates.indexOf(daydata['World'].dates[day]) + 1;
-    chartworld.data.labels = daydata['World'].dates;
-    chartworld.data.datasets[0].data = daydata['World'].deaths.slice(0, (lastdayindex));// Slice the data at the current day
-    chartworld.data.datasets[1].data = daydata['World'].recovered.slice(0, (lastdayindex));
-    chartworld.data.datasets[2].data = daydata['World'].confirmed.slice(0, (lastdayindex));
+    var lastdayindex = dayData['World'].dates.indexOf(dayData['World'].dates[day]) + 1;
+    chartworld.data.labels = dayData['World'].dates;
+    chartworld.data.datasets[0].data = dayData['World'].deaths.slice(0, (lastdayindex));// Slice the data at the current day
+    chartworld.data.datasets[1].data = dayData['World'].recovered.slice(0, (lastdayindex));
+    chartworld.data.datasets[2].data = dayData['World'].confirmed.slice(0, (lastdayindex));
     chartworld.update();
     // Country chart
-    if (daydata[detailcountry] != undefined && detailcountry != 'World') {
+    if (dayData[detailcountry] != undefined && detailcountry != 'World') {
         if (detailprovince != false) { // Show province on chart
-            var chartdata = daydata[detailcountry].provinces[detailprovince];
+            var chartdata = dayData[detailcountry].provinces[detailprovince];
         } else { // Show main country
-            var chartdata = daydata[detailcountry];
+            var chartdata = dayData[detailcountry];
         }
         var lastdayindex = chartdata.dates.indexOf(chartdata.dates[day]) + 1;
         chartcountry.data.labels = chartdata.dates;
@@ -458,13 +459,13 @@ function initCountryList() {
     for (var country in coronaWorldMap.countries) {
         var countrycode = coronaWorldMap.countries[country].id;
         var countryname = coronaWorldMap.countries[country].name;
-        if (daydata[countrycode] != undefined && country != 'World') {
+        if (dayData[countrycode] != undefined && country != 'World') {
             // Main country
-            //if (daydata[countrycode].provinces == undefined) {
+            //if (dayData[countrycode].provinces == undefined) {
                 countylist += '<li id="' + countrycode + '" data-name="' + countryname + '" data-confirmed="" onmouseover="coronaWorldMap.over(\'' + countrycode + '\')" onmouseout="coronaWorldMap.out(\'' + countrycode + '\')" onclick="countryListClick(\'' + countrycode + '\')">' + countryname + '</li>';
             // Province
             //} else {
-                //for (var province in daydata[countrycode].provinces) {
+                //for (var province in dayData[countrycode].provinces) {
                 //}
             //}
         /*} else {
@@ -479,10 +480,10 @@ function initCountryList() {
 function updateCountryList() {
     for (var country in coronaWorldMap.countries) {
         var countrycode = coronaWorldMap.countries[country].id;
-        if (daydata[countrycode] != undefined) {
+        if (dayData[countrycode] != undefined) {
             // Add confirmed to countrylist
             if (document.getElementById(countrycode) != null) {
-                var confirmedday = daydata[countrycode].confirmed[day];
+                var confirmedday = dayData[countrycode].confirmed[day];
                 var countryname = document.getElementById(countrycode).dataset.name;
                 if (confirmedday > 0) { 
                     document.getElementById(countrycode).dataset.confirmed = confirmedday;
@@ -572,7 +573,7 @@ function mapClick(path) {
                 detailprovince = false;
             }
         // Main countries
-        } else if (daydata[countryid] != undefined) {
+        } else if (dayData[countryid] != undefined) {
             detailprovince = false;
         }
         detailcountry = countryid;

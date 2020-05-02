@@ -27,6 +27,8 @@
         <div id="labels" class="box">
             <button onclick="myWorldMap.labels('all')">Country labels</button>
             <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+            <button onclick="myWorldMap.download('svg')">Save as SVG</button>
+            <button onclick="myWorldMap.download('png')">Save as PNG</button>
         </div>
         <div id="overout" class="box">
             Path over: <span id="over"></span><br><br>
@@ -35,7 +37,6 @@
         </div>
         <div id="countries" class="box"></div>
         <script src="../src/svg-world-map.js"></script>
-        <script src="js/svg-pan-zoom.min.js"></script>
         <script src="js/pretty-json.js"></script>
         <script>
             // Global variables
@@ -45,12 +46,9 @@
             loadSVGWorldMap();
             async function loadSVGWorldMap() {
                 // Startup SVG World Map
-                myWorldMap = await svgWorldMap({ bigMap: true, /* set to false for smaller, faster map */ showOcean: false, showAntarctica: false, showLabels: false, showInfoBox: true, provinceStroke: { out: '#666666',  over: '#666666',  click: '#333333' } });
+                myWorldMap = await svgWorldMap({ bigMap: true, /* set to false for smaller, faster map */ showOcean: false, showAntarctica: false, showLabels: false, showInfoBox: true });
                 // Build controls 
                 buildCountryControls();
-                // SvgPanZoom 
-                svgPanZoom = svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
-                svgPanZoom.pan({ x: 0, y: 50 }); // Set map to better start position without antarctica
                 // Fadein with opacity 
                 document.getElementById('svg-world-map-container').style.opacity = 1;
                 // Load first demo dataset
@@ -97,13 +95,33 @@
                         // Use (background) color from original data table, if there was some
                         var keys = Object.keys(tableData[countryid]);
                         var lastElem = tableData[countryid][keys[keys.length-2]];
-                        //console.log(lastElem);
-                        //console.log(lastElem.color);
                         if (lastElem.color != undefined) {
                             updateData[countryid] = lastElem.color;
+                        // Or use population data for color intensity
+                        } else if (tableData[countryid].Population != undefined) {
+                            var colorPlus = 0;
+                            var popMillions = parseInt(tableData[countryid].Population / 1000000);
+                            if (popMillions == 0) {
+                                colorPlus = 100;
+                            } else if (popMillions < 10) {
+                                colorPlus = 80;
+                            } else if (popMillions < 50) {
+                                colorPlus = 60;
+                            } else if (popMillions < 100) {
+                                colorPlus = 40;
+                            } else if (popMillions < 1000) {
+                                colorPlus = 20;
+                            }
+                            var red = updateColor[0] + colorPlus;
+                            var green = updateColor[1] + colorPlus;
+                            var blue = updateColor[2] + colorPlus;
+                            if (red > 255) { red = 255; }
+                            if (green > 255) { green = 255; }
+                            if (blue > 255) { blue = 255; }
+                            updateData[countryid] = 'rgb(' + red + ',' + green + ',' + blue + ')';
                         // Or just the generated random color 
                         } else {
-                            updateData[countryid] = updateColor;
+                            updateData[countryid] = 'rgb(' + updateColor[0] + ',' + updateColor[1] + ',' + updateColor[2] + ')';
                         }
                     }
                     myWorldMap.update(updateData);
@@ -158,7 +176,8 @@
                 // Get the numbers for the id letters, add them, square them and take the last 6 digits
                 var number = parseInt(id.substr(0, 1).charCodeAt(0) + '' + id.substr(1, 2).charCodeAt(0));
                 var hex = '#' + parseInt(number * number).toString().substr(-6, 6);
-                return hex;
+                var rgb = ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+                return rgb;
             }
         </script>
     </body>

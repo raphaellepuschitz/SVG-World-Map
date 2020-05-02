@@ -14,9 +14,10 @@
         <div id="labels" class="box">
             <button onclick="myWorldMap.labels('all')">Country labels</button>
             <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+            <button onclick="myWorldMap.download('svg')">Save as SVG</button>
+            <button onclick="myWorldMap.download('png')">Save as PNG</button>
         </div>
         <script src="../src/svg-world-map.js"></script>
-        <script src="js/svg-pan-zoom.min.js"></script>
         <script>
             // Wait for asynchronous Wikipedia JSON load and pass data to library 
             loadWikipediaData();
@@ -65,8 +66,6 @@
                 };
                 // Startup SVG World Map
                 myWorldMap = await svgWorldMap(options, false, tableData);
-                // SvgPanZoom 
-                svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false }); 
                 // Fadein with opacity 
                 document.getElementById('svg-world-map-container').style.opacity = 1;
             }

@@ -49,7 +49,7 @@ ul li:hover {
 .box button, .box input { 
     cursor: pointer; 
     width: 100%; 
-    padding: 5px 0; 
+    padding: 5px 10px; 
     font-size: 13px; 
     text-align: center; 
     border: none;  
@@ -92,7 +92,11 @@ ul li:hover {
 
 #labels { 
     top: 10px; 
-    width: 150px; 
+    min-width: 255px; 
+}
+
+#labels button {
+    width: 125px;
 }
 
 #details, #countries { 

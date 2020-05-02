@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.8
+ * v0.1.9
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -21,6 +21,7 @@ var svgWorldMap = (function() {
     var countryData = {};
     var countryGroups = {};
     var countryLabels = {};
+    var tableData = {};
     var selectedCountry;
     //var dragMap = false; // TODO: Check, doesn't work smooth 
 
@@ -96,6 +97,7 @@ var svgWorldMap = (function() {
                         'update': function(data) { window["updateMapData"].call(null, data); }, 
                         'reset': function(data) { window["resetMap"].call(null, data); }, 
                         'labels': function(data) { window["toggleMapLabels"].call(null, data); }, 
+                        'download': function(data) { window["downloadMap"].call(null, data); }, 
                         'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
                         'date': function(data) { window["timeControlsDate"].call(null, data); }, 
                     };
@@ -170,16 +172,18 @@ var svgWorldMap = (function() {
             countries['Ocean'].style.fill = 'none'; 
             countries['Ocean'].style.stroke = 'none'; 
         }
+        // Get microstates from labels and remove from countries
+        sortLabels();
         //delete countries['Ocean']; // (Delete ocean from countries object) Keep it currently
-        // Delete Antarctica from countries, if set in options
+        // Delete Antarctica from countries and labels, if set in options
         if (options.showAntarctica == false) {
             baseNode.removeChild(baseNode.getElementById("AQ"));
             delete countries['AQ']; 
+            baseNode.getElementById("labels").removeChild(baseNode.getElementById("AQ-label"));
+            delete countryLabels['AQ']; 
         }
         // Sort countries alphabetically
         countries = sortObject(countries);
-        // Get microstates from labels and remove from countries
-        sortLabels();
         // Show labels on start, if it is set
         if (options.showLabels == true) {
             toggleMapLabels('all');
@@ -343,7 +347,7 @@ var svgWorldMap = (function() {
         // Add info box CSS
         var style = document.createElement('style');
         style.innerHTML = `
-            #map-infobox { position: absolute; top: 0; left: 0; padding: 3px 6px; font-family: Verdana; font-size: 13px; color: #444444; background-color: rgba(255, 255, 255, .75); border: 1px solid #CDCDCD; border-radius: 5px; }
+            #map-infobox { position: absolute; top: 0; left: 0; padding: 3px 6px; max-width: 250px; overflow: hidden; font-family: Verdana; font-size: 13px; color: #444444; background-color: rgba(255, 255, 255, .75); border: 1px solid #CDCDCD; border-radius: 5px; }
         `;
         document.head.appendChild(style);
         // Add event listener and set display to none at start
@@ -361,13 +365,35 @@ var svgWorldMap = (function() {
         // Info box is set in options.showInfoBox, otherwise undefined
         if (infoBox != undefined) {
             if (event == 'over' && path.id != 'World' && path.id != 'Ocean') {
-                // Don't show unnamed paths and borders
+                var infoText = path.country.name;
+                // Add province info, but not for unnamed paths and borders
                 if (path.id.substr(0, 4) != 'path' && path.id.substr(0, 2) != path.country.id.toLowerCase() && path.id.length != 2) {
-                    var text = path.country.name + '<br><small>' + path.id + '</small>';
-                } else {
-                    var text = path.country.name;
+                    infoText += '<br><small>' + path.id + '</small>';
                 }
-                infoBox.innerHTML = text;
+                // Add table data info for country or province
+                if (tableData[path.country.id] != undefined || tableData[path.id] != undefined) {
+                    if (tableData[path.country.id] != undefined) {
+                        var tableInfo = tableData[path.country.id];
+                    } else {
+                        var tableInfo = tableData[path.id];
+                    }
+                    infoText += '<br><small>';
+                    for (var details in tableInfo) {
+                        infoText += '<b>' + details + '</b>: ' + tableInfo[details] + '<br>';
+                    }
+                    infoText += '</small>';
+                }
+                // Basic implementation of time data info, TODO: refactor
+                // Add info for dayData, if it exists
+                if (typeof(dayData) !== 'undefined' && dayData[path.country.id] != undefined) {
+                    infoText += '<br><small>';
+                    infoText += 'Date: ' + dayData[path.country.id].dates[day] + '<br>';
+                    infoText += 'Confirmed: ' + dayData[path.country.id].confirmed[day] + '<br>';
+                    infoText += 'Recovered: ' + dayData[path.country.id].recovered[day] + '<br>';
+                    infoText += 'Deaths: ' + dayData[path.country.id].deaths[day] + '<br>';
+                    infoText += '</small>';
+                }
+                infoBox.innerHTML = infoText;
                 infoBox.style.display = 'block';
             } else {
                 infoBox.style.display = 'none';
@@ -557,6 +583,48 @@ var svgWorldMap = (function() {
         }
     }
 
+    // Export Map as SVG or PNG, defined in 'svgMap.download' 
+    // TODO: Refactor + cleanup
+    window.downloadMap = function(type) {
+        var serializer = new XMLSerializer();
+        var svgXML = serializer.serializeToString(svg.contentDocument);
+        var blob = new Blob([svgXML], { type: "image/svg+xml;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        if (type == 'svg') {
+            var downloadLink = document.createElement("a");
+            downloadLink.href = url;
+            downloadLink.download = "world-map." + type;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        } else if (type == 'png') {
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var svgSize = baseNode.viewBox.baseVal;
+            canvas.width = svgSize.width*2;
+            canvas.height = svgSize.height*2;
+            var data = new XMLSerializer().serializeToString(svg.contentDocument);
+            var win = window.URL || window.webkitURL || window;
+            var blob = new Blob([data], { type: 'image/svg+xml' });
+            var url = win.createObjectURL(blob);
+            var img = new Image();
+            img.onload = function () {
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                win.revokeObjectURL(url);
+                var uri = canvas.toDataURL('image/png').replace('image/png', 'octet/stream');
+                var a = document.createElement('a');
+                document.body.appendChild(a);
+                a.style = 'display: none';
+                a.href = uri;
+                a.download = "world-map." + type;
+                a.click();
+                window.URL.revokeObjectURL(uri);
+                document.body.removeChild(a);
+            };
+            img.src = url;
+        } 
+    }
+
     // Caller for time controls to callback out, defined in 'svgMap.date' 
     window.timeControlsDate = function(date) {
         callBack('date', date);
@@ -564,7 +632,7 @@ var svgWorldMap = (function() {
 
     // Parse HTML for <table> data, defined in 'svgMap.table' 
     window.parseHTMLTable = function(html) {
-        var tableData = {};
+        tableData = {};
         var tableKeys = ['iso', 'name', 'country', 'countries', 'state', 'states', 'nation', 'nations', 'member state', 'member states'];
         var dom = new DOMParser().parseFromString(html, "text/html");
         var tables = dom.getElementsByTagName('table');

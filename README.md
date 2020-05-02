@@ -10,15 +10,7 @@ Use this map and library as boilerplate for a **Strategy Game**, for **Data Visu
 
 This is just a small library (with a big world map) for fast and simple data projection. If you need more advanced features for data visualization and SVGs, have a look at [d3js](https://github.com/d3/d3).  
 
-> ***Attention:*** This library is under development and currently in early beta phase. Use it carefully! 
-
-This package constists of 3 parts (which could also be used separately):
-
-* A detailed **[SVG world map](#part-1-the-map)** with **239 nations and countries** and over **3000 second-level provinces and islands**, ready for editing with your preferred graphics editor
-* A **[List of all world countries](#part-2-the-list)** with additional information, ready for use with the SVG map
-* A **[JavaScript SVG library](#part-3-the-library)** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a **callback-API**, including a addon module for **time controls** and **visual data animation**
-
-To unleash the full power of *SVG World Map JS* you should of course use all 3 combined ;-)
+> ***Attention:*** This library is under development and currently in early public beta phase. Use it carefully! 
 
 
 Showcase
@@ -26,7 +18,7 @@ Showcase
 
 | [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) | [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) | [Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html) |
 |:---:|:---:|:---:|
-| ![](./demo/img/corona-world-map.png) | ![](./demo/img/wikipedia-data.png) | ![](./demo/img/wikipedia-data-animation.png) |
+| ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/corona-world-map.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/wikipedia-data.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/wikipedia-data-animation.png) |
 
 
 All Demos
@@ -38,8 +30,8 @@ All Demos
 * **[Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)**
 * **[Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html)** <sup>ᴢ</sup>
 * **[Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html)** <sup>ᴛ ᴢ</sup>
-* **[Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html)** <sup>ᴢ</sup>
-* **[Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html)** <sup>ᴛ ᴢ</sup>
+* **[Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html)**
+* **[Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html)** <sup>ᴛ</sup>
 * **[COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html)** <sup>ᴛ ᴢ ᴄ ᴀ</sup> 
 <!-- * Strategy game -->
 
@@ -49,9 +41,24 @@ All Demos
 <sup>ᴀ</sup> data from the [Coronavirus Tracker API](https://github.com/ExpDev07/coronavirus-tracker-api)
 
 
-Part 1: The Map
----------------
+Upfront
+-------
 
+<details>
+<summary><b>What's inside</b></summary>  
+  
+This package constists of 3 parts (which could also be used separately):
+
+* A detailed **SVG world map** with **239 nations and countries** and over **3000 second-level provinces and islands**, ready for editing with your preferred graphics editor
+* A **List of all world countries** with additional information, ready for use with the SVG map
+* A **JavaScript SVG library** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a **callback-API**, including a addon module for **time controls** and **visual data animation**
+
+To unleash the full power of *SVG World Map JS* you should of course use all 3 combined ;-)
+</details>
+
+<details>
+<summary><b>World maps</b></summary>  
+  
 Download big map: [world-states-provinces.svg](./src/world-states-provinces.svg)  
 Download small map: [world-states.svg](./src/world-states.svg)  
 
@@ -69,11 +76,11 @@ Because of all the detailed subregions the big map has a lot of vectors and is r
 **Otherwise** please set the `bigMap` paramenter in options to `false`. This will make the library load the **small map without provinces** (~1,3 MB), which is much faster.  
 
 > The political subdivisions (countries, provinces, states) of the big map are mostly not named correctly, like `<path id="path12345" ...>`. This issue will be addressed in future versions. 
+</details>
 
-
-Part 2: The List
-----------------
-
+<details>
+<summary><b>Country lists</b></summary>  
+  
 There are 2 versions of the country list: 
 
 * A [CSV file](./src/country-data.csv) for easy editing with any office software
@@ -90,21 +97,23 @@ The list includes 250 countries and microstates from Andorra to Zimbabwe with th
 * (For some countries also the **provinces**, e.g. "Vienna")
 
 > Note: Most political subdivisions (countries, provinces, states) are currently not included in the country list. They will be added in future versions. 
+</details>
 
 
-Part 3: The Library
--------------------
+The Library
+-----------
 
-### Requirements
-
+<details open>
+<summary><b>Requirements</b></summary>  
+  
 Although this project only uses frontend technologies, most browsers nowadays don't accept the `file://` protocol for SVGs or JSONs, so SVG World Map needs to run on a (local) server. If you are new to HTML / SVG / JavaScript integration, please see the Pitfalls section first.  
+</details>
 
-
-### How to use
-
-| **&raquo; Demo:** [Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html) |
-| --- |
-
+<details open>
+<summary><b>How to use</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html">Basics</a></td></tr></table>
+</summary>  
+  
 Add the `/src/` folder to your project, include [svg-world-map.js](./src/svg-world-map.js) in your HTML document, then call the library:
 
 ```html
@@ -125,12 +134,13 @@ async function loadSVGWorldMap() {
     // Do something with the map...
 }
 ```
+</details>
 
-### Custom options 
-
-| **&raquo; Demo:** [Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html) |
-| --- |
-
+<details open>
+<summary><b>Custom options</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html">Custom options</a></td></tr></table>
+</summary>  
+  
 * All default options can be overruled by passing an object of custom options
 * `bigMap` controls whether the map is loaded **with all countries and provinces** (~3,8 MB) or **with nations only** (~1,3 MB)
 * All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input
@@ -191,10 +201,13 @@ Or as inline parameter:
 ```js
 myWorldMap = svgWorldMap({ showOcean: false, groupCountries: false, mapClick: "customMapClick" }); 
 ```
+</details>
 
-
-### Map object return values
-
+<details>
+<summary><b>Map object return values</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html">Groups, callbacks & zoom</a></td></tr></table>
+</summary>  
+  
 After initialization, the `svgWorldMap()` function will give you an object in return.  
 If the map is called like `myWorldMap = svgWorldMap()`, then the return data of `myWorldMap` looks something like this: 
 
@@ -211,6 +224,7 @@ myWorldMap: {
     update: function(data) { ... }, 
     reset: function(data) { ... }, 
     labels: function(data) { ... }, 
+    download: function(data) { ... }, 
     table: function(data) { ... }, 
     date: function(data) { ... } 
 };
@@ -275,8 +289,7 @@ svgWorldMap.countryData['CA']: {
 
 #### Country groups
 
-| **&raquo; Demo:** [Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html) |
-| --- |
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html">Groups, callbacks & zoom</a></td></tr></table>
 
 Country groups are an essential feature of the SVG World Map library and can help you access a whole bunch of countries simultaneously. Countries are grouped by the information of the `svgWorldMap.countryData` explained before. By default, the countries are grouped by their respective world region, so `svgWorldMap.countryGroups` contains the data as follows: 
 
@@ -330,13 +343,16 @@ svgWorldMap.countryLabels['AD']: <text id="AD-label">: {
 }
 ```
 
-#### Country `over()`, `out()`, `click()`, `update()`, `reset()`, `labels()`, `table()` and `date()`
+#### Country `over()`, `out()`, `click()`, `update()`, `reset()`, `labels()`, `download()`, `table()` and `date()`
 
 All these functions are part of the **API**, please see below for further information.
+</details>
 
-
-### Changing the basic country data
-
+<details>
+<summary><b>Changing the basic country data</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html">Custom data</a></td></tr></table>
+</summary>  
+  
 There's two kinds of data for countries: 
 
 * The **initial country data** is passed as a JSON object in the same format as the [country-data.json](./src/country-data.json) 
@@ -346,9 +362,6 @@ There's two kinds of data for countries:
 
 
 #### JSON format
-
-| **&raquo; Demo:** [Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html) |
-| --- |
 
 To add or change the country information on startup, you can simply pass your JSON data to the `svgWorldMap()` as second (optional) parameter (the first one is options).  
 
@@ -383,16 +396,15 @@ var countryData = {
 ```
 
 > **Note:** You can change all country information ***except*** the ISO country code, which is the identifier for the corresponding map path.  
+</details>
 
-
-### Callback and home APIs
-
-| **&raquo; Demo:** [Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html) |
-| --- |
-
-| **&raquo; Demo:** [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) |
-| --- |
-
+<details>
+<summary><b>Callback and home APIs</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html">Custom callbacks</a></td></tr></table>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html">Wikipedia table data projection</a></td></tr></table>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html">Wikipedia table data time animation</a></td></tr></table>
+</summary>  
+  
 #### Calling back from the map
 
 As seen in the options setup, there are five callback functions for over, out, click, table and date, which can also have custom names:
@@ -440,7 +452,7 @@ function myCustomDate(date) {
 
 #### Calling home to the map
 
-There are 8 calling home functions, 3 for country `over()`, `out()` and `click()`, then `update()` and `reset()` for (un)coloring countries, a `label()` control function, the HTML `table()` parser and `date()` (the last one is just a routing helper for mapDate).  
+There are 9 calling home functions, 3 for country `over()`, `out()` and `click()`, then `update()` and `reset()` for (un)coloring countries, a `label()` control and a `download()` function, the HTML `table()` parser and `date()` (the last one is just a routing helper for mapDate).  
 
 * **`over()`**, **`out()`** and **`click()`** will trigger the attribute changes for `fill`, `stroke` and `stroke-width` defined in `options`. They only need the country id parameter:  
  
@@ -474,10 +486,15 @@ There are 8 calling home functions, 3 for country `over()`, `out()` and `click()
     <button onclick="myWorldMap.labels('all')">Show labels</button>
     ```
 
+* **`download()`** triggers an export of the current map state. The input parameter can be `"svg"` or `"png"`: 
+
+    ```html
+    <button onclick="myWorldMap.download('png')">Save as PNG</button>
+    ```
+
 * **`table()`** accepts a HTML string and will try to DOM parse it and find a valid `<table>` with '*iso*', '*country*', '*state*', '*name*', '*nation*', etc. in the `<th>` table headers. If such a table is found, the data inside will be scraped, sorted and returned as JSON object, ordered by the country (ISO) key. As the data parsing runs asynchronously, you have to catch the JSON via the `mapTable()` callback function mentioned above. 
 
-    | **&raquo; Demo:** [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) |
-    | --- |
+    <table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html">Wikipedia table data projection</a></td></tr></table>
 
     Fire the calling home function with any HTML string (no URL or DOM object):
 
@@ -493,16 +510,16 @@ There are 8 calling home functions, 3 for country `over()`, `out()` and `click()
         ...
     }
     ```
+ 
+</details>
 
-
-### Time Control addon module
-
-| **&raquo; Demo:** [Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html) |
-| --- |
-
-| **&raquo; Demo:** [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) |
-| --- |
-
+<details>
+<summary><b>Time Control addon module</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html">Time animation and controls</a></td></tr></table>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html">Wikipedia table data time animation</a></td></tr></table>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html">COVID-19 Corona virus world map</a></td></tr></table>
+</summary>  
+  
 The SVG World Map library includes a nice addon for **animated data visualization**: A [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) for an easy integration of time series data on the map with changing colors for each country or province. 
 
 Before activating the Time Control module, make sure to have [svg-world-map-time-controls.mjs](./src/svg-world-map-time-controls.mjs) and the webfont folder `/src/font/...` included in your project.  
@@ -612,15 +629,15 @@ myTimeData = {
 // Init map
 myWorldMap = svgWorldMap(myTimeOptions, false, myTimeData); // countryData can be false, but not empty
 ```
+</details>
 
 
 Further Development & Changelog
 -------------------------------
 
-
-### TODOs
-
-* Add map download 
+<details>
+<summary><b>TODOs</b></summary>  
+  
 * Add game controls
 * Add strategy game demo
 * Add capitals to countrydata
@@ -628,14 +645,21 @@ Further Development & Changelog
 * Add minified JS and CSS files
 * Optimize drag and click
 * Optimize zoom integration
-* Integrate [Web Animations](https://www.w3.org/TR/web-animations-1/) (currently working draft)
+* Test support for Node.js & Typescript
 * Modify the library for use with other SVG maps (RPG gamers, I'm talking to you!)
-* Name all provinces in the SVG correctly (This may take a while... Help appreciated!)
+* Name all provinces in the SVGs correctly (This may take a while... Help appreciated!)
 * Name all provinces in the JSON and CSV correctly (This may take a while... Help appreciated!)
+* Integrate [Web Animations](https://www.w3.org/TR/web-animations-1/) (currently W3C working draft)
+</details>
 
-
-### Done
-
+<details>
+<summary><b>Done</b></summary>  
+  
+* 0.1.9
+  * Added map download function for SVG & PNG
+  * Added details to info box
+  * Improved coloring example in Wikipedia table demo
+  * Made README sections collapsible
 * 0.1.8
   * Added Wikipedia (and other) HTML time data import
   * Added Wikipedia time animation demo
@@ -674,21 +698,25 @@ Further Development & Changelog
   * Added basic demos
   * Added further options
   * Improved callback API
+</details>
 
 
 Pitfalls, Known Issues & Bugs
 -----------------------------
 
-
-### Pitfalls
-
+<details>
+<summary><b>Pitfalls</b></summary>  
+  
 * A lot of problems with SVGs include loading issues, make sure the SVG is fully loaded before you initialize the library
 * SVGs can not be called via `file://`, so make sure you have a (local) server for this library (although it's completely frontend)
 * Most browsers don't accept a mix of `http://` and `https://`, this can also affect SVG or JSON loading
+</details>
 
-
-### Known Issues & Bugs
-
+<details>
+<summary><b>Known Issues & Bugs</b></summary>  
+  
+* If you use [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom), it will crop the download image because of the inserted `<g id="viewport-..." class="svg-pan-zoom_viewport" ...>`
 * Currently several small bugs, mainly SVG path related
-* Slow or old computers or bad internet conncetion will show nothing but the map
+* Slow or old computers or bad internet conncetion may show nothing but the map
 * If you find a bug, be nice to it (and also let me know of it) ;-) 
+</details>
