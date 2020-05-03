@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.1.9
+ * v0.2.0
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -82,6 +82,10 @@ var svgWorldMap = (function() {
             // Wait for asynchronous svg load
             svg.addEventListener("load", async () => {
                 let promise2 = new Promise(resolve2 => {
+                    // Set SVG base node
+                    baseNode = svg.getSVGDocument().children[0]; 
+                    // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
+                    initMapCountries();
                     // Return svgMap object after everything is ready and bind calling home functions
                     svgMap = { 
                         'worldMap': svg, 
@@ -101,10 +105,6 @@ var svgWorldMap = (function() {
                         'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
                         'date': function(data) { window["timeControlsDate"].call(null, data); }, 
                     };
-                    // Set SVG base node
-                    baseNode = svg.getSVGDocument().children[0]; 
-                    // Startup SVG path traversing, then country sorting, followed by click handlers, etc.
-                    initMapCountries();
                     // Asynchronous load library addon module, if it's set in options.timeControls
                     if (options.timeControls == true) {
                         import('../src/svg-world-map-time-controls.mjs').then(module => {
@@ -182,15 +182,16 @@ var svgWorldMap = (function() {
             baseNode.getElementById("labels").removeChild(baseNode.getElementById("AQ-label"));
             delete countryLabels['AQ']; 
         }
-        // Sort countries alphabetically
-        countries = sortObject(countries);
         // Show labels on start, if it is set
         if (options.showLabels == true) {
             toggleMapLabels('all');
         }
         delete countries['labels']; // Delete labels from countries object, not from map
-        // Next steps: country detail sort and country groups 
+        // Pre-sort provinces
         sortProvinces();
+        // Sort countries alphabetically
+        countries = sortObject(countries);
+        // Init country groups
         if (options.groupCountries == true) {
             buildCountryGroups();
         }
@@ -347,7 +348,8 @@ var svgWorldMap = (function() {
         // Add info box CSS
         var style = document.createElement('style');
         style.innerHTML = `
-            #map-infobox { position: absolute; top: 0; left: 0; padding: 3px 6px; max-width: 250px; overflow: hidden; font-family: Verdana; font-size: 13px; color: #444444; background-color: rgba(255, 255, 255, .75); border: 1px solid #CDCDCD; border-radius: 5px; }
+            #map-infobox { position: absolute; top: 0; left: 0; padding: 3px 6px; max-width: 270px; overflow: hidden; font-family: 'Trebuchet MS', Verdana, Arial, sans-serif; font-size: 13px; color: #444444; background-color: rgba(255, 255, 255, .75); border: 1px solid #CDCDCD; border-radius: 5px; }
+            #map-infobox .data { margin-top: 5px; }
         `;
         document.head.appendChild(style);
         // Add event listener and set display to none at start
@@ -355,7 +357,11 @@ var svgWorldMap = (function() {
         baseNode.addEventListener("mousemove", function(event) {
             if (infoBox.style.display != 'none') {
                 infoBox.style.left = (event.clientX - (infoBox.offsetWidth / 2)) + 'px';
-                infoBox.style.top = (event.clientY - infoBox.offsetHeight - 20) + 'px';
+                if (event.clientY < (infoBox.offsetHeight + 25)) {
+                    infoBox.style.top = (event.clientY + 25) + 'px';
+                } else {
+                    infoBox.style.top = (event.clientY - infoBox.offsetHeight - 15) + 'px';
+                }
             }
         }, false);
     }
@@ -365,33 +371,33 @@ var svgWorldMap = (function() {
         // Info box is set in options.showInfoBox, otherwise undefined
         if (infoBox != undefined) {
             if (event == 'over' && path.id != 'World' && path.id != 'Ocean') {
-                var infoText = path.country.name;
+                var infoText = '<b>' + path.country.name + '</b>';
                 // Add province info, but not for unnamed paths and borders
                 if (path.id.substr(0, 4) != 'path' && path.id.substr(0, 2) != path.country.id.toLowerCase() && path.id.length != 2) {
-                    infoText += '<br><small>' + path.id + '</small>';
+                    infoText += '<br>' + path.id;
                 }
                 // Add table data info for country or province
                 if (tableData[path.country.id] != undefined || tableData[path.id] != undefined) {
+                    infoText += '<div class="data">';
                     if (tableData[path.country.id] != undefined) {
                         var tableInfo = tableData[path.country.id];
                     } else {
                         var tableInfo = tableData[path.id];
                     }
-                    infoText += '<br><small>';
                     for (var details in tableInfo) {
                         infoText += '<b>' + details + '</b>: ' + tableInfo[details] + '<br>';
                     }
-                    infoText += '</small>';
+                    infoText += '</div>';
                 }
                 // Basic implementation of time data info, TODO: refactor
                 // Add info for dayData, if it exists
                 if (typeof(dayData) !== 'undefined' && dayData[path.country.id] != undefined) {
-                    infoText += '<br><small>';
+                    infoText += '<div class="data">';
                     infoText += 'Date: ' + dayData[path.country.id].dates[day] + '<br>';
                     infoText += 'Confirmed: ' + dayData[path.country.id].confirmed[day] + '<br>';
                     infoText += 'Recovered: ' + dayData[path.country.id].recovered[day] + '<br>';
-                    infoText += 'Deaths: ' + dayData[path.country.id].deaths[day] + '<br>';
-                    infoText += '</small>';
+                    infoText += 'Deaths: ' + dayData[path.country.id].deaths[day];
+                    infoText += '</div>';
                 }
                 infoBox.innerHTML = infoText;
                 infoBox.style.display = 'block';
@@ -878,7 +884,7 @@ var svgWorldMap = (function() {
         }
     }
 
-    // Helper function for all countries and provinces
+    // Debug helper function for all countries and provinces
     function countCountries() {
         var countCountries = 0;
         var countProvinces = 0;

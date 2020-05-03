@@ -6,7 +6,7 @@ SVG World Map JS
 
 ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/svg-world-map.png)  
 
-Use this map and library as boilerplate for a **Strategy Game**, for **Data Visualization** of scientific research and other data, or as **Interactive Map** for your article, paper, website or app. 
+Use this map and library as boilerplate for a **Strategy Game**, as a **Choropleth Map** for **Data Visualization** of scientific and statistical data, or as **Interactive Map** for your article, paper, website or app. 
 
 This is just a small library (with a big world map) for fast and simple data projection. If you need more advanced features for data visualization and SVGs, have a look at [d3js](https://github.com/d3/d3).  
 
@@ -655,6 +655,9 @@ Further Development & Changelog
 <details>
 <summary><b>Done</b></summary>  
   
+* 0.2.0
+  * Optimized CSS for Windows and mobile devices
+  * Fixed map loading and info box bug
 * 0.1.9
   * Added map download function for SVG & PNG
   * Added details to info box

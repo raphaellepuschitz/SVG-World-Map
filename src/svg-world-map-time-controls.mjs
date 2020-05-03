@@ -16,7 +16,7 @@ export function svgWorldMapTimeControls(svgWorldMap, timePause, timeLoop, initTi
     var timeData = false;
     var maxDates = false;
     var loop = false;
-    window.paused = true; // paused has to be attached to window because of window.setInterval, otherwise controls are broken! // TODO: Check other variables too?
+    var paused = true;
 
     // Check time dataset
     if (initTimeData != undefined) {

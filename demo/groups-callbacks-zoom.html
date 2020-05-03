@@ -82,7 +82,7 @@
 
             // Demo country list
             function buildCountryControls() {
-                var out = '<u>Countries:</u><br><br><ul>';
+                var out = '<ul>';
                 for (var countryid in myWorldMap.countries) {
                     out += '<li id="' + countryid + '" onmouseover="highlightCountry(\'' + countryid + '\')" onmouseout="myWorldMap.out(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
                 }

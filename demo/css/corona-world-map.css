@@ -169,7 +169,7 @@ ul li {
     top: 51px;
     bottom: 51px;
     width: 280px;
-    overflow-y: scroll;
+    overflow-y: auto;
     text-align: center;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
@@ -320,7 +320,7 @@ ul li {
     top: 51px;
     bottom: 51px;
     width: 180px;
-    overflow-y: scroll;
+    overflow-y: auto;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
@@ -570,8 +570,9 @@ ul li {
             left: 1px;
             bottom: 41px;
             width: auto;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
+        
         #info .bgbox:last-child {
             margin-bottom: 10px;
         }

@@ -21,7 +21,7 @@ a {
 ul { 
     list-style: none; 
     padding: 0; 
-    margin: 0 0 10px; 
+    margin: 0; 
 }
 
 ul li { 
@@ -34,6 +34,10 @@ ul li:hover {
     background-color: #444444; 
 }
 
+ul li:last-child { 
+    margin-bottom: 10px;
+}
+
 .box { 
     position: fixed; 
     top: 10px; 
@@ -43,7 +47,7 @@ ul li:hover {
     background-color: rgba(100, 100, 100, .95); 
     color: #FFFFFF; 
     border-radius: 5px; 
-    overflow-y: scroll; 
+    overflow-y: auto; 
 }
 
 .box button, .box input { 
@@ -101,7 +105,7 @@ ul li:hover {
 
 #details, #countries { 
     top: 222px; 
-    height: calc(100vh - 252px);
+    max-height: calc(100vh - 252px);
 }
 
 #overout { 
@@ -184,9 +188,7 @@ body.wikianim #code {
     top: 94px; 
 }
 
-
 /* Taken from: https://gist.github.com/faffyman/6183311 */
-
 pre {
     margin: 5px;
 }
@@ -214,4 +216,45 @@ pre {
 
 .key {
     color: #CCCCCC;
+}
+
+/* Responsive breakpoints */
+
+@media all and (max-width: 999px) {
+    
+    body, .box button, .box input { 
+        font-size: 11px;
+    }
+
+    .box {
+        width: 120px;
+    }
+
+    #code, #countries, #groups, #overout {
+        display: none;
+    }
+
+    #pageurl {
+        width: calc(100% - 10px);
+    }
+
+    @media all and (orientation: portrait) {
+
+        #wikidata {
+            top: unset;
+            bottom: 10px;
+            right: 10px;
+            width: auto;
+        }
+
+    }
+
+    @media all and (orientation: landscape) {
+
+        #wikidata {
+            width: 200px;
+        }
+
+    }
+
 }

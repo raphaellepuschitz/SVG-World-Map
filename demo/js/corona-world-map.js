@@ -2,6 +2,7 @@
 
 // Global Variables
 var mapSVG; 
+var svgInit = false;
 var svgLoaded = false;
 var coronaWorldMap; // For svg-world-map.js
 var svgPanZoom; // For svg-pan-zoom.js
@@ -34,9 +35,10 @@ function initStartup() {
             document.getElementById('loading').innerHTML = '~~~ There seems to be a problem ~~~<br><br>Try again with <a href="' + url + '?api=1">API 1</a>, <a href="' + url + '?api=2">API 2</a> or <a href="' + url + '?api=3">fallback</a>';
         } else if (virusData == undefined) {
             document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-        } else if (svgLoaded == false && countryData != undefined && virusData != undefined && timeData.length > 0) {
+        } else if (svgInit == false && svgLoaded == false && countryData != undefined && virusData != undefined && timeData.length > 0) {
             document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
             loadSVGMap();
+            svgInit = true;
         } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 0) {
             window.clearInterval(startuptimer);
             document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
@@ -264,17 +266,31 @@ function initDayData() {
     // Add world data and missing dates
     dayData['World'].dates = [];
     for (var country in dayData) {
-        // Add world data
+        // Add reproduction array for country
+        //dayData[country].reproduction = [];
+        // Add reproduction and world data
         for (var d=0; d<dayData[country].dates.length; d++) {
+            // Compute R0 over 4 days: D(t) = (N(t)+N(t-1)+N(t-2)+N(t-3))/4 
+            // See: https://www.heise.de/newsticker/meldung/Corona-Pandemie-Die-Mathematik-hinter-den-Reproduktionszahlen-R-4712676.html
+            /*if (dayData[country].confirmed[d-3] != undefined) {
+                var R4 = parseFloat(((dayData[country].confirmed[d] + dayData[country].confirmed[d-1] + dayData[country].confirmed[d-2] + dayData[country].confirmed[d-3]) / 4).toPrecision(5));
+                var R0t4 = parseFloat(((dayData[country].confirmed[d] - R4) / 100).toPrecision(5));
+                dayData[country].reproduction.push(R0t4);
+            } else {
+                dayData[country].reproduction.push(0);
+            }*/
+            // Add world data
             if (dayData['World'].dates[d] == undefined) {
                 dayData['World'].dates[d] = dayData[country].dates[d];
                 dayData['World'].confirmed[d] = dayData[country].confirmed[d];
                 dayData['World'].recovered[d] = dayData[country].recovered[d];
                 dayData['World'].deaths[d] = dayData[country].deaths[d];
+                //dayData['World'].reproduction[d] = dayData[country].reproduction[d];
             } else {
                 dayData['World'].confirmed[d] += dayData[country].confirmed[d];
                 dayData['World'].recovered[d] += dayData[country].recovered[d];
                 dayData['World'].deaths[d] += dayData[country].deaths[d];
+                //dayData['World'].reproduction[d] += dayData[country].reproduction[d];
             }
         }
         // Add missing dates to DK, FR, GB, NL (they are empty because of the sub province sort and the original data)
@@ -408,7 +424,10 @@ function updateStats(country) {
         var countrydetails = '';
         countrydetails += '<div class="totalcount"><span class="big red">' + formatInteger(confirmed) + '</span><span class="small">Confirmed</span><br>';
         countrydetails += '<span class="big green">' + formatInteger(recovered) + '</span><span class="small">Recovered (' + recoveredpercent + '%)</span><br>';
-        countrydetails += '<span class="big black">' + formatInteger(deaths) + '</span><span class="small">Deaths (' + deathspercent + '%)</span></div>';
+        countrydetails += '<span class="big black">' + formatInteger(deaths) + '</span><span class="small">Deaths (' + deathspercent + '%)</span><br>';
+        /*if (location.reproduction != undefined) {
+            countrydetails += '<span class="big">' + location.reproduction[day].toPrecision(4) + '</span><span class="small">Reproduction Rate</span></div>';
+        }*/
         countrydetails += '<div class="onedaycount">Last 24 hours:<br>';
         countrydetails += '<span class="small"><span class="red">+' + formatInteger(confirmednew) + '</span> (+' + confirmednewpercent + '%)';
         countrydetails += '<span class="green">+' + formatInteger(recoverednew) + '</span> (+' + recoverednewpercent + '%)';

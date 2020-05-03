@@ -10,8 +10,8 @@
         <div id="wikidata" class="box">
             Wikipedia page URL<br>
             <input type="text" id="pageurl" value="https://en.wikipedia.org/wiki/Member_states_of_the_Commonwealth_of_Nations"><br>
-            <button id="loaddata" onclick="myWorldMap.reset();loadWikipediaData();">Load data</button>
-            <button id="reset" onclick="myWorldMap.reset();document.getElementById('tabledata').classList.add('hidden');">Reset map</button><br>
+            <button id="loaddata" onclick="loadWikipediaData()">Load data</button>
+            <button id="reset" onclick="resetMapAndList()">Reset map</button><br>
             Load example page<br>
             <button onclick="setWikiURL(0)">Commonwealth</button>
             <button onclick="setWikiURL(1)">South America</button>
@@ -57,6 +57,14 @@
 
             // Wait for asynchronous Wikipedia JSON load and pass data to library 
             async function loadWikipediaData() {
+                // Reset 
+                myWorldMap.reset();
+                document.getElementById('code').classList.add('hidden');
+                var lis = document.getElementsByTagName("li");
+                for (var i=0; i<lis.length; i++) {
+                    lis[i].classList.add('hidden');
+                }
+                // Load Wiki data
                 var pageUrl = document.getElementById('pageurl').value.split('/');
                 var pageTitle = decodeURIComponent(pageUrl[pageUrl.length-1]);
                 document.getElementById('code').innerHTML = 'Loading Wikipedia data...';
@@ -123,6 +131,10 @@
                         } else {
                             updateData[countryid] = 'rgb(' + updateColor[0] + ',' + updateColor[1] + ',' + updateColor[2] + ')';
                         }
+                        // Hide country in country list
+                        if (document.getElementById(countryid) != null) {
+                            document.getElementById(countryid).classList.remove('hidden');
+                        }
                     }
                     myWorldMap.update(updateData);
                 }
@@ -159,12 +171,22 @@
                 document.getElementById("loaddata").click();
             }
 
+            // Reset map and country list
+            function resetMapAndList() {
+                myWorldMap.reset();
+                document.getElementById('code').classList.add('hidden');
+                var lis = document.getElementsByTagName("li");
+                for (var i=0; i<lis.length; i++) {
+                    lis[i].classList.remove('hidden');
+                }
+            }
+
             // Demo country list
             function buildCountryControls() {
                 var out = '<ul>';
                 for (var countryid in myWorldMap.countries) {
                     if (myWorldMap.countries[countryid].name != undefined) {
-                        out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="myWorldMap.over(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
+                        out += '<li id="' + countryid + '" class="hidden" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="myWorldMap.over(\'' + countryid + '\')" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
                     }
                 }
                 out += '</ul>';

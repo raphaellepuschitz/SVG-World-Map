@@ -43,7 +43,7 @@
 
             // Demo country list
             function buildCountryControls() {
-                var out = '<u>Star Trek planets as countries:</u><br><ul>';
+                var out = '<u>Star Trek planets as countries:</u><br><br><ul>';
                 for (var countryid in myWorldMap.countries) {
                     if (myWorldMap.countries[countryid].name != undefined) {
                         out += '<li id="' + countryid + '" onmouseout="myWorldMap.out(\'' + countryid + '\')" onmouseover="highlightCountry()" onclick="myWorldMap.click(\'' + countryid + '\')">[' + countryid + '] ' + myWorldMap.countries[countryid].name + '</li>'; 
