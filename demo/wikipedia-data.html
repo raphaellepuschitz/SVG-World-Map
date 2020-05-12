@@ -46,7 +46,7 @@
             loadSVGWorldMap();
             async function loadSVGWorldMap() {
                 // Startup SVG World Map
-                myWorldMap = await svgWorldMap({ bigMap: true, /* set to false for smaller, faster map */ showOcean: false, showAntarctica: false, showLabels: false, showInfoBox: true });
+                myWorldMap = await svgWorldMap({ bigMap: true, /* set to false for smaller, faster map */ showOcean: false, /*showAntarctica: false,*/ showLabels: false, showInfoBox: true });
                 // Build controls 
                 buildCountryControls();
                 // Fadein with opacity 

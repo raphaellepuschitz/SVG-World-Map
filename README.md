@@ -655,6 +655,8 @@ Further Development & Changelog
 <details>
 <summary><b>Done</b></summary>  
   
+* 0.2.1
+  * Improved Corona virus data visualization demo
 * 0.2.0
   * Optimized CSS for Windows and mobile devices
   * Fixed map loading and info box bug

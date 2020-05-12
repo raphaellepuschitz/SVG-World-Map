@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.2.0
+ * v0.2.1
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -141,7 +141,7 @@ var svgWorldMap = (function() {
             svg.setAttribute("id", "svg-world-map");
             svg.setAttribute("type", "image/svg+xml");
             // Load small map with states only
-            if (isMobile == true || options.bigMap == false) {
+            if (smallScreen != false || options.bigMap == false) { // isMobile == true
                 svg.setAttribute("data", "../src/world-states.svg");
             // Load big map with provinces
             } else {
@@ -389,14 +389,16 @@ var svgWorldMap = (function() {
                     }
                     infoText += '</div>';
                 }
-                // Basic implementation of time data info, TODO: refactor
+                // Basic implementation of time data info for corona map, TODO: refactor
                 // Add info for dayData, if it exists
                 if (typeof(dayData) !== 'undefined' && dayData[path.country.id] != undefined) {
                     infoText += '<div class="data">';
                     infoText += 'Date: ' + dayData[path.country.id].dates[day] + '<br>';
-                    infoText += 'Confirmed: ' + dayData[path.country.id].confirmed[day] + '<br>';
-                    infoText += 'Recovered: ' + dayData[path.country.id].recovered[day] + '<br>';
-                    infoText += 'Deaths: ' + dayData[path.country.id].deaths[day];
+                    infoText += 'Conf. : <span class="red">' + dayData[path.country.id].confirmed[day] + '</span><br>';
+                    infoText += 'Active: <span class="orange">' + dayData[path.country.id].activecases[day] + '</span><br>';
+                    infoText += 'Rec. : <span class="green">' + dayData[path.country.id].recovered[day] + '</span><br>';
+                    infoText += 'Deaths: <span class="black">' + dayData[path.country.id].deaths[day] + '</span><br>';
+                    //infoText += 'New Cases: <span class="black">' + dayData[path.country.id].confirmednew[day] + '</span>';
                     infoText += '</div>';
                 }
                 infoBox.innerHTML = infoText;

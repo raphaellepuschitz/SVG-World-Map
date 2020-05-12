@@ -39,7 +39,7 @@ function initStartup() {
             document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
             loadSVGMap();
             svgInit = true;
-        } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 0) {
+        } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 0 && document.getElementById('map-slider') != null) {
             window.clearInterval(startuptimer);
             document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
             initSVGMap();
@@ -58,12 +58,12 @@ async function loadSVGMap() {
         countryStroke: { out: '#333333',  over: '#333333',  click: '#000000' }, 
         //provinceFill: { out: '#C0C89E',  over: '#CCCCCC',  click: '#999999' },
         provinceFill: { out: '#F2F2F2',  over: '#CCCCCC',  click: '#999999' },
-        provinceStroke: { out: '#666666',  over: '#666666',  click: '#666666' }, 
+        provinceStroke: { out: '#FFFFFF',  over: '#666666',  click: '#666666' }, 
         //provinceStrokeWidth: { out: '0.5',  over: '0.5',  click: '0.5' }, 
         labelFill: { out: '#666666',  over: '#000000',  click: '#000000' },
         timeControls: true, // Activate time antimation controls
-        timePause: false, // Set pause to false for autostart
-        timeLoop: false // Loop time animation
+        timePause: true, // No autostart
+        timeLoop: false // No loop
         //mapClick: "mapClick" // Use default callback mapClick()
     };
     // Startup SVG World Map
@@ -75,6 +75,10 @@ async function loadSVGMap() {
 // SVG map start
 function initSVGMap() {
     if (svgLoaded == true && timeData.length > 0) {
+        // Change start day
+        document.getElementById('map-slider').value = timeData.length - 14; // Start 2 weeks ago
+        document.getElementById('map-slider').oninput();
+        document.getElementById('map-control-play-pause').click();
         // Build country list 
         initCountryList();
         // Init svgPanZoom library
@@ -117,7 +121,8 @@ function mapDate(date) {
     updateDetails();
     // Update day date info
     var daydate = new Date(document.getElementById('map-date').innerHTML).toString().split(' ');
-    document.getElementById('map-date').innerHTML = daydate[2] + ' ' + daydate[1] + '. ' + daydate[3];
+    if (daydate[1] != 'May') { daydate[1] = daydate[1] + '.' }
+    document.getElementById('map-date').innerHTML = daydate[2] + ' ' + daydate[1] + ' ' + daydate[3];
 }
 
 // Asynchronous load for country data
@@ -135,7 +140,7 @@ function loadVirusData() {
     // Switch API urls if needed
     var url1 = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues, should be faster
     var url2 = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
-    var url3 = '../demo/corona-data-fallback.json'; // Local fallback 
+    var url3 = '../demo/js/corona-data-fallback.json'; // Local fallback 
     var url = url1; // Default URL is API 1
     if (window.location.search != '') {
         var query = window.location.search.substr(1).split('=');
@@ -215,8 +220,25 @@ function initDayData() {
         // Add data for countries with provinces - currently Australia, Canada, China
         if (dayData[country].provinces != undefined && dayData[country].confirmed.length == 0) {
             for (var province in dayData[country].provinces) {
+                // Add active cases and new confirmed array for country
+                dayData[country].activecases = [];
+                dayData[country].confirmednew = [];
                 var provincedata = dayData[country].provinces[province];
                 for (var d=0; d<provincedata.dates.length; d++) {
+                    // Add active cases and new confirmed to province
+                    if (provincedata.confirmednew == undefined) {
+                        provincedata.activecases = [];
+                        provincedata.confirmednew = [];
+                        provincedata.activecases[d] = 0;
+                        provincedata.confirmednew[d] = 0;
+                    } else {
+                        var activecases = parseInt(dayData[country].confirmed[d]) - parseInt(dayData[country].recovered[d]);
+                        var confirmednew = parseInt(dayData[country].confirmed[d]) - parseInt(dayData[country].confirmed[d-1]);
+                        if (confirmednew < 0) { confirmednew = 0; }
+                        provincedata.activecases[d] = activecases;
+                        provincedata.confirmednew[d] = confirmednew;
+                    }
+                    // Add parent country data
                     if (dayData[country].dates[d] == undefined) {
                         // Oh Canada... TODO: Check recovered data for CA
                         if (provincedata.recovered == undefined) {  provincedata.recovered = []; }
@@ -226,6 +248,8 @@ function initDayData() {
                         dayData[country].confirmed[d] = provincedata.confirmed[d];
                         dayData[country].recovered[d] = provincedata.recovered[d];
                         dayData[country].deaths[d] = provincedata.deaths[d];
+                        dayData[country].activecases[d] = provincedata.activecases[d];
+                        dayData[country].confirmednew[d] = provincedata.confirmednew[d];
                     } else {
                         // Oh Canada... TODO: Check recovered data for CA
                         if (provincedata.recovered == undefined) {  provincedata.recovered = []; }
@@ -234,6 +258,8 @@ function initDayData() {
                         dayData[country].confirmed[d] += provincedata.confirmed[d];
                         dayData[country].recovered[d] += provincedata.recovered[d];
                         dayData[country].deaths[d] += provincedata.deaths[d];
+                        dayData[country].activecases[d] += provincedata.activecases[d];
+                        dayData[country].confirmednew[d] += provincedata.confirmednew[d];
                     }
                 }
             }
@@ -253,7 +279,6 @@ function initDayData() {
                             dayData[provinceid] = dayData[countrycode].provinces[province];
                             // Remove province from country
                             delete dayData[countrycode].provinces[province];
-
                         }
                     }
                 }
@@ -263,13 +288,31 @@ function initDayData() {
         }
     }
 
-    // Add world data and missing dates
+    // Add world data, computed values and missing dates
     dayData['World'].dates = [];
     for (var country in dayData) {
+        // Add missing dates to DK, FR, GB, NL (they are empty because of the sub province sort and the original data)
+        if (country != 'World' && dayData[country].dates != undefined && dayData[country].dates.length == 0) {
+            dayData[country].dates = dayData['CN'].dates; // Copy data from China, it should be filled by now / TODO: Use other method?
+            delete dayData[country].provinces; // Delete left provinces, most were moved or sorted before
+        }
+        // Add active cases and new confirmed array for country
+        dayData[country].activecases = [];
+        dayData[country].confirmednew = [];
         // Add reproduction array for country
         //dayData[country].reproduction = [];
-        // Add reproduction and world data
+        // Add active cases and new confirmed, reproduction and world data
         for (var d=0; d<dayData[country].dates.length; d++) {
+            // Add active cases and new confirmed data
+            var activecases = parseInt(dayData[country].confirmed[d]) - parseInt(dayData[country].recovered[d]);
+            dayData[country].activecases.push(activecases);
+            if (dayData[country].confirmed[d-1] != undefined) {
+                var confirmednew = parseInt(dayData[country].confirmed[d]) - parseInt(dayData[country].confirmed[d-1]);
+                if (confirmednew < 0) { confirmednew = 0; }
+                dayData[country].confirmednew.push(confirmednew);
+            } else {
+                dayData[country].confirmednew.push(0);
+            }
             // Compute R0 over 4 days: D(t) = (N(t)+N(t-1)+N(t-2)+N(t-3))/4 
             // See: https://www.heise.de/newsticker/meldung/Corona-Pandemie-Die-Mathematik-hinter-den-Reproduktionszahlen-R-4712676.html
             /*if (dayData[country].confirmed[d-3] != undefined) {
@@ -285,18 +328,17 @@ function initDayData() {
                 dayData['World'].confirmed[d] = dayData[country].confirmed[d];
                 dayData['World'].recovered[d] = dayData[country].recovered[d];
                 dayData['World'].deaths[d] = dayData[country].deaths[d];
+                dayData['World'].activecases[d] = dayData[country].activecases[d];
+                dayData['World'].confirmednew[d] = dayData[country].confirmednew[d];
                 //dayData['World'].reproduction[d] = dayData[country].reproduction[d];
             } else {
                 dayData['World'].confirmed[d] += dayData[country].confirmed[d];
                 dayData['World'].recovered[d] += dayData[country].recovered[d];
                 dayData['World'].deaths[d] += dayData[country].deaths[d];
+                dayData['World'].activecases[d] += dayData[country].activecases[d];
+                dayData['World'].confirmednew[d] += dayData[country].confirmednew[d];
                 //dayData['World'].reproduction[d] += dayData[country].reproduction[d];
             }
-        }
-        // Add missing dates to DK, FR, GB, NL (they are empty because of the sub province sort and the original data)
-        if (country != 'World' && dayData[country].dates != undefined && dayData[country].dates.length == 0) {
-            dayData[country].dates = dayData['CN'].dates; // Copy data from China, it should be filled by now / TODO: Use other method?
-            delete dayData[country].provinces; // Delete left provinces, most were moved or sorted before
         }
     }
 
@@ -313,7 +355,7 @@ function initTimeData() {
         for (var country in dayData) {
             if (country != 'World') {
                 // Show province details only on bigMap
-                if (dayData[country].provinces != undefined && isMobile == false) {
+                if (dayData[country].provinces != undefined && smallScreen == false) {
                     for (var province in dayData[country].provinces) {
                         if (dayData[country].provinces[province] != undefined && countryData[country].provinces != undefined) {
                             var provinceid = getProvinceId(country, province); // Get map id (ISO code) of province by name
@@ -354,13 +396,15 @@ function getCountryColor(confirmed, recovered) {
     var factor = (confirmed - recovered) / confirmed;
     if (isNaN(factor)) { factor = 0; }
     var color = parseInt(factor * 128);
-    //if (color > 20) {
+    if (factor == 0) {
+        return 'rgb(255,255,255)'; // white
+    } else if (factor > 0.5) { // red
         return 'rgb(255,' + (255-color) + ',' + (255-color) + ')';
-    /*} else if (factor > 0) {
-        return 'rgb(' + (128+color) + ',255,' + (128+color) + ')';
-    } else {
-        return 'rgb(242,242,242)';
-    }*/
+    } else if (factor > 0.3) { // orange
+        return 'rgb(255,' + (160+color) + ',160)';
+    } else { // green
+        return 'rgb(' + (160+color) + ',255,' + (160+color) + ')';
+    }
 }
 
 // Update details
@@ -409,29 +453,38 @@ function updateStats(country) {
         var confirmed = location.confirmed[day];
         var recovered = location.recovered[day];
         var deaths = location.deaths[day];
+        var confirmednew = location.confirmednew[day];
+        var activecases = location.activecases[day];
         if (location.confirmed[day-1] == undefined) { location.confirmed[day-1] = 0; } // For first day
         if (location.recovered[day-1] == undefined) { location.recovered[day-1] = 0; } 
         if (location.deaths[day-1] == undefined) { location.deaths[day-1] = 0; } 
-        var confirmednew = (confirmed - location.confirmed[day-1]);
+        if (location.confirmednew[day-1] == undefined) { location.confirmednew[day-1] = 0; } 
+        if (location.activecases[day-1] == undefined) { location.activecases[day-1] = 0; } 
         var confirmednewpercent = Math.floor((confirmednew / confirmed) * 100);
         var recoverednew = (recovered - location.recovered[day-1]);
-        var recoveredpercent = Math.floor((recovered / confirmed) * 100);
+        var recoveredpercent = Math.floor(((recovered - deaths) / confirmed) * 100);
         var recoverednewpercent = Math.floor((recoverednew / confirmed) * 100);
         var deathsnew = (deaths - location.deaths[day-1]);
         var deathspercent = Math.floor((deaths / confirmed) * 100);
         var deathsnewpercent = Math.floor((deathsnew / confirmed) * 100);
+        var activenew = (activecases - location.activecases[day-1]);
+        var activepercent = Math.floor((activecases / confirmed) * 100);
+        var activenewpercent = Math.floor((activenew / confirmed) * 100);
+        if (activenew > 0) { var activegrowth = '+'; } else { var activegrowth = ''; }
         // Output
         var countrydetails = '';
-        countrydetails += '<div class="totalcount"><span class="big red">' + formatInteger(confirmed) + '</span><span class="small">Confirmed</span><br>';
+        countrydetails += '<div class="totalcount"><span class="big red">' + formatInteger(confirmed) + '</span><span class="small">Confirmed Cases</span><br>';
+        countrydetails += '<span class="big orange">' + formatInteger(activecases) + '</span><span class="small">Active Cases (' + activepercent + '%)</span><br>';
         countrydetails += '<span class="big green">' + formatInteger(recovered) + '</span><span class="small">Recovered (' + recoveredpercent + '%)</span><br>';
-        countrydetails += '<span class="big black">' + formatInteger(deaths) + '</span><span class="small">Deaths (' + deathspercent + '%)</span><br>';
+        countrydetails += '<span class="big black">' + formatInteger(deaths) + '</span><span class="small">Deaths (' + deathspercent + '%)</span></div>';
         /*if (location.reproduction != undefined) {
-            countrydetails += '<span class="big">' + location.reproduction[day].toPrecision(4) + '</span><span class="small">Reproduction Rate</span></div>';
+            countrydetails += '<span class="big">' + location.reproduction[day].toPrecision(4) + '</span><span class="small">Reproduction Rate</span>';
         }*/
-        countrydetails += '<div class="onedaycount">Last 24 hours:<br>';
-        countrydetails += '<span class="small"><span class="red">+' + formatInteger(confirmednew) + '</span> (+' + confirmednewpercent + '%)';
-        countrydetails += '<span class="green">+' + formatInteger(recoverednew) + '</span> (+' + recoverednewpercent + '%)';
-        countrydetails += '<span class="black">+' + formatInteger(deathsnew) + '</span> (+' + deathsnewpercent + '%)</span></div>';
+        countrydetails += '<div class="onedaycount small">Last 24 hours:<br>';
+        countrydetails += '<span class="red">+' + formatInteger(confirmednew) + '</span> Conf. (+' + confirmednewpercent + '%)';
+        countrydetails += '<span class="orange">' + activegrowth + formatInteger(activenew) + '</span> Active (' + activegrowth + activenewpercent + '%)<br>';
+        countrydetails += '<span class="green">+' + formatInteger(recoverednew) + '</span> Rec. (+' + recoverednewpercent + '%)';
+        countrydetails += '<span class="black">+' + formatInteger(deathsnew) + '</span> Deaths (+' + deathsnewpercent + '%)</div>';
     }
     return countrydetails;
 }
@@ -442,10 +495,14 @@ function updateCharts() {
     // World chart
     var lastdayindex = dayData['World'].dates.indexOf(dayData['World'].dates[day]) + 1;
     chartworld.data.labels = dayData['World'].dates;
-    chartworld.data.datasets[0].data = dayData['World'].deaths.slice(0, (lastdayindex));// Slice the data at the current day
+    chartworld.data.datasets[0].data = dayData['World'].deaths.slice(0, (lastdayindex)); // Slice data at current day
     chartworld.data.datasets[1].data = dayData['World'].recovered.slice(0, (lastdayindex));
-    chartworld.data.datasets[2].data = dayData['World'].confirmed.slice(0, (lastdayindex));
+    chartworld.data.datasets[2].data = dayData['World'].activecases.slice(0, (lastdayindex));
+    chartworld.data.datasets[3].data = dayData['World'].confirmed.slice(0, (lastdayindex));
     chartworld.update();
+    chartworldnew.data.labels = dayData['World'].dates;
+    chartworldnew.data.datasets[0].data = dayData['World'].confirmednew.slice(0, (lastdayindex)); // Slice data at current day
+    chartworldnew.update();
     // Country chart
     if (dayData[detailcountry] != undefined && detailcountry != 'World') {
         if (detailprovince != false) { // Show province on chart
@@ -455,10 +512,14 @@ function updateCharts() {
         }
         var lastdayindex = chartdata.dates.indexOf(chartdata.dates[day]) + 1;
         chartcountry.data.labels = chartdata.dates;
-        chartcountry.data.datasets[0].data = chartdata.deaths.slice(0, (lastdayindex));// Slice the data at the current day
+        chartcountry.data.datasets[0].data = chartdata.deaths.slice(0, (lastdayindex)); // Slice data at current day
         chartcountry.data.datasets[1].data = chartdata.recovered.slice(0, (lastdayindex));
-        chartcountry.data.datasets[2].data = chartdata.confirmed.slice(0, (lastdayindex));
+        chartcountry.data.datasets[2].data = chartdata.activecases.slice(0, (lastdayindex));
+        chartcountry.data.datasets[3].data = chartdata.confirmed.slice(0, (lastdayindex));
         chartcountry.update();
+        chartcountrynew.data.labels = chartdata.dates;
+        chartcountrynew.data.datasets[0].data = chartdata.confirmednew.slice(0, (lastdayindex)); // Slice data at current day
+        chartcountrynew.update();
     }
 }
 
@@ -562,12 +623,12 @@ function countryListClick(countrycode) {
     detailcountry = countrycode;
     updateDetails();
     // Pan map to country (label)
-    if (smallScreen == false) {
+    /*if (smallScreen == false) {
         var coordsX = 500 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("x")); // 500 = SVG width / 2
         var coordsY = 253 - parseInt(coronaWorldMap.countryLabels[countrycode].getAttribute("y")); // 253 = SVG height / 2
         svgPanZoom.reset();
         svgPanZoom.pan({ x: coordsX, y: coordsY });
-    }
+    }*/
 }
 
 // Callback function from SVG World Map JS
@@ -623,10 +684,11 @@ Chart.Legend.prototype.afterFit = function() {
 function initCharts() {
     var chartoptions = { 
         maintainAspectRatio: false, 
-        legend: { reverse: true, labels: { usePointStyle: true, fontColor: "#CDCDCD" } }, 
+        legend: { reverse: true, labels: { usePointStyle: true, fontColor: "#CDCDCD", fontSize: 11 } }, 
+        elements: { point:{ radius: 0 } }, 
         scales: { 
             xAxes: [{ ticks: { display: false } }], 
-            yAxes: [{ ticks: { suggestedMin: 0, suggestedMax: 500, fontColor: "#CDCDCD", 
+            yAxes: [{ ticks: { suggestedMin: 0, fontColor: "#CDCDCD", /*suggestedMax: 500*/
                     callback: function(label, index, labels) {
                         if (label >= 1000000) {
                             return label/1000000+'m';
@@ -644,17 +706,22 @@ function initCharts() {
         label: 'Deaths',
         data: [ 0 ],
         borderWidth: 1,
-        backgroundColor: 'rgba(0, 0, 0, .5)'
+        backgroundColor: 'rgba(0, 0, 0, .6)'
     }, {
-        label: 'Recovered',
+        label: 'Rec.',
         data: [ 0 ],
         borderWidth: 1,
-        backgroundColor: 'rgba(0, 200, 0, .5)'
+        backgroundColor: 'rgba(0, 200, 0, .6)'
     }, {
-        label: 'Confirmed',
+        label: 'Active',
         data: [ 0 ],
         borderWidth: 1,
-        backgroundColor: 'rgba(200, 0, 0, .5)'
+        backgroundColor: 'rgba(255, 160, 64, .6)'
+    }, {
+        label: 'Conf.',
+        data: [ 0 ],
+        borderWidth: 1,
+        backgroundColor: 'rgba(200, 0, 0, .6)'
     }];
     chartworld = new Chart(worldcanvas, {
         type: 'line',
@@ -669,6 +736,34 @@ function initCharts() {
         data: {
             labels: [ 0 ],
             datasets: chartdatasets
+        },
+        options: chartoptions
+    });
+    // Change chart y axis label
+    chartoptions.scales.yAxes[0].ticks.maxTicksLimit = 3;
+    chartworldnew = new Chart(worldnewcanvas, {
+        type: 'line',
+        data: {
+            labels: [ 0 ],
+            datasets: [{
+                label: 'New Cases',
+                data: [ 0 ],
+                borderWidth: 1,
+                backgroundColor: 'rgba(255, 255, 255, .5)'
+            }]
+        },
+        options: chartoptions
+    });
+    chartcountrynew = new Chart(countrynewcanvas, {
+        type: 'line',
+        data: {
+            labels: [ 0 ],
+            datasets: [{
+                label: 'New Cases',
+                data: [ 0 ],
+                borderWidth: 1,
+                backgroundColor: 'rgba(255, 255, 255, .5)'
+            }]
         },
         options: chartoptions
     });
