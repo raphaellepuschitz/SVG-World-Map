@@ -1,11 +1,12 @@
 /**
  * SVG World Map JS
- * v0.2.1
+ * v0.2.2
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
- * Original author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
+ * Author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
+ * Copyright: Raphael Lepuschitz
  * URL: https://github.com/raphaellepuschitz/SVG-World-Map
- * Copyleft: GNU General Public License version 3
+ * License: MIT
  **/
 
 var svgWorldMap = (function() { 
@@ -27,6 +28,8 @@ var svgWorldMap = (function() {
 
     // Default options
     var options = {
+        // Base path 
+        libPath: '../src/', // Point to library folder, e.g. (http[s]:)//myserver.com/map/src/
         // Basic options
         bigMap: true, // Set to 'false' to load small map without provinces
         showOcean: true, // Show or hide ocean layer
@@ -54,7 +57,7 @@ var svgWorldMap = (function() {
         mapClick: "mapClick", 
         mapTable: "mapTable", // (Custom) callback function for HTML data parsing
         mapDate: "mapDate", // (Custom) callback function for time control date return
-        // Time control addon module
+        // Time controls
         timeControls: false, // Set to 'true' for time controls
         timePause: true, // Set to 'false' for time animation autostart
         timeLoop: false //  Set to 'true' for time animation loop
@@ -105,11 +108,9 @@ var svgWorldMap = (function() {
                         'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
                         'date': function(data) { window["timeControlsDate"].call(null, data); }, 
                     };
-                    // Asynchronous load library addon module, if it's set in options.timeControls
+                    // Load time controls
                     if (options.timeControls == true) {
-                        import('../src/svg-world-map-time-controls.mjs').then(module => {
-                            module.svgWorldMapTimeControls(svgMap, options.timePause, options.timeLoop, initTimeData);
-                        });
+                        svgWorldMapTimeControls(options.timePause, options.timeLoop, initTimeData);
                     }
                     // Add info box
                     if (options.showInfoBox == true) {
@@ -142,10 +143,10 @@ var svgWorldMap = (function() {
             svg.setAttribute("type", "image/svg+xml");
             // Load small map with states only
             if (smallScreen != false || options.bigMap == false) { // isMobile == true
-                svg.setAttribute("data", "../src/world-states.svg");
+                svg.setAttribute("data", options.libPath + "world-states.svg");
             // Load big map with provinces
             } else {
-                svg.setAttribute("data", "../src/world-states-provinces.svg");
+                svg.setAttribute("data", options.libPath + "world-states-provinces.svg");
             }
             container.appendChild(svg);
             // Add container and SVG CSS
@@ -332,9 +333,8 @@ var svgWorldMap = (function() {
                     path.setAttribute('stroke-width', options.provinceStrokeWidth[event]);
                 }
             // Set color to path directly, also to selected country
-            } else if ((event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb')) { // && path != selectedCountry && path.country != selectedCountry
+            } else if (typeof event === "string" && (event.substr(0, 1) == '#' || event.substr(0, 3) == 'rgb')) { // && path != selectedCountry && path.country != selectedCountry
                 path.setAttribute('fill', event);
-                //path.setAttribute('stroke', event);
             }
         }
     }
@@ -634,8 +634,8 @@ var svgWorldMap = (function() {
     }
 
     // Caller for time controls to callback out, defined in 'svgMap.date' 
-    window.timeControlsDate = function(date) {
-        callBack('date', date);
+    window.timeControlsDate = function(currDate) {
+        callBack('date', currDate);
     }
 
     // Parse HTML for <table> data, defined in 'svgMap.table' 
@@ -750,7 +750,7 @@ var svgWorldMap = (function() {
         callBack('table', tableData);
     }
 
-    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut', 'options.mapClick' and 'options.mapDate'
+    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut', 'options.mapClick', 'options.mapTable' and 'options.mapDate'
     function callBack(event, data) { // 'data' is a path except for time controls date
         if (event == 'over' && window[options.mapOver] && typeof(window[options.mapOver]) === "function") { 
             window[options.mapOver].apply(window, [data]);
@@ -932,6 +932,248 @@ var svgWorldMap = (function() {
         "YE": { "name": "Yemen", "region": "AS" }, "YT": { "name": "Mayotte", "region": "AF" }, 
         "ZA": { "name": "South Africa", "region": "AF" }, "ZM": { "name": "Zambia", "region": "AF" }, "ZW": { "name": "Zimbabwe", "region": "AF" }
     };
+
+    // Global variables for time controls
+    var timer; // Interval
+    var currDate = 0; // Current day, month, year etc.
+    var ticks = 0; // For speed
+    var speed = 10; // For ticks per date
+    var timeData = false;
+    var maxDates = false;
+    var loop = false;
+    var paused = true;
+
+    // Time controls
+    function svgWorldMapTimeControls(timePause, timeLoop, initTimeData) { 
+
+        // Check time dataset
+        if (initTimeData != undefined) {
+            timeData = initTimeData;
+            // Convert time date from object to array
+            if (typeof(timeData) == 'object' && Array.isArray(timeData) == false) {
+                var timeHelper = [];
+                var keys = Object.keys(timeData);
+                for (var k=0; k<keys.length; k++) {
+                    timeHelper.push({ [keys[k]]: timeData[keys[k]] });
+                }
+                timeData = timeHelper;
+            }
+            maxDates = timeData.length-1;
+        }
+
+        // Set pause at start (= autoplay)
+        if (timePause == false) {
+            paused = false;
+        }
+
+        // Set loop
+        if (timeLoop == true) {
+            loop = true;
+        }
+
+        // Dynamically load webfont
+        document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="' + options.libPath + 'font/flaticon.css" />');
+
+        // Start HTML injection
+        initControls();
+    }
+
+    // Interval for day timer
+    function initDayTimer() {
+        timer = window.setInterval(function() {
+            if (!paused) {
+                increaseTimeTicks();
+            }
+        }, 100);
+    }
+
+    // 'Tick'-logic for time per speed
+    function increaseTimeTicks() {
+        ticks++;
+        if (speed == 1 || (ticks % speed) == 1) {
+            if (currDate < maxDates || maxDates == false) {
+                currDate++;
+            } else {
+                if (loop) {
+                    currDate = 0; // Return to start if loop is on
+                } else {
+                    paused = true; // Pause if last date of data is reached
+                }
+            }
+            updateControls();
+        }
+    }
+
+    // Slider control
+    function initSilder() {
+        if (timeData != false) {
+            document.getElementById("map-slider").oninput = function() {
+                paused = true;
+                currDate = this.value;
+            } 
+        } else {
+            document.getElementById("map-slider").style.display = 'none';
+            document.getElementById("map-slider-container").style.display = 'list-item';
+            document.getElementById("map-slider-container").style.fontSize = '0';
+        }
+    }
+
+    // Keyboard controls and start values
+    function initKeyControls() {
+        // Keyboard controls
+        document.addEventListener('keyup', function(event) {
+            if (event.keyCode == 32) { // Space
+                document.getElementById("map-control-play-pause").firstChild.click();
+            } else if (event.keyCode == 37) { // Arrow left
+                document.getElementById("map-control-back").firstChild.click();
+            } else if (event.keyCode == 38) { // Arrow up
+                document.getElementById("map-control-start").firstChild.click();
+            } else if (event.keyCode == 39) { // Arrow right
+                document.getElementById("map-control-forward").firstChild.click();
+            } else if (event.keyCode == 40) { // Arrow down
+                document.getElementById("map-control-end").firstChild.click();
+            } else if (event.keyCode == 171) { // Arrow right
+                document.getElementById("map-control-faster").firstChild.click();
+            } else if (event.keyCode == 173) { // Arrow down
+                document.getElementById("map-control-slower").firstChild.click();
+            }
+        });
+    }
+
+    // Update controls output
+    function updateControls() {
+        if (paused) {
+            document.getElementById("map-control-play-pause").innerHTML = '<i class="flaticon-play"></i>';
+        } else {
+            document.getElementById("map-control-play-pause").innerHTML = '<i class="flaticon-pause"></i>';
+        }
+        if (timeData) {
+            var dateKey = Object.keys(timeData[currDate])[0]; // Get date by first key
+            document.getElementById("map-slider").value = currDate;
+            document.getElementById("map-date").innerHTML = dateKey;
+            //svgWorldMap.update(timeData[date][dateKey]); // Call update function in SVG World Map lib 
+            svgMap.update(timeData[currDate][dateKey]); // Call update function in SVG World Map lib 
+        } else {
+            document.getElementById("map-date").innerHTML = currDate;
+        }
+        //svgWorldMap.date(date); // Call date and then callback function in SVG World Map 
+        svgMap.date(currDate); // Call date and then callback function in SVG World Map lib 
+    }
+
+    // Play and pause controls
+    window.clickPlayPause = function() {
+        paused = !paused;
+        updateControls();
+    }
+
+    // Controls for play, pause, forward, back, start, end
+    window.clickControl = function() {
+        var controlid = event.srcElement.parentNode.id; 
+        if (controlid == 'map-control-start') {
+            currDate = 0;
+        } else if (controlid == 'map-control-end') {
+            currDate = maxDates;
+        } else if (controlid == 'map-control-back' && currDate > 0) {
+            currDate--;
+        } else if (controlid == 'map-control-forward' && currDate < maxDates) {
+            currDate++;
+        }
+        paused = true;
+        updateControls();
+    }
+
+    // Speed controls
+    window.clickSpeed = function() {
+        var speedid = event.srcElement.parentNode.id; 
+        if (speedid == 'map-control-faster' && speed > 1) {
+            speed--;
+        } else if (speedid == 'map-control-slower' && speed < 20) {
+            speed++;
+        }
+    }
+
+    // HTML for time controls
+    function initControls() {
+        // Avoid double loading
+        if (document.getElementById('map-controls') == null) {
+            // Init CSS
+            initControlsCSS();
+            // Control elements
+            var controlElements = { 'map-controls': { tag: 'div', append: 'svg-world-map-container' }, 
+                                    'map-control-buttons': { tag: 'div', append: 'map-controls' }, 
+                                    'map-control-start': { tag: 'button', append: 'map-control-buttons', icon: 'previous', click: 'clickControl()' }, 
+                                    'map-control-back': { tag: 'button', append: 'map-control-buttons', icon: 'rewind', click: 'clickControl()' }, 
+                                    'map-control-play-pause': { tag: 'button', append: 'map-control-buttons', icon: 'play', click: 'clickPlayPause()' }, 
+                                    'map-control-forward': { tag: 'button', append: 'map-control-buttons', icon: 'fast-forward', click: 'clickControl()' }, 
+                                    'map-control-end': { tag: 'button', append: 'map-control-buttons', icon: 'skip', click: 'clickControl()' }, 
+                                    'map-slider-container': { tag: 'div', append: 'map-controls' }, 
+                                    'map-slider': { tag: 'input', append: 'map-slider-container' }, 
+                                    'map-speed-controls': { tag: 'div', append: 'map-controls' }, 
+                                    'map-control-slower': { tag: 'button', append: 'map-speed-controls', icon: 'minus', click: 'clickSpeed()' }, 
+                                    'map-control-faster': { tag: 'button', append: 'map-speed-controls', icon: 'plus', click: 'clickSpeed()' }, 
+                                    'map-date': { tag: 'div', append: 'map-controls' } };
+            // Create all elements dynamically
+            for (var element in controlElements) {
+                window[element] = document.createElement(controlElements[element].tag);
+                window[element].setAttribute("id", element);
+                window[controlElements[element].append].appendChild(window[element]);
+                if (controlElements[element].tag == 'button') {
+                    var i = document.createElement('i');
+                    i.setAttribute("class", "flaticon-" + controlElements[element].icon);
+                    window[element].appendChild(i);
+                    window[element].setAttribute("onclick", controlElements[element].click);
+                }
+            }
+            // Add missing attributes to slider
+            document.getElementById("map-slider").setAttribute("type", "range");
+            document.getElementById("map-slider").setAttribute("min", "0");
+            document.getElementById("map-slider").setAttribute("max", maxDates);
+            // Startup time control functions
+            initKeyControls();
+            initSilder();
+            initDayTimer();
+        }
+    }
+
+    // CSS for time controls
+    function initControlsCSS() {
+        var style = document.createElement('style');
+        style.innerHTML = `
+            #map-controls { position: absolute; bottom: 0; left: 0; right: 0; width: auto; height: 40px; padding: 0 10px; background-color: rgba(0, 0, 0, .75); }
+            #map-control-buttons, #map-slider-container, #map-speed-controls, #map-date { float: left; }
+            #map-control-buttons { width: 20%; }
+            #map-slider-container { width: 60%; }
+            #map-speed-controls, #map-date { width: 10%; text-align: right; }
+            #map-date { margin-top: 10px; color: #FFFFFF; }
+            #map-controls button { cursor: pointer; opacity: .5; margin-top: 10px; color: #FFFFFF; background-color: transparent; border: none; } /* broder: manu; */
+            #map-controls button:hover { opacity: 1 !important; }
+            #map-controls button i::before { margin: 0; }
+            #map-speed-controls button i::before { font-size: 15px; font-weight: bold; }
+            #map-slider { -webkit-appearance: none; width: 98%; height: 5px; border-radius: 5px; background: #8A8A8A; -moz-user-select: none; user-select: none; outline: none; margin: 17px 13px 0; }
+            #map-slider:focus { outline: none; }
+            #map-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: #FFFFFF; cursor: pointer; opacity: .5; }
+            #map-slider::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: #FFFFFF; cursor: pointer; opacity: .5; -moz-user-select: none; user-select: none; }
+            #map-slider:hover::-webkit-slider-thumb, #map-slider:hover::-moz-range-thumb { opacity: 1; }
+            @media all and (max-width: 999px) { 
+                #map-control-buttons { width: 25%; }
+                #map-slider-container { width: 50%; }
+                #map-speed-controls, #map-date { width: 12.5%; }
+                #map-controls button { margin-top: 12px; } 
+                #map-controls button i::before { font-size: 15px; } 
+                #map-speed-controls button i::before { font-size: 12px; } 
+            }
+            @media all and (max-width: 666px) { 
+                #map-speed-controls { display: none; }
+                #map-control-buttons, #map-date { position: absolute; bottom: 41px; height: 30px; padding-top: 10px; text-align: center; background-color: rgba(0, 0, 0, .75); }
+                #map-control-buttons { left: 0; width: 50%; }
+                #map-date { right: 0; width: calc(50% - 1px); }
+                #map-controls button { margin-top: 0px; } 
+                #map-slider-container { width: 100%; }
+                #map-slider { width: 100%; margin: 17px 0 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
     // Return the main function
     return svgWorldMap;

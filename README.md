@@ -35,7 +35,7 @@ All Demos
 * **[COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html)** <sup>ᴛ ᴢ ᴄ ᴀ</sup> 
 <!-- * Strategy game -->
 
-<sup>ᴛ</sup> with the **Time Controls** addon module, 
+<sup>ᴛ</sup> with **Time Controls**, 
 <sup>ᴢ</sup> with [svg-pan-zoom.js](https://github.com/ariutta/svg-pan-zoom), 
 <sup>ᴄ</sup> with [chart.js](https://www.chartjs.org), 
 <sup>ᴀ</sup> data from the [Coronavirus Tracker API](https://github.com/ExpDev07/coronavirus-tracker-api)
@@ -51,7 +51,7 @@ This package constists of 3 parts (which could also be used separately):
 
 * A detailed **SVG world map** with **239 nations and countries** and over **3000 second-level provinces and islands**, ready for editing with your preferred graphics editor
 * A **List of all world countries** with additional information, ready for use with the SVG map
-* A **JavaScript SVG library** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a **callback-API**, including a addon module for **time controls** and **visual data animation**
+* A **JavaScript SVG library** developed for the map and optimized for **quick SVG path access**, customizable with **options** and a **callback-API**, including **time controls** for **visual data animation**
 
 To unleash the full power of *SVG World Map JS* you should of course use all 3 combined ;-)
 </details>
@@ -142,16 +142,20 @@ async function loadSVGWorldMap() {
 </summary>  
   
 * All default options can be overruled by passing an object of custom options
+* Set `libPath`, if the library source folder is different from `../src/`
 * `bigMap` controls whether the map is loaded **with all countries and provinces** (~3,8 MB) or **with nations only** (~1,3 MB)
 * All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input
 * Use `showOcean` and `showAntarctica` to hide these layers on the map
 * If `showInfoBox` is set to `true`, the library will add a `<div id="map-infobox"></div>` plus basic CSS to your page
 * `mapClick`, `mapOver`, `mapOut`, `mapTable` and `mapDate` are callback function names, see the API section for details
-* `timeControls` will activate the **Time Controls** addon module, see below for more information
+* `timeControls` will activate the **Time Controls**, see below for more information
 
 ```js
 // Default options
 var options = {
+
+    // Base path 
+    libPath: '../src/', // Point to library folder, e.g. (http[s]:)//myserver.com/map/src/
 
     // Basic options
     bigMap: true, // Set to 'false' to load small map without provinces
@@ -183,7 +187,7 @@ var options = {
     mapTable: "mapTable", // (Custom) callback function for HTML data parsing
     mapDate: "mapDate", // (Custom) callback function for time control date return
 
-    // Time control addon module
+    // Time controls
     timeControls: false, // Set to 'true' for time controls
     timePause: true, // Set to 'false' for time animation autostart
     timeLoop: false //  Set to 'true' for time animation loop
@@ -420,7 +424,7 @@ var options = {
 };
 ```
 
-With the callback of these functions you can catch the hovered or clicked country, get the return JSON from a parsed HTML table or receive the current date of the **Time Control** module (see below). Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"`, `"myCustomOut()"`, `"myCustomTable()"` and `"myCustomDate()"`, then the code would look something like this: 
+With the callback of these functions you can catch the hovered or clicked country, get the return JSON from a parsed HTML table or receive the current date of the **Time Controls** (see below). Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"`, `"myCustomOut()"`, `"myCustomTable()"` and `"myCustomDate()"`, then the code would look something like this: 
 
 ```js
 function myCustomClick(country) {
@@ -444,7 +448,7 @@ function myCustomTable(object) {
 }
 
 function myCustomDate(date) {
-    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Control module 
+    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Controls
     ...
 }
 ```
@@ -514,17 +518,17 @@ There are 9 calling home functions, 3 for country `over()`, `out()` and `click()
 </details>
 
 <details>
-<summary><b>Time Control addon module</b>
+<summary><b>Time Controls</b>
 <table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html">Time animation and controls</a></td></tr></table>
 <table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html">Wikipedia table data time animation</a></td></tr></table>
 <table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html">COVID-19 Corona virus world map</a></td></tr></table>
 </summary>  
   
-The SVG World Map library includes a nice addon for **animated data visualization**: A [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) for an easy integration of time series data on the map with changing colors for each country or province. 
+The SVG World Map library includes **Time Controls** for **animated data visualization**, to provide an easy integration of time series data on the map with changing colors for each country or province. 
 
-Before activating the Time Control module, make sure to have [svg-world-map-time-controls.mjs](./src/svg-world-map-time-controls.mjs) and the webfont folder `/src/font/...` included in your project.  
+> Before activating the Time Controls, make sure to have the webfont folder `/src/font/...` included in your project.  
 
-* Set the options parameter `timeControls` to `true` to load and acivate the module
+* Set the options parameter `timeControls` to `true` to acivate the Time Controls
 * Use `timePause` and `timeLoop` for further adjustments
 * `mapDate` is the custom callback function (see above)
 
@@ -539,13 +543,15 @@ myTimeOptions = {
 myWorldMap = svgWorldMap(myTimeOptions); 
 ```
 
-This will asynchronously load `/src/svg-world-map-time-controls.mjs`, **inject the calling document** and:  
+This will:  
 
 * Load the **flaticon webfont** for the control icons
 * Add (prepend) some **CSS** before the closing `</head>` tag 
 * Add **HTML** to a new `<div id="map-controls">` element inside the `<div id="svg-world-map-container">` 
 
-Please override the CSS as you like and change or hide the added HTML elements.  
+Please override the CSS as you like to change or hide the added HTML elements. 
+
+> The following code shows the injected CSS / HTML for clarification. The library will do this automatically, no need to copy this. 
 
 <!-- Github markdown shows "./src" in red in HTML code blocks (not CSS), so the <object> below has "../src/" not ".. /src/" -->
 
@@ -591,13 +597,13 @@ Please override the CSS as you like and change or hide the added HTML elements.
 </html>
 ```
 
-The activated module without a *time series dataset* (see below) will load the controls (play, pause, forward, faster, ...) and add the ticks per day (or month, year, ...) logic to the map. The control buttons and the current date will be shown, but the time slider will not be visible (as there is *no* end date).  
+Without a *time series dataset* (see below) only the controls (play, pause, forward, faster, ...) and the ticks per day (or month, year, ...) logic will be added to the map. The control buttons and the current date will be shown, but the time slider will not be visible (as there is *no* end date).  
 
 To catch the callback when the map goes to the next date, just use the callback function mentioned before:
 
 ```js
 function myCustomDate(date) {
-    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Control module 
+    var currentDay = date; // Callback for the current date (e.g. day, month, year) from the Time Controls
     ... // Do something with the new date
 }
 ```
@@ -655,6 +661,10 @@ Further Development & Changelog
 <details>
 <summary><b>Done</b></summary>  
   
+* 0.2.2
+  * Added LICENSE
+  * Merged the time controls module into the main library since .mjs files are not supported well by all servers
+  * Added option for library path
 * 0.2.1
   * Improved Corona virus data visualization demo
 * 0.2.0
@@ -725,3 +735,9 @@ Pitfalls, Known Issues & Bugs
 * Slow or old computers or bad internet conncetion may show nothing but the map
 * If you find a bug, be nice to it (and also let me know of it) ;-) 
 </details>
+
+
+License
+-----------------------------
+
+SVG World Map JS is available under the [MIT license](https://opensource.org/licenses/MIT).

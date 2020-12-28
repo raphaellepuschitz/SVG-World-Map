@@ -20,7 +20,6 @@ var day = 0;
 checkSize();
 checkMobile();
 loadCountryData();
-loadVirusData();
 initStartup();
 initCharts();
 
@@ -35,11 +34,11 @@ function initStartup() {
             document.getElementById('loading').innerHTML = '~~~ There seems to be a problem ~~~<br><br>Try again with <a href="' + url + '?api=1">API 1</a>, <a href="' + url + '?api=2">API 2</a> or <a href="' + url + '?api=3">fallback</a>';
         } else if (virusData == undefined) {
             document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
-        } else if (svgInit == false && svgLoaded == false && countryData != undefined && virusData != undefined && timeData.length > 0) {
+        } else if (svgInit == false && svgLoaded == false && countryData != undefined && virusData != undefined && timeData.length > 1) {
             document.getElementById('loading').innerHTML = '~~~ Loading SVG Map ~~~';
             loadSVGMap();
             svgInit = true;
-        } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 0 && document.getElementById('map-slider') != null) {
+        } else if (svgLoaded == true && countryData != undefined && virusData != undefined && timeData.length > 1 && document.getElementById('map-slider') != null) {
             window.clearInterval(startuptimer);
             document.getElementById('loading').innerHTML = '~~~ All Data Loaded ~~~';
             initSVGMap();
@@ -74,7 +73,7 @@ async function loadSVGMap() {
 
 // SVG map start
 function initSVGMap() {
-    if (svgLoaded == true && timeData.length > 0) {
+    if (svgLoaded == true && timeData.length > 1) {
         // Change start day
         document.getElementById('map-slider').value = timeData.length - 14; // Start 2 weeks ago
         document.getElementById('map-slider').oninput();
@@ -116,8 +115,8 @@ function initSVGMap() {
 }
 
 // Callback function from the time control module, defined in 'options.mapDate'
-function mapDate(date) {
-    day = date;
+function mapDate(updateDate) {
+    day = updateDate;
     updateDetails();
     // Update day date info
     var daydate = new Date(document.getElementById('map-date').innerHTML).toString().split(' ');
@@ -131,6 +130,7 @@ function loadCountryData() {
     var url = '../src/country-data.json';
     loadFile(url, function(response) {
         countryData = JSON.parse(response); 
+        loadVirusData(); // Load virus data after country data is conplete
     });
 }
 
@@ -148,7 +148,6 @@ function loadVirusData() {
             url = eval('url' + query[1]);
         }
     }
-    // Total new dataset: 
     loadFile(url, function(response) {
         virusData = JSON.parse(response); 
         initDayData();
@@ -558,25 +557,27 @@ function initCountryList() {
 
 // Update country list
 function updateCountryList() {
-    for (var country in coronaWorldMap.countries) {
-        var countrycode = coronaWorldMap.countries[country].id;
-        if (dayData[countrycode] != undefined) {
-            // Add confirmed to countrylist
-            if (document.getElementById(countrycode) != null) {
-                var confirmedday = dayData[countrycode].confirmed[day];
-                var countryname = document.getElementById(countrycode).dataset.name;
-                if (confirmedday > 0) { 
-                    document.getElementById(countrycode).dataset.confirmed = confirmedday;
-                    document.getElementById(countrycode).innerHTML = '<span class="small red">' + formatInteger(confirmedday) + '</span>' + countryname;
-                } else {
-                    document.getElementById(countrycode).dataset.confirmed = '';
-                    document.getElementById(countrycode).innerHTML = countryname;
+    if (coronaWorldMap != undefined) {
+        for (var country in coronaWorldMap.countries) {
+            var countrycode = coronaWorldMap.countries[country].id;
+            if (dayData[countrycode] != undefined) {
+                // Add confirmed to countrylist
+                if (document.getElementById(countrycode) != null) {
+                    var confirmedday = dayData[countrycode].confirmed[day];
+                    var countryname = document.getElementById(countrycode).dataset.name;
+                    if (confirmedday > 0) { 
+                        document.getElementById(countrycode).dataset.confirmed = confirmedday;
+                        document.getElementById(countrycode).innerHTML = '<span class="small red">' + formatInteger(confirmedday) + '</span>' + countryname;
+                    } else {
+                        document.getElementById(countrycode).dataset.confirmed = '';
+                        document.getElementById(countrycode).innerHTML = countryname;
+                    }
                 }
             }
         }
+        // Sort country list with new confirmed
+        sortCountryList();
     }
-    // Sort country list with new confirmed
-    sortCountryList();
 }
 
 // Sort countrylist by confirmed helper function

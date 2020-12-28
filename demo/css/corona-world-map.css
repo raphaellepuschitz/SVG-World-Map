@@ -123,7 +123,7 @@ ul li {
 #svg-world-map-container, #details, #settings, #countries {
     visibility: hidden;
     opacity: 0;
-    transition: opacity 1s ease-out;
+    transition: opacity 1s linear;
 }
 
 /* Settings */
