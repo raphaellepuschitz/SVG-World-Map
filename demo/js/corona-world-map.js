@@ -138,8 +138,8 @@ function loadCountryData() {
 function loadVirusData() {
     document.getElementById('loading').innerHTML = '~~~ Loading Virus Data ~~~';
     // Switch API urls if needed
-    var url1 = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues, should be faster
-    var url2 = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
+    var url1 = 'https://coronavirus-tracker-api.herokuapp.com/all'; // Main URL from Github project page
+    var url2 = 'https://covid-tracker-us.herokuapp.com/all'; // Backup URL found in Github issues
     var url3 = '../demo/js/corona-data-fallback.json'; // Local fallback 
     var url = url1; // Default URL is API 1
     if (window.location.search != '') {
@@ -773,8 +773,6 @@ function initCharts() {
 // Load file helper function
 function loadFile(url, callback) {
     var xobj = new XMLHttpRequest();
-    //xobj.overrideMimeType("application/json");
-    //xobj.open('GET', 'countries.json', true);
     xobj.open('GET', url, true);
     xobj.onreadystatechange = function() {
         if (xobj.readyState === 4 && xobj.status === 200) {
@@ -787,12 +785,6 @@ function loadFile(url, callback) {
 // Number format helper function
 function formatInteger(number) {
     return new Intl.NumberFormat('en-GB').format(number);
-}
-
-// Get day difference between two dates helper function
-function getDayDiff(date1, date2) {
-    const difftime = Math.abs(new Date(date2) - new Date(date1));
-    return Math.ceil(difftime / (1000 * 60 * 60 * 24)); 
 }
 
 // Mobile device detection
@@ -813,55 +805,3 @@ function checkSize() {
         }
     }
 }
-
-/*
-// Helper function to not zoom out of the SVG
-function beforePan(oldPan, newPan) {
-    var stopHorizontal = false, 
-        stopVertical = false, 
-        //gutterWidth = 100, 
-        //gutterHeight = 100, 
-        gutterWidth = (mappanzoom.getSizes().width), 
-        gutterHeight = (mappanzoom.getSizes().height), 
-        // Computed variables, 
-        sizes = this.getSizes(), 
-        leftLimit = -((sizes.viewBox.x + sizes.viewBox.width) * sizes.realZoom) + gutterWidth, 
-        rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom), 
-        topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight, 
-        bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
-
-    customPan = {};
-    customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
-    customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
-    return customPan;
-}
-
-// Mouseover, mouseout and click functions for map and countrylist
-function countryDblclick(countryid) {
-    var bbox = mapcountries[detailcountry].getBBox();
-    var center = { x: bbox.x + bbox.width / 2, y: bbox.y  + bbox.height / 2 };
-    if (bbox.height < 10) { // get zoom by size
-        var zoom = 6;
-    } else if (bbox.height < 100) {
-        var zoom = 5;
-    } else {
-        var zoom = 4;
-    }
-    if (mappanzoom.getZoom() != zoom) { // Zoom in
-        mappanzoom.zoomAtPoint(zoom, center);
-    } else { // Reset = zoom out to center
-        mappanzoom.reset();
-    }
-    //console.log("mappanzoom.getZoom(): " + mappanzoom.getZoom());
-}
-
-function worldClick() {
-    mapcountries[detailcountry].style.strokeWidth = '1'; // Reset former selected country
-    detailcountry = 'World';
-    updateDetails();
-}
-
-function worldDblclick(countryid) {
-    mappanzoom.reset(); // Reset pan and zoom
-}
-*/

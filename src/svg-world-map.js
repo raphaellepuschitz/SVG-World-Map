@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.2.2
+ * v0.2.3
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -641,7 +641,7 @@ var svgWorldMap = (function() {
     // Parse HTML for <table> data, defined in 'svgMap.table' 
     window.parseHTMLTable = function(html) {
         tableData = {};
-        var tableKeys = ['iso', 'name', 'country', 'countries', 'state', 'states', 'nation', 'nations', 'member state', 'member states'];
+        var tableKeys = ['iso', 'name', 'country', 'countries', 'state', 'states', 'nation', 'nations', 'member state', 'member states', 'country or territory'];
         var dom = new DOMParser().parseFromString(html, "text/html");
         var tables = dom.getElementsByTagName('table');
         // Search for table to use
@@ -735,7 +735,10 @@ var svgWorldMap = (function() {
                     } else {
                         var countryKey = rowData[headerKey];
                     }
-                    tableData[countryKey] = rowData;
+                    // Skip table index (1, 2, 3...), only use iso country identifiers
+                    if (isNaN(countryKey)) {
+                        tableData[countryKey] = rowData;
+                    }
                 }
             }
         }
@@ -1010,6 +1013,7 @@ var svgWorldMap = (function() {
             document.getElementById("map-slider").oninput = function() {
                 paused = true;
                 currDate = this.value;
+                updateControls();
             } 
         } else {
             document.getElementById("map-slider").style.display = 'none';

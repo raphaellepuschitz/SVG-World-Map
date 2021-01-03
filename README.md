@@ -661,6 +661,8 @@ Further Development & Changelog
 <details>
 <summary><b>Done</b></summary>  
   
+* 0.2.3
+  * Minor bugfixes
 * 0.2.2
   * Added LICENSE
   * Merged the time controls module into the main library since .mjs files are not supported well by all servers
