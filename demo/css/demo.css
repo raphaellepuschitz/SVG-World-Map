@@ -66,8 +66,8 @@ ul li:last-child {
     background-color: #999999; 
 }
 
-.box button:first-child { 
-    margin-bottom: 10px; 
+.box button:nth-child(3), .box button:nth-child(4) { 
+    margin-top: 10px; 
 }
 
 .box input { 
@@ -180,7 +180,7 @@ body.black #overout {
     margin-left: 335px; 
 }
 
-body.black #code {
+body.black #code, #code.break {
     top: 10px; 
 }
 
@@ -191,6 +191,10 @@ body.wikianim #code {
 /* Taken from: https://gist.github.com/faffyman/6183311 */
 pre {
     margin: 5px;
+}
+
+.break pre {
+    white-space: normal;
 }
 
 .function {

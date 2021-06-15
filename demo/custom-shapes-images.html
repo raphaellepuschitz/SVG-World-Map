@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SVG World Map Demo</title>
+        <link rel="stylesheet" type="text/css" href="css/demo.css">
+	</head>
+	<body>
+        <div id="code" class="box break"><pre></pre></div>
+        <div id="labels" class="box">
+            <button onclick="myWorldMap.labels('all')">Country labels</button>
+            <button onclick="myWorldMap.labels('micro')">Microstate labels</button>
+            <button onclick="myWorldMap.download('svg')">Save as SVG</button>
+            <button onclick="myWorldMap.download('png')">Save as PNG</button>
+        </div>
+        <div id="overout" class="box">
+            Path over: <span id="over"></span><br><br>
+            Path out: <span id="out"></span><br><br>
+            Path click: <span id="click"></span>
+        </div>
+        <script src="../src/svg-world-map.js"></script>
+        <script src="js/svg-pan-zoom.min.js"></script>
+        <script>
+            // Load SVG World Map
+            loadSVGWorldMap();
+
+            async function loadSVGWorldMap() {
+                // Custom options
+                var options = { 
+                    bigMap: true, 
+                    showInfoBox: true, 
+                    backgroundImage: '../demo/img/world-physical.png', // Background image path
+                    countryStroke: { out: '#666666',  over: '#666666',  click: '#999999' }, 
+                    countryStrokeWidth: { out: '0',  over: '0.3',  click: '0.5' }, 
+                    provinceFill: { out: 'rgba(255, 255, 255, 0)',  over: 'rgba(255, 255, 255, 0.3)',  click: 'rgba(255, 255, 255, 0.6)' },
+                    provinceStroke: { out: '#666666',  over: '#666666',  click: '#999999' }, 
+                    trackCoords: true,
+                };
+
+                // Startup
+                myWorldMap = await svgWorldMap(options);
+
+                // Add SVG shapes
+                myWorldMap.shape('<circle cx="504" cy="105" r="1" style="fill: red" />'); // Innsbruck
+                myWorldMap.shape('<circle cx="450" cy="130" r="5" style="fill: none; stroke: blue; stroke-width: 1px" />'); // Lisboa
+                myWorldMap.shape('<ellipse cx="600" cy="310" rx="15" ry="30" style="fill: none; stroke: green; stroke-width: 1px" />'); // Madagascar
+                myWorldMap.shape('<polygon points="302,151 291,194 259,173" style="fill: rgba(255, 128, 128, 0.3); stroke: purple; stroke-width: 1px" />'); // Bermuda triangle
+                myWorldMap.shape('<line x1="350" y1="10" x2="350" y2="495" stroke="black" stroke-width=".3" stroke-dasharray="4" />'); // Tordesillas line
+                myWorldMap.shape('<rect x="770" y="285" width="120" height="110" rx="15" style="fill: none; stroke: navy; stroke-width: 5px" stroke-dasharray="2 5" />');
+                myWorldMap.shape('<image href="../demo/img/wikipedia-data.png" height="240" width="126" x="70" y="200" />'); // Image
+                myWorldMap.shape('<text x="440" y="420" style="font: italic 30px serif; fill: red">Custom Text</text>'); // Text
+
+                // Test svgPanZoom 
+                svgPanZoom = svgPanZoom(myWorldMap.worldMap, { minZoom: 1, dblClickZoomEnabled: false });  //controlIconsEnabled: true, beforePan: beforePan
+            }
+
+            // Default callback functions, custom names can be defined in 'options.mapOver', 'options.mapOut', 'options.mapClick' and 'options.mapCoords'
+            function mapOver(country) {
+                document.getElementById("over").innerHTML = country.id;
+            }
+
+            function mapOut(country) {
+                document.getElementById("out").innerHTML = country.id;
+            }
+
+            function mapClick(country) {
+                document.getElementById("click").innerHTML = country.id;
+            }
+
+            /*function mapCoords(coords) {
+                document.getElementById("coords").innerHTML = 'Map X: ' + coords.x.toFixed(1) + '<br><br>Map Y: ' + coords.y.toFixed(1);
+            }*/
+
+            // Code example
+            document.getElementById("code").children[0].innerHTML = '<span class="comment">// Set custom background image</span><br><br>options</span> = {<br> &nbsp; <span class="key">"backgroundImage":</span><br> &nbsp; <span class="string">"../demo/img/world-physical.png"</span><br>}<br><br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Load SVG World Map</span><br><br><span class="key">myWorldMap</span> = <span class="function">await svgWorldMap(</span>options<span class="function">)</span>;<br><br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Add shapes via SVG code</span><br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Points & circles</span><br><span class="key">myWorldMap</span>.<span class="function">shape(</span><span class="string">\'&lt;circle cx="504" cy="105" r="1" style="fill: red" /&gt;\'</span><span class="function">)</span>;<br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Lines, polygons, rectangles, etc.</span><br><span class="key">myWorldMap</span>.<span class="function">shape(</span><span class="string">\'&lt;line x1="350" y1="10" x2="350" y2="495" stroke="black" stroke-width=".3" stroke-dasharray="4" /&gt;\'</span><span class="function">)</span>;<br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Images</span><br><span class="key">myWorldMap</span>.<span class="function">shape(</span><span class="string">\'&lt;image href="../demo/img/wikipedia-data.png" height="240" width="126" x="70" y="200" /&gt;\'</span><span class="function">)</span>;<br><br>';
+            document.getElementById("code").children[0].innerHTML += '<span class="comment">// Text</span><br><span class="key">myWorldMap</span>.<span class="function">shape(</span><span class="string">\'&lt;text x="440" y="420" style="font: italic 30px serif; fill: red"&gt;Custom Text&lt;/text&gt;\'</span><span class="function">)</span>;<br>';
+        </script>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 /**
  * SVG World Map JS
- * v0.2.3
+ * v0.2.4
  * 
  * Description: A Javascript library to easily integrate one or more SVG world map(s) with all nations (countries) and political subdivisions (countries, provinces, states). 
  * Author: Raphael Lepuschitz <raphael.lepuschitz@gmail.com>
@@ -14,6 +14,7 @@ var svgWorldMap = (function() {
     // Global variables
     var svg;
     var baseNode;
+    var basePoint;
     var infoBox;
     var isMobile = false;
     var smallScreen = false;
@@ -22,8 +23,10 @@ var svgWorldMap = (function() {
     var countryData = {};
     var countryGroups = {};
     var countryLabels = {};
+    var shapes = {};
     var tableData = {};
     var selectedCountry;
+    var svgNS = "http://www.w3.org/2000/svg";
     //var dragMap = false; // TODO: Check, doesn't work smooth 
 
     // Default options
@@ -38,10 +41,11 @@ var svgWorldMap = (function() {
         showMicroLabels: false, // Show microstate labels
         showMicroStates: true, // Show microstates on map
         showInfoBox: false, // Show info box
+        backgroundImage: '', // Background image path
         // Color options
         oceanColor: '#D8EBFF', 
         worldColor: '#FFFFFF', 
-        labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
+        labelFill: { out: '#666666',  over: '#333333',  click: '#000000' }, 
         //countryFill: { out: '#B9B9B9',  over: '#CCCCCC',  click: '#666666' }, // TODO: Currently this makes no sense for main country groups, until all country borders are existing in the SVG (a lot are missing, e.g. Japan, Greenland, Antarctica)
         countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
         countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
@@ -51,12 +55,15 @@ var svgWorldMap = (function() {
         // Group options
         groupCountries: true, // Enable or disable country grouping
         groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
+        // Coordinates
+        trackCoords: false, // Track map coords, default 'false' due to performance
         // Callback functions from the map to the outside, can have custom names
         mapOut: "mapOut", 
         mapOver: "mapOver", 
         mapClick: "mapClick", 
-        mapTable: "mapTable", // (Custom) callback function for HTML data parsing
+        mapCoords: "mapCoords", 
         mapDate: "mapDate", // (Custom) callback function for time control date return
+        mapTable: "mapTable", // (Custom) callback function for HTML data parsing
         // Time controls
         timeControls: false, // Set to 'true' for time controls
         timePause: true, // Set to 'false' for time animation autostart
@@ -96,6 +103,7 @@ var svgWorldMap = (function() {
                         'countryData': countryData, 
                         'countryGroups': countryGroups, 
                         'countryLabels': countryLabels, 
+                        'shapes': shapes, 
                         // Calling home functions from outside into the map 
                         // TODO: maybe use 'this["countryXYZ"]' insted of 'window["countryXYZ"]' for several maps? -> Leads to too much recursion...
                         'out': function(id) { window["countryOut"].call(null, id); }, 
@@ -105,8 +113,10 @@ var svgWorldMap = (function() {
                         'reset': function(data) { window["resetMap"].call(null, data); }, 
                         'labels': function(data) { window["toggleMapLabels"].call(null, data); }, 
                         'download': function(data) { window["downloadMap"].call(null, data); }, 
-                        'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
+                        'coords': function(data) { window["getCoords"].call(null, data); }, 
+                        'shape': function(data) { window["drawShape"].call(null, data); }, 
                         'date': function(data) { window["timeControlsDate"].call(null, data); }, 
+                        'table': function(data) { window["parseHTMLTable"].call(null, data); }, 
                     };
                     // Load time controls
                     if (options.timeControls == true) {
@@ -115,6 +125,10 @@ var svgWorldMap = (function() {
                     // Add info box
                     if (options.showInfoBox == true) {
                         initInfoBox();
+                    }
+                    // Init coordinates
+                    if (options.trackCoords == true) {
+                        initCoords();
                     }
                     resolve2(svgMap);
                 });
@@ -173,6 +187,23 @@ var svgWorldMap = (function() {
             countries['Ocean'].style.fill = 'none'; 
             countries['Ocean'].style.stroke = 'none'; 
         }
+        // Add map backgound image, if set
+        if (options.backgroundImage != '') {
+            var background = document.createElementNS(svgNS, "image");
+            background.setAttribute("id", "Background");
+            background.setAttribute("overflow", "visible");
+            background.setAttribute("width", "1000");
+            background.setAttribute("height", "507");
+            //background.setAttribute("width", "2000");
+            //background.setAttribute("height", "1000");
+            background.setAttribute("href", options.backgroundImage);
+            //var zw = baseNode.getElementById("ZW");
+            //baseNode.insertBefore(background, zw);
+            var world = baseNode.getElementById("World");
+            baseNode.insertBefore(background, world);
+            countries['World'].style.fill = 'rgba(255, 255, 255, 0)'; 
+            countries['Ocean'].style.fill = 'rgba(255, 255, 255, 0)'; 
+        }
         // Get microstates from labels and remove from countries
         sortLabels();
         //delete countries['Ocean']; // (Delete ocean from countries object) Keep it currently
@@ -196,6 +227,11 @@ var svgWorldMap = (function() {
         if (options.groupCountries == true) {
             buildCountryGroups();
         }
+        // Add group for shapes
+        var shapeGroup = document.createElementNS(svgNS, "g");
+        shapeGroup.setAttribute("id", "shapes");
+        baseNode.appendChild(shapeGroup);
+        shapes = baseNode.getElementById("shapes");
     }
 
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
@@ -407,6 +443,21 @@ var svgWorldMap = (function() {
                 infoBox.style.display = 'none';
             }
         }
+    }
+
+    // Init coordiante tracking
+    // Robinson projection: Use https://github.com/proj4js/proj4js/releases
+    // TODO: Make coords work with svg pan zoom 
+    function initCoords() {
+        // Add base point and event listener for coords
+        basePoint = baseNode.createSVGPoint(); 
+        baseNode.addEventListener("mousemove", function(event) { 
+            basePoint.x = event.clientX;
+            basePoint.y = event.clientY;
+            // Translate cursor point to svg coordinates
+            var svgPoint =  basePoint.matrixTransform(baseNode.getScreenCTM().inverse());
+            callBack('coords', svgPoint);
+        });
     }
 
     // Map controls
@@ -632,6 +683,13 @@ var svgWorldMap = (function() {
             img.src = url;
         } 
     }
+    
+    // Draw shape on map, defined in 'svgMap.shape' 
+    window.drawShape = function(svgString) {
+        var template = document.createElementNS(svgNS, 'svg');
+        template.innerHTML = svgString;
+        shapes.appendChild(template.firstChild);
+    }
 
     // Caller for time controls to callback out, defined in 'svgMap.date' 
     window.timeControlsDate = function(currDate) {
@@ -692,8 +750,8 @@ var svgWorldMap = (function() {
             for (r=0; r<rows.length; r++) {
                 var rowData = {};
                 var columns = rows[r].getElementsByTagName('td');
-                if (timeTable == true) {
-                    var startColumn = 0;
+                if (timeTable == true) { // Why?
+                    var startColumn = 1;
                 } else {
                     var startColumn = 0;
                 }
@@ -753,8 +811,8 @@ var svgWorldMap = (function() {
         callBack('table', tableData);
     }
 
-    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut', 'options.mapClick', 'options.mapTable' and 'options.mapDate'
-    function callBack(event, data) { // 'data' is a path except for time controls date
+    // Fire the (custom) callback functions, defined in 'options.mapOver', 'options.mapOut', 'options.mapClick', 'options.mapCoords', 'options.mapDate' and 'options.mapTable'
+    function callBack(event, data) { // 'data' is a path except for coords and time controls date
         if (event == 'over' && window[options.mapOver] && typeof(window[options.mapOver]) === "function") { 
             window[options.mapOver].apply(window, [data]);
         } else if (event == 'out' && window[options.mapOut] && typeof(window[options.mapOut]) === "function") { 
@@ -762,10 +820,12 @@ var svgWorldMap = (function() {
         } else if (event == 'click' && window[options.mapClick] && typeof(window[options.mapClick]) === "function") { 
             if (data == undefined) { data = ''; } // If path is undefined (because of selectedCountry), return empty string
             window[options.mapClick].apply(window, [data]);
-        } else if (event == 'table' && window[options.mapTable] && typeof(window[options.mapTable]) === "function") { 
-            window[options.mapTable].apply(window, [data]);
+        } else if (event == 'coords' && window[options.mapCoords] && typeof(window[options.mapCoords]) === "function") { 
+            window[options.mapCoords].apply(window, [data]);
         } else if (event == 'date' && window[options.mapDate] && typeof(window[options.mapDate]) === "function") { 
             window[options.mapDate].apply(window, [data]);
+        } else if (event == 'table' && window[options.mapTable] && typeof(window[options.mapTable]) === "function") { 
+            window[options.mapTable].apply(window, [data]);
         } 
     }
 
@@ -858,6 +918,8 @@ var svgWorldMap = (function() {
         if (name.substr(-5).toLowerCase() == ', the') { name = name.substr(0, name.length-5); }
         // Remove last single characters, e.g. " b" from "Syrian Arab Republic  b"
         if (name.substr(-2, 1) == ' ') { name = name.substr(0, name.length-2); }
+        // Remove special characters, e.g. "†"
+        if (name.substr(-1, 1) == '†') { name = name.substr(0, name.length-1); }
         // Remove everything in brackets, e.g. "(France)" from "French Guiana (France)" and trim()
         name = name.replace(/(\(.*\))/ig, "").trim();
         // Search countries for name
@@ -1051,7 +1113,7 @@ var svgWorldMap = (function() {
         } else {
             document.getElementById("map-control-play-pause").innerHTML = '<i class="flaticon-pause"></i>';
         }
-        if (timeData) {
+        if (timeData && timeData.length > 0) {
             var dateKey = Object.keys(timeData[currDate])[0]; // Get date by first key
             document.getElementById("map-slider").value = currDate;
             document.getElementById("map-date").innerHTML = dateKey;

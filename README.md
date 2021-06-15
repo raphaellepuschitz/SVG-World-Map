@@ -16,9 +16,9 @@ This is just a small library (with a big world map) for fast and simple data pro
 Showcase
 --------
 
-| [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) | [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) | [Wikipedia table data time animation](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data-animation.html) |
+| [COVID-19 Corona virus world map](https://raphaellepuschitz.github.io/SVG-World-Map/demo/corona-world-map.html) | [Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html) | [Custom shapes & images](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-shapes-images.html) |
 |:---:|:---:|:---:|
-| ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/corona-world-map.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/wikipedia-data.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/wikipedia-data-animation.png) |
+| ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/corona-world-map.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/wikipedia-data.png) | ![](https://raphaellepuschitz.github.io/SVG-World-Map/demo/img/custom-shapes-images.png) |
 
 
 All Demos
@@ -27,7 +27,8 @@ All Demos
 * **[Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html)**
 * **[Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html)**
 * **[Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)**
-* **[Custom data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)**
+* **[Custom country data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)**
+* **[Custom shapes & images](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-shapes-images.html)** <sup>ᴢ</sup>
 * **[Groups, callbacks & zoom](https://raphaellepuschitz.github.io/SVG-World-Map/demo/groups-callbacks-zoom.html)** <sup>ᴢ</sup>
 * **[Time animation and controls](https://raphaellepuschitz.github.io/SVG-World-Map/demo/time-animation.html)** <sup>ᴛ ᴢ</sup>
 * **[Wikipedia table data projection](https://raphaellepuschitz.github.io/SVG-World-Map/demo/wikipedia-data.html)**
@@ -144,10 +145,11 @@ async function loadSVGWorldMap() {
 * All default options can be overruled by passing an object of custom options
 * Set `libPath`, if the library source folder is different from `../src/`
 * `bigMap` controls whether the map is loaded **with all countries and provinces** (~3,8 MB) or **with nations only** (~1,3 MB)
+* Set the path to a custom `backgroundImage `
 * All `color`, `fill` and `stroke` arguments take hex and rgb(a) values or 'none' as input
 * Use `showOcean` and `showAntarctica` to hide these layers on the map
 * If `showInfoBox` is set to `true`, the library will add a `<div id="map-infobox"></div>` plus basic CSS to your page
-* `mapClick`, `mapOver`, `mapOut`, `mapTable` and `mapDate` are callback function names, see the API section for details
+* `mapClick`, `mapOver`, `mapOut`, `mapCoords`, `mapTable` and `mapDate` are callback function names, see the API section for details
 * `timeControls` will activate the **Time Controls**, see below for more information
 
 ```js
@@ -165,11 +167,12 @@ var options = {
     showMicroLabels: false, // Show microstate labels
     showMicroStates: true, // Show microstates on map
     showInfoBox: false, // Show info box
+    backgroundImage: '', // Background image path
 
     // Color options
     oceanColor: '#D8EBFF', 
     worldColor: '#FFFFFF', 
-    labelFill: { out: '#666666',  over: '#CCCCCC',  click: '#000000' }, 
+    labelFill: { out: '#666666',  over: '#333333',  click: '#000000' }, 
     countryStroke: { out: '#FFFFFF',  over: '#FFFFFF',  click: '#333333' }, 
     countryStrokeWidth: { out: '0.5',  over: '1',  click: '1' }, 
     provinceFill: { out: '#B9B9B9',  over: '#FFFFFF',  click: '#666666' }, 
@@ -179,11 +182,15 @@ var options = {
     // Group options
     groupCountries: true, // Enable or disable country grouping
     groupBy: [ "region" ], // Sort countryData by this value(s) and return to countryGroups
+    
+    // Coordinates
+    trackCoords: false, // Track map coords, default 'false' due to performance
 
     // Callback functions from the map to the outside, can have custom names
     mapOut: "mapOut", 
     mapOver: "mapOver", 
     mapClick: "mapClick", 
+    mapCoords: "mapCoords", 
     mapTable: "mapTable", // (Custom) callback function for HTML data parsing
     mapDate: "mapDate", // (Custom) callback function for time control date return
 
@@ -354,7 +361,7 @@ All these functions are part of the **API**, please see below for further inform
 
 <details>
 <summary><b>Changing the basic country data</b>
-<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html">Custom data</a></td></tr></table>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html">Custom country data</a></td></tr></table>
 </summary>  
   
 There's two kinds of data for countries: 
@@ -411,7 +418,7 @@ var countryData = {
   
 #### Calling back from the map
 
-As seen in the options setup, there are five callback functions for over, out, click, table and date, which can also have custom names:
+As seen in the options setup, there are six callback functions for over, out, click, coords, table and date, which can also have custom names:
 
 ```js
 var options = {
@@ -419,12 +426,13 @@ var options = {
     mapOut: "myCustomOut", 
     mapOver: "myCustomOver", 
     mapClick: "myCustomClick", 
+    mapCoords: "myCustomCoords", 
     mapTable: "myCustomTable", 
     mapDate: "myCustomDate", 
 };
 ```
 
-With the callback of these functions you can catch the hovered or clicked country, get the return JSON from a parsed HTML table or receive the current date of the **Time Controls** (see below). Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"`, `"myCustomOut()"`, `"myCustomTable()"` and `"myCustomDate()"`, then the code would look something like this: 
+With the callback of these functions you can catch the hovered or clicked country, get the return JSON from a parsed HTML table or receive the current date of the **Time Controls** (see below). Let's say you named your functions `"myCustomClick()"`, `"myCustomOver()"`, `"myCustomOut()"`, `"myCustomCoords()"`, `"myCustomTable()"` and `"myCustomDate()"`, then the code would look something like this: 
 
 ```js
 function myCustomClick(country) {
@@ -442,6 +450,12 @@ function myCustomOut(country) {
     ...
 }
 
+function myCustomCoords(coords) {
+    var mapX = coords.x; // The translated cursor position on the upscaled map (1000 x 507px)
+    var mapY = coords.y; 
+    ...
+}
+
 function myCustomTable(object) {
     var tableData = object; // JSON of the parsed HTML table (e.g. from a Wikipedia country list)
     ...
@@ -456,7 +470,7 @@ function myCustomDate(date) {
 
 #### Calling home to the map
 
-There are 9 calling home functions, 3 for country `over()`, `out()` and `click()`, then `update()` and `reset()` for (un)coloring countries, a `label()` control and a `download()` function, the HTML `table()` parser and `date()` (the last one is just a routing helper for mapDate).  
+There are several calling home functions, 3 for country `over()`, `out()` and `click()`, then `update()` and `reset()` for (un)coloring countries, a `label()` control and a `download()` function, the HTML `table()` parser, `shape()` for SVG shapes and images and `date()` (the last one is just a routing helper for mapDate).  
 
 * **`over()`**, **`out()`** and **`click()`** will trigger the attribute changes for `fill`, `stroke` and `stroke-width` defined in `options`. They only need the country id parameter:  
  
@@ -514,6 +528,49 @@ There are 9 calling home functions, 3 for country `over()`, `out()` and `click()
         ...
     }
     ```
+
+* **`shape()`** will add any custom shape, image or text to the map. Please see the next chapter for details. 
+ 
+</details>
+
+<details>
+<summary><b>Custom shapes, images & text</b>
+<table><tr><td> &raquo; Demo: <a href="https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-shapes-images.html">Custom shapes & images</a></td></tr></table>
+</summary>  
+
+> The size of the world map SVGs is **1000px** in width and **507px** in height. This might change in future versions. Also, currently there is no support for latitude / longitude conversion for the [Robinson projection](https://en.wikipedia.org/wiki/Robinson_projection), this will be added soon.
+
+#### Adding a custom background image
+
+If you want to add a custom background image - e.g. a physical terrain map - please use the `backgroundImage ` option. The image should have the proportions of **1000 x 507 pixels** or any **multiple** of this size. To make sure the province fills are not hiding the background, set the color options to rgba values. 
+
+```js
+var options = {
+    backgroundImage: "../demo/img/world-physical.png",
+    provinceFill: { out: 'rgba(255, 255, 255, 0)',  over: 'rgba(255, 255, 255, 0.3)',  click: 'rgba(255, 255, 255, 0.6)' },
+}
+```
+
+#### Adding shapes, images and text
+
+Custom shapes, images and text can be added on top of the map (over the countries and names) via the calling home function **`shape()`**. You can use all graphic SVG tags, e.g. `<line>`, `<rect>`, `<text>`, `<ellipse>`, ... (see the [MDN SVG element reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Element#graphics_elements) for details). Just pass the SVG code directly to the function as shown below and use coordinates between **0 - 1000** for the X-axis and **0 - 507** for the Y-axis.
+
+```js
+// Load SVG World Map
+myWorldMap = await svgWorldMap(options);
+
+// Add point
+myWorldMap.shape('<circle cx="504" cy="105" r="1" style="fill: red" />');
+
+// Add line
+myWorldMap.shape('<line x1="350" y1="10" x2="350" y2="495" stroke="black" stroke-width=".3" stroke-dasharray="4" />');
+
+// Add image
+myWorldMap.shape('<image href="../demo/img/wikipedia-data.png" height="240" width="126" x="70" y="200" />');
+
+// Add text
+myWorldMap.shape('<text x="440" y="420" style="font: italic 30px serif; fill: red">Custom Text</text>');
+```
  
 </details>
 
@@ -536,7 +593,7 @@ The SVG World Map library includes **Time Controls** for **animated data visuali
 myTimeOptions = {
     timeControls: true, // Set to 'true' for time controls
     timePause: true, // Set to 'false' for time animation autostart
-    timeLoop: false //  Set to 'true' for time animation loop
+    timeLoop: false, //  Set to 'true' for time animation loop
     mapDate: "myCustomDate", // (Custom) callback function for time control date return
 };
 
@@ -647,7 +704,6 @@ Further Development & Changelog
 * Add game controls
 * Add strategy game demo
 * Add capitals to countrydata
-* Add bubbles / circles to the map
 * Add minified JS and CSS files
 * Optimize drag and click
 * Optimize zoom integration
@@ -656,11 +712,16 @@ Further Development & Changelog
 * Name all provinces in the SVGs correctly (This may take a while... Help appreciated!)
 * Name all provinces in the JSON and CSV correctly (This may take a while... Help appreciated!)
 * Integrate [Web Animations](https://www.w3.org/TR/web-animations-1/) (currently W3C working draft)
+* Add [Robinson projection](https://en.wikipedia.org/wiki/Robinson_projection) latitude / longitude conversion
 </details>
 
 <details>
 <summary><b>Done</b></summary>  
   
+* 0.2.4
+  * Added custom background image
+  * Added custom SVG shapes, images and text
+  * Added basic coordinate system
 * 0.2.3
   * Minor bugfixes
 * 0.2.2
